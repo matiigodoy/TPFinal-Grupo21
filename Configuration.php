@@ -57,9 +57,9 @@ class Configuration
 
     private static function getConfig()
     {
-        return parse_ini_file("config/config.ini");
+        $configFile = file_exists("config/macConfig.ini") ? "config/macConfig.ini" : "config/config.ini";
+        return parse_ini_file($configFile);
     }
-
 
     public static function getRouter()
     {
