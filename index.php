@@ -1,42 +1,34 @@
 <?php
-include_once ("Configuration.php");
-include_once ("helper/SessionManager.php");
+session_start();
+include_once("Configuration.php");
+include_once("helper/SessionManager.php");
 
 $router = Configuration::getRouter();
 $sessionManager = new SessionManager();
-/*
-$controller = isset($_GET["controller"]) ? $_GET["controller"] : "" ;
-$action = isset($_GET["action"]) ? $_GET["action"] : "" ;
 
-$router->route($controller, $action);
-
-// index.php?controller=tours&action=get
-// tours/get
-
-*/
-
-
-$controller = $_GET["controller"] ?? "index";
+$controller = $_GET["controller"] ?? "";
 $action = $_GET["action"] ?? "";
-echo $controller;
-// Validar si la sesión NO es válida
+
+/*
+// Check if the user is logged in
 if (!isset($_SESSION['userID'])) {
-    echo($_SESSION['userID']);
-    // Si la sesión no es válida, verifica si se solicita una vista de inicio de sesión o registro
-    if ($controller === 'user' && in_array($action, ['login', 'signin', 'procesarLogin', 'procesarAlta'])) {
-        // Si la vista es "user/login" o "user/signin," permite el acceso
+
+    // If the user is not logged in, allow access only to login and signup actions
+    if (in_array($controller, ['login', 'register']) && in_array($action, ['login', 'register', 'authenticate', 'create'])) {
         $router->route($controller, $action);
         exit;
     }
-    // Si la sesión no es válida y no se solicita "user/login" o "user/signin," redirige a la página de inicio de sesión por defecto
+
+    // Redirect to login page if trying to access other actions
     $controller = "user";
     $action = "login";
+} else {
 
-} else if ($_SESSION['userID']) {//usuario logeado
-    echo($_SESSION['userID']);
-    $controller = "index";
-    $action = "show";
-
+    // If the user is logged in, handle the requested action
+    if ($controller === 'index' && $action === '') {
+        $action = ""; // Default action for logged in users
+    }
 }
-// Si la sesión es válida, permite el acceso a la ruta deseada
+*/
+// Route the request
 $router->route($controller, $action);

@@ -13,20 +13,23 @@ class LoginController {
 
     public function get()
     {
-        $data["isLogged"] = isset($_SESSION["userID"])?true:false;
-        $this->presenter->render("login",$data);
+        if (isset($_SESSION["userID"])) {
+            // If the user is logged in, redirect them to a different page, e.g., home or dashboard
+            Redirect::to('/lobby'); // Adjust the route as needed
+        } else {
+            $data["isLogged"] = false;
+            $this->presenter->render("login", $data);
+        }
     }
 
     public function authenticate() {
         if(isset($_POST["username"], $_POST["password"])) {
             $formData = $_POST;
-
             $result = $this->loginService->verifyUser($formData);
 
             if($result === true) {
-                $this->sessionManager->setUser("1"); //Por ahora le paso el ID de admin hardcodeado
+                $this->sessionManager->setUser("1");
                 $this->renderLoginSuccess();
-                
             } else {
                 $this->renderLoginError($result);
             }

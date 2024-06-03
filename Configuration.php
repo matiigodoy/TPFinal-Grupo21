@@ -17,6 +17,7 @@ include_once ("helper/Router.php");
 include_once ("helper/Presenter.php");
 include_once ("helper/MustachePresenter.php");
 include_once ("helper/SessionManager.php");
+include_once ("helper/Redirect.php");
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 
