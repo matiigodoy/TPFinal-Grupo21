@@ -11,8 +11,6 @@ class RegisterController{
         $this->presenter = $presenter;
     }
 
-
-
     public function register() {
         if (isset(
             $_POST["full_name"],
