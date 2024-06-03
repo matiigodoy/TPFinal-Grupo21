@@ -74,6 +74,7 @@ class RegisterController{
         $this->presenter->render("login", $data);
     }
 
+
     private function renderRegisterError($message)
     {
         $data["message"] = $message;
