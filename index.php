@@ -9,7 +9,7 @@ $sessionManager = new SessionManager();
 $controller = $_GET["controller"] ?? "";
 $action = $_GET["action"] ?? "";
 
-/*
+// /*
 // Check if the user is logged in
 if (!isset($_SESSION['userID'])) {
 
@@ -29,6 +29,6 @@ if (!isset($_SESSION['userID'])) {
         $action = ""; // Default action for logged in users
     }
 }
-*/
+// */
 // Route the request
 $router->route($controller, $action);
