@@ -13,25 +13,22 @@ class GameController
 
     public function startGame() {
 
-        $userId = $_SESSION['user_id']; // Ejemplo, asumiendo que guardas el ID del usuario en una sesión
+        $userId = 1; //hardcodeado
 
-        $gameId = $this->gameModel->createGame($userId);
+        $gameId = 5; //hardcodeado
 
         if ($gameId !== false) {
 
-            $data = array(
-                'gameId' => $gameId
-            );
-            $this->presenter->render("play", $data);
+        $this->askQuestion($gameId, $userId);
             exit();
         } else {
-            // Hubo un error al iniciar la partida, muestra algún mensaje de error
+
             echo "Hubo un error al iniciar la partida.";
         }
     }
 
     public function askQuestion($gameId, $userId) {
-        $question = $this->gameModel->getQuestion($gameId, $userId);
+        $question = $this->gameModel->getQuestion($userId, $gameId); //hardcodeado
         if ($question) {
             $data = [
                 'gameId' => $gameId,
@@ -44,16 +41,22 @@ class GameController
         }
     }
 
-    public function answerQuestion() {
+    public function answerQuestion()
+    {
         if (isset($_POST['gameId'], $_POST['userId'], $_POST['questionId'], $_POST['selectedOption'])) {
-            $gameId = $_POST['gameId'];
-            $userId = $_POST['userId'];
+            $gameId = 5;
+            $userId = 1;
             $questionId = $_POST['questionId'];
             $selectedOption = $_POST['selectedOption'];
 
             $wasRight = $this->gameModel->saveAnswer($gameId, $userId, $questionId, $selectedOption);
-            $message = $wasRight ? "Respuesta correcta!" : "Respuesta incorrecta.";
-            $this->askQuestion($gameId, $userId);
+
+            if ($wasRight) {
+                $this->askQuestion($gameId, $userId);
+            } else {
+                $message = "Respuesta incorrecta.";
+                $this->renderError($message);
+            }
         } else {
             $this->renderError("Faltan datos para procesar la respuesta.");
         }

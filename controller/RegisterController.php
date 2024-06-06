@@ -47,7 +47,7 @@ class RegisterController{
                         'email' => $formData['email'],
                         'password' => $hashedPassword,
                         'username' => $formData['username'],
-                        'profile_picture' => $uploadFile // Ruta del archivo de imagen
+                        'profile_picture' => $uploadFile
                     ];
 
                     if ($this->registerModel->register($userData)) { 

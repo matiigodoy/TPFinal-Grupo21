@@ -28,6 +28,7 @@ class GameModel
     public function saveAnswer($gameId, $userId, $questionId, $selectedOption)
     {
 
+
         $query = "SELECT right_answer FROM answer WHERE question_id = ?";
         $stmt = $this->database->prepare($query);
         $stmt->bind_param("i", $questionId);
@@ -40,7 +41,7 @@ class GameModel
 
         $query = "INSERT INTO partida (id_partida, id_user, id_question, was_right) VALUES (?, ?, ?, ?)";
         $stmt = $this->database->prepare($query);
-        $stmt->bind_param("iiii", $gameId, $userId, $questionId, $wasRight);
+        $stmt->bind_param("iiib", $gameId, $userId, $questionId, $wasRight);
         $stmt->execute();
         $stmt->close();
 
