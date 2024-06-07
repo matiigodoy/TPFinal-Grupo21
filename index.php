@@ -25,7 +25,7 @@ if (!isset($_SESSION['userID'])) {
     // let's leave this log for now
     echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
     // If the user is logged in as admin, allow access to all actions except login and register
-    if (in_array($controller, ['login', 'register', ""])) {
+    if (in_array($controller, ['login', 'register', ""]) && $action !== "exit") {
         $controller = "lobby";
         $action = "";
     }
@@ -33,7 +33,7 @@ if (!isset($_SESSION['userID'])) {
     // let's leave this log for now
     echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
     // If the user is logged in as user, allow access to all actions except login and register
-    if (in_array($controller, ['login', 'register'])) {
+    if (in_array($controller, ['login', 'register', ""]) && $action !== "exit") {
         $controller = "lobby";
         $action = "";
     }
