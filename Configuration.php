@@ -8,7 +8,6 @@ include_once("model/LoginModel.php");
 include_once("model/ProfileModel.php");
 include_once ("model/RegisterModel.php");
 
-include_once ("helper/LoginService.php");
 include_once ("helper/ProfileService.php");
 
 include_once ("helper/Database.php");
@@ -27,7 +26,7 @@ class Configuration
     // CONTROLLERS
     public static function getLoginController()
     {
-        return new LoginController(self::getLoginService(),self::getSessionManager(),self::getPresenter());
+        return new LoginController(self::getLoginModel(),self::getSessionManager(),self::getPresenter());
     }
 
     public static function getProfileController()
@@ -83,11 +82,6 @@ class Configuration
     private static function getPresenter()
     {
         return new MustachePresenter("view/template");
-    }
-
-    public static function getLoginService()
-    {
-        return new LoginService(self::getLoginModel());
     }
 
     public static function getProfileService()

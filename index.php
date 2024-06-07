@@ -9,6 +9,7 @@ $sessionManager = new SessionManager();
 $controller = $_GET["controller"] ?? "";
 $action = $_GET["action"] ?? "";
 
+// Check if the user is logged in
 if (!isset($_SESSION['userID'])) {
 
     // If the user is not logged in, allow access only to login and signup actions
@@ -21,5 +22,7 @@ if (!isset($_SESSION['userID'])) {
     $controller = "user";
     $action = "login";
 }
+// log user id on the console // lets leave this log for now
+echo "<script>console.log('user id: ".$_SESSION['userID']."', 'role: ".$_SESSION['role']."');</script>";
 
 $router->route($controller, $action);
