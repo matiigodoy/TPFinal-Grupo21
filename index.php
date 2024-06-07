@@ -22,7 +22,7 @@ if (!isset($_SESSION['userID'])) {
     $controller = "user";
     $action = "login";
 } else if ($_SESSION['role'] === 'admin') {
-    // lets leave this log for now
+    // let's leave this log for now
     echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
     // If the user is logged in as admin, allow access to all actions except login and register
     if (in_array($controller, ['login', 'register', ""])) {
@@ -30,7 +30,7 @@ if (!isset($_SESSION['userID'])) {
         $action = "";
     }
 } else if ($_SESSION['role'] === 'user') {
-    // lets leave this log for now
+    // let's leave this log for now
     echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
     // If the user is logged in as user, allow access to all actions except login and register
     if (in_array($controller, ['login', 'register'])) {
