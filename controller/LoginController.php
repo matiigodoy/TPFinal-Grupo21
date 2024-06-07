@@ -12,13 +12,8 @@ class LoginController {
     }
 
     public function get() {
-        if (isset($_SESSION["userID"])) {
-            // If the user is logged in, redirect them to a different page, e.g., home or dashboard
-            Redirect::to('/lobby'); // Adjust the route as needed
-        } else {
-            $data["isLogged"] = false;
-            $this->presenter->render("login", $data);
-        }
+        $data["isLogged"] = false;
+        $this->presenter->render("login", $data);
     }
 
     public function authenticate() {

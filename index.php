@@ -21,8 +21,24 @@ if (!isset($_SESSION['userID'])) {
     // Redirect to login page if trying to access other actions
     $controller = "user";
     $action = "login";
+} else if ($_SESSION['role'] === 'admin') {
+    // lets leave this log for now
+    echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
+    // If the user is logged in as admin, allow access to all actions except login and register
+    if (in_array($controller, ['login', 'register', ""])) {
+        $controller = "lobby";
+        $action = "";
+    }
+} else if ($_SESSION['role'] === 'user') {
+    // lets leave this log for now
+    echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
+    // If the user is logged in as user, allow access to all actions except login and register
+    if (in_array($controller, ['login', 'register'])) {
+        $controller = "lobby";
+        $action = "";
+    }
 }
 // log user id on the console // lets leave this log for now
-echo "<script>console.log('user id: ".$_SESSION['userID']."', 'role: ".$_SESSION['role']."');</script>";
+echo "<script>console.log('user id: ".$_SESSION['userID']."');</script>";
 
 $router->route($controller, $action);
