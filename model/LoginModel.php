@@ -7,21 +7,21 @@ class LoginModel {
         $this->database = $database;
     }
 
-    public function validateLogin($username, $password) {
-        $query = "SELECT id, role FROM user WHERE username = ? AND password = ?";
+    public function getUserByUsername($username) {
+        $query = "SELECT * FROM user WHERE username = ?";
         $stmt = $this->database->prepare($query);
-        $stmt->bind_param("ss", $username, $password);
+
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+
+        $stmt->bind_param("s", $username);
         $stmt->execute();
-        $role = null;
-        $id = null;
-        $stmt->bind_result($id, $role);
-        $stmt->fetch();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+
         $stmt->close();
 
-        if (!empty($id)) {
-            return ['id' => $id, 'role' => $role];
-        } else {
-            return false;
-        }
+        return $user;
     }
 }

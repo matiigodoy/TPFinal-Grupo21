@@ -6,13 +6,13 @@
         <form action="/register/register" method="post" enctype="multipart/form-data" class="row g-3">
             <div class="col-md-6">
                 <div class="col-md-12">
-                    <label for="full_name" class="form-label">Nombre Completo:</label>
-                    <input id="full_name" type="text" name="full_name" class="form-control" required placeholder="Ingrese su nombre completo">
+                    <label for="fullname" class="form-label">Nombre Completo:</label>
+                    <input id="fullname" type="text" name="fullname" class="form-control" required placeholder="Ingrese su nombre completo">
                 </div>
 
                 <div class="col-md-12">
                     <label for="birth_year" class="form-label">Año de Nacimiento:</label>
-                    <input id="birth_year" type="text" name="birth_year" class="form-control" required placeholder="Ingrese su año de nacimiento">
+                    <input id="birth_year" type="number" name="birth_year" class="form-control" required placeholder="Ingrese su año de nacimiento">
                 </div>
 
                 <div class="col-md-12">
@@ -56,7 +56,7 @@
 
                 <div class="col-md-12">
                     <label for="profile_picture" class="form-label">Imagen de Perfil:</label>
-                    <input id="profile_picture" type="file" name="profile_picture" class="form-control" required accept="image/*">
+                    <input id="profile_picture" type="file" name="profile_picture" class="form-control" accept="image/*">
                 </div>
             </div>
             <div class="col-12">

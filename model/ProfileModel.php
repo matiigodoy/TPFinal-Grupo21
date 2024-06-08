@@ -9,7 +9,7 @@ class ProfileModel {
     }
 
     public function getProfile($userID) {
-        $sql = "SELECT u.fullname, u.birth_date, u.gender, u.register_date
+        $sql = "SELECT u.fullname, u.birth_year, u.gender, u.register_date
                 FROM user u
                 WHERE u.id = ?";
 

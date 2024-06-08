@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include_once("controller/LoginController.php");
 include_once("controller/ProfileController.php");
 include_once("controller/LobbyController.php");
