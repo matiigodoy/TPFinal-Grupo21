@@ -36,7 +36,8 @@ class RegisterModel
             $stmt->close();
             return true;
         } else {
-            die('Execute failed: ' . htmlspecialchars($stmt->error));
+            $stmt->close();
+            return false;
         }
     }
 }
