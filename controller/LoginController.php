@@ -22,7 +22,7 @@ class LoginController {
             $result = $this->verifyUser($formData);
 
             if ($result !== false) {
-                $this->sessionManager->setUser($result['id'], $result['role']);
+                $this->sessionManager->setUser($result['id'], $result['role'], $result['username']);
                 $this->renderLoginSuccess();
             } else {
                 $this->renderLoginError("Usuario y/o contraseña inválidos. Intente nuevamente");
