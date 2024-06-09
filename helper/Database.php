@@ -1,37 +1,50 @@
 <?php
 
 class Database {
-    
     private $conn;
 
     public function __construct($servername, $username, $password, $dbname)
     {
-        $this->conn = mysqli_connect($servername, $username, $password, $dbname);
+        $this->conn = new mysqli($servername, $username, $password, $dbname);
 
-        if (!$this->conn) {
-            die("Connection failed: " . mysqli_connect_error());
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
         }
     }
 
     public function query($sql)
     {
-        $result = mysqli_query($this->conn, $sql);
-        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $result = $this->conn->query($sql);
+
+        if ($result === false) {
+            die("Query failed: " . $this->conn->error);
+        }
+
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function execute($sql)
     {
-        mysqli_query($this->conn, $sql);
+        if ($this->conn->query($sql) === false) {
+            die("Execute failed: " . $this->conn->error);
+        }
+
+        return true;
     }
 
     public function prepare($sql)
     {
-        return mysqli_prepare($this->conn, $sql);
+        $stmt = $this->conn->prepare($sql);
+
+        if ($stmt === false) {
+            die("Prepare failed: " . $this->conn->error);
+        }
+
+        return $stmt;
     }
 
     public function __destruct()
     {
-        mysqli_close($this->conn);
+        $this->conn->close();
     }
-
 }

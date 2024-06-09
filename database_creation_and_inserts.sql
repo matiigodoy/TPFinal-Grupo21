@@ -10,24 +10,27 @@ SET
 
 CREATE TABLE `user`(
                        id INT(11) PRIMARY KEY AUTO_INCREMENT,
-                       fullname VARCHAR(30) NOT NULL,
-                       birth_date DATE NOT NULL,
+                       fullname VARCHAR(50) NOT NULL,
+                       birth_year INT(4) NOT NULL,
                        gender VARCHAR(30) NOT NULL,
                        city VARCHAR(30) NOT NULL,
-                       province VARCHAR(30) NOT NULL,
+                       province VARCHAR(30) NULL,
                        country VARCHAR(30) NOT NULL,
                        email VARCHAR(255) NOT NULL UNIQUE,
-                       username VARCHAR(30) NOT NULL,
-                       password VARCHAR(30) NOT NULL,
-                       profile_picture VARCHAR(30) DEFAULT NULL,
-                       score INT(6) NOT NULL,
+                       username VARCHAR(30) NOT NULL UNIQUE,
+                       password VARCHAR(250) NOT NULL,
+                       profile_picture VARCHAR(250) DEFAULT NULL,
+                       score INT(6) NOT NULL DEFAULT 0,
                        register_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-                       role VARCHAR(30) NOT NULL,
+                       role VARCHAR(30) NOT NULL DEFAULT 'user',
                        is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-INSERT INTO `user` (fullname,birth_date,gender,city, province, country,email,username,password,profile_picture,score, register_date, role, is_active)
-VALUES ('Mariano Saldivar','1990-09-09','Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','admin@grupo21.com','MarianCapo','1234',NULL,0, '2024-06-05','admin', 0);
+-- PASSWORD: 1234
+INSERT INTO `user` (fullname,birth_year,gender,city, province, country,email,username,password,profile_picture,score, register_date, role, is_active)
+VALUES ('Mariano Saldivar',1990,'Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','admin@grupo21.com','MarianCapo','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
+('admin',1990,'Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','admin@gmail.com','admin','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
+('user',1990,'Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','user@gmail.com','user','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','user', 0);
 
 
 CREATE TABLE `question` (

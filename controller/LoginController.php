@@ -38,7 +38,13 @@ class LoginController {
         $username = $formData["username"];
         $password = $formData["password"];
 
-        return $this->loginModel->validateLogin($username, $password);
+        $user = $this->loginModel->getUserByUsername($username);
+
+        if ($user && password_verify($password, $user['password'])) {
+            return $user;
+        } else {
+            return false;
+        }
     }
 
     private function renderLoginSuccess() {
