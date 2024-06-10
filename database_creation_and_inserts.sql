@@ -13,9 +13,8 @@ CREATE TABLE `user`(
                        fullname VARCHAR(50) NOT NULL,
                        birth_year INT(4) NOT NULL,
                        gender VARCHAR(30) NOT NULL,
-                       city VARCHAR(30) NOT NULL,
-                       province VARCHAR(30) NULL,
-                       country VARCHAR(30) NOT NULL,
+                       latitude DECIMAL(17, 14) NOT NULL,
+                       longitude DECIMAL(17, 14) NOT NULL,
                        email VARCHAR(255) NOT NULL UNIQUE,
                        username VARCHAR(30) NOT NULL UNIQUE,
                        password VARCHAR(250) NOT NULL,
@@ -27,10 +26,10 @@ CREATE TABLE `user`(
 );
 
 -- PASSWORD: 1234
-INSERT INTO `user` (fullname,birth_year,gender,city, province, country,email,username,password,profile_picture,score, register_date, role, is_active)
-VALUES ('Mariano Saldivar',1990,'Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','admin@grupo21.com','MarianCapo','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
-('admin',1990,'Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','admin@gmail.com','admin','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
-('user',1990,'Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','user@gmail.com','user','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','user', 0);
+INSERT INTO `user` (fullname,birth_year,gender,latitude,longitude,email,username,password,profile_picture,score, register_date, role, is_active)
+VALUES ('Mariano Saldivar',1990,'Masculino',-34.670678159005746, -58.56332018874492,'admin@grupo21.com','MarianCapo','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
+('admin',1990,'Masculino',-34.670678159005746, -58.56332018874492,'admin@gmail.com','admin','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
+('user',1990,'Masculino',-34.670678159005746, -58.56332018874492,'user@gmail.com','user','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','user', 0);
 
 
 CREATE TABLE `question` (
