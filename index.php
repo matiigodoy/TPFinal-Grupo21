@@ -19,7 +19,7 @@ if (!isset($_SESSION['userID'])) {
     }
 
     // Redirect to login page if trying to access other actions
-    $controller = "user";
+    $controller = "login";
     $action = "login";
 } else if ($_SESSION['role'] === 'admin') {
     // let's leave this log for now
