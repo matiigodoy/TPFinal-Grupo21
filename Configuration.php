@@ -3,12 +3,12 @@ include_once("controller/LoginController.php");
 include_once("controller/ProfileController.php");
 include_once("controller/LobbyController.php");
 include_once ("controller/RegisterController.php");
-include_once ("controller/GameController.php");
+
 
 include_once("model/LoginModel.php");
 include_once("model/ProfileModel.php");
 include_once ("model/RegisterModel.php");
-include_once ("model/GameModel.php");
+
 
 include_once ("helper/ProfileService.php");
 
@@ -46,9 +46,7 @@ class Configuration
         return new RegisterController(self::getRegisterModel(), self::getPresenter());
     }
 
-    public static function getGameController(){
-        return new GameController(self::getGameModel(), self::getPresenter());
-    }
+
 
     // MODELS
     private static function getLoginModel()
@@ -66,9 +64,7 @@ class Configuration
         return new RegisterModel(self::getDatabase());
     }
 
-    private static function getGameModel(){
-        return new GameModel(self::getDatabase());
-    }
+
 
 
     // HELPERS
