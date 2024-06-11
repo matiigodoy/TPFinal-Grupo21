@@ -1,39 +1,37 @@
 <main class="py-5">
-
+    <script src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyAiq3xISXSZYgkd9GDAOdajy4NK2d3L7dY&loading=async&callback=loadMap" async defer onerror="alert('asdasd')"></script>
     <div class="content container px-lg-5 p-4 bg-light rounded-3">
         <h2 class="text-center display-3 fw-bold">Registro de Usuario</h2>
         <br>
         <form action="/register/register" method="post" enctype="multipart/form-data" class="row g-3">
             <div class="col-md-6">
                 <div class="col-md-12">
-                    <label for="full_name" class="form-label">Nombre Completo:</label>
-                    <input id="full_name" type="text" name="full_name" class="form-control" required placeholder="Ingrese su nombre completo">
+                    <label for="fullname" class="form-label">Nombre Completo:</label>
+                    <input id="fullname" type="text" name="fullname" class="form-control" required placeholder="Ingrese su nombre completo">
                 </div>
 
                 <div class="col-md-12">
                     <label for="birth_year" class="form-label">Año de Nacimiento:</label>
-                    <input id="birth_year" type="text" name="birth_year" class="form-control" required placeholder="Ingrese su año de nacimiento">
+                    <input id="birth_year" type="number" name="birth_year" class="form-control" required placeholder="Ingrese su año de nacimiento">
                 </div>
 
                 <div class="col-md-12">
                     <label for="gender" class="form-label">Género:</label>
                     <select id="gender" name="gender" class="form-control" required>
-                        <option value="male">Masculino</option>
-                        <option value="female">Femenino</option>
-                        <option value="other">Otro</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
                     </select>
                 </div>
 
                 <div class="col-md-12">
-                    <label for="country" class="form-label">País:</label>
-                    <input id="country" type="text" name="country" class="form-control" required placeholder="Ingrese su país">
+                    <label class="form-label">Ubicación:</label>
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
+                    <div id="map" style="height: 400px; width: 100%; border: 1px solid #000;"></div>
+                    <small id="input-coordinates"></small>
                 </div>
-
-                <div class="col-md-12">
-                    <label for="city" class="form-label">Ciudad:</label>
-                    <input id="city" type="text" name="city" class="form-control" required placeholder="Ingrese su ciudad">
-                </div>
-
+                
                 <div class="col-md-12">
                     <label for="email" class="form-label">Correo Electrónico:</label>
                     <input id="email" type="email" name="email" class="form-control" required placeholder="Ingrese su correo electrónico">
@@ -56,7 +54,7 @@
 
                 <div class="col-md-12">
                     <label for="profile_picture" class="form-label">Imagen de Perfil:</label>
-                    <input id="profile_picture" type="file" name="profile_picture" class="form-control" required accept="image/*">
+                    <input id="profile_picture" type="file" name="profile_picture" class="form-control" accept="image/*">
                 </div>
             </div>
             <div class="col-12">
@@ -72,4 +70,36 @@
             {{/showMessage}}
         </form>
     </div>
+    <script>
+        function loadMap() {
+
+            var inputCoordinates = document.getElementById('input-coordinates');
+            var mapOptions = {
+                center:new google.maps.LatLng(-34.6686986,-58.5614947),
+                zoom:12,
+                panControl: false,
+                zoomControl: false,
+                scaleControl: false,
+                mapTypeControl:false,
+                streetViewControl:true,
+                overviewMapControl:true,
+                rotateControl:true,
+                mapTypeId:google.maps.MapTypeId.ROADMAP
+            };
+
+            var map = new google.maps.Map(document.getElementById('map'),mapOptions);
+
+            var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                map: map,
+                draggable:true
+            });
+
+            google.maps.event.addListener(marker, "drag", function (event) { 
+                document.getElementById('latitude').value = marker.getPosition().lat();
+                document.getElementById('longitude').value = marker.getPosition().lng();
+                inputCoordinates.innerText = 'Latitud: ' + marker.getPosition().lat() + ', Longitud: ' + marker.getPosition().lng();
+            });
+        }
+    </script>
 </main>

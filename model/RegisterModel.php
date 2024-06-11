@@ -2,30 +2,34 @@
 
 class RegisterModel
 {
-
     private $database;
 
-    public function __construct($database){
+    public function __construct($database) {
         $this->database = $database;
     }
 
     public function register($data) {
-        $query = "INSERT INTO user (full_name, birth_year, gender, country, city, email, password, username, profile_picture) 
+        $query = "INSERT INTO user (fullname, birth_year, gender, latitude, longitude, email, password, username, profile_picture) 
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->database->prepare($query);
 
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+
+        $profile_picture = $data['profile_picture'] ?? null;
         $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-        $stmt->bind_param("sisssssss",
-            $data['full_name'],
+        $stmt->bind_param("sisddssss",
+            $data['fullname'],
             $data['birth_year'],
             $data['gender'],
-            $data['country'],
-            $data['city'],
+            $data['latitude'],
+            $data['longitude'],
             $data['email'],
             $hashed_password,
             $data['username'],
-            $data['profile_picture']
+            $profile_picture
         );
 
         if ($stmt->execute()) {
@@ -36,5 +40,4 @@ class RegisterModel
             return false;
         }
     }
-
 }
