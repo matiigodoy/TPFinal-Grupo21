@@ -41,7 +41,6 @@ class RegisterController{
                             return;
                         }
                     }
-
                     $userData = [
                             'fullname' => $formData['fullname'],
                             'birth_year' => $formData['birth_year'],
