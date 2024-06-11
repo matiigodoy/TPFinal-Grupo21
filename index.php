@@ -13,14 +13,19 @@ $action = $_GET["action"] ?? "";
 if (!isset($_SESSION['userID'])) {
 
     // If the user is not logged in, allow access only to login and signup actions
-    if (in_array($controller, ['login', 'register']) && in_array($action, ['login', 'register', 'authenticate', 'create', 'verifyUser'])) {
+    if (in_array($controller, ['login', 'register']) && in_array($action, ['login', 'register', 'authenticate', 'create'])) {
         $router->route($controller, $action);
         exit;
     }
 
     // Redirect to login page if trying to access other actions
+
 //    $controller = "user";
 //    $action = "login";
+
+    $controller = "login";
+    $action = "login";
+
 } else if ($_SESSION['role'] === 'admin') {
     // let's leave this log for now
     echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
