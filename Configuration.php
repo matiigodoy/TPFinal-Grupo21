@@ -3,11 +3,13 @@ include_once("controller/LoginController.php");
 include_once("controller/ProfileController.php");
 include_once("controller/LobbyController.php");
 include_once ("controller/RegisterController.php");
+include_once ("controller/UserController.php");
 
 
 include_once("model/LoginModel.php");
 include_once("model/ProfileModel.php");
 include_once ("model/RegisterModel.php");
+include_once ("model/UserModel.php");
 
 
 include_once ("helper/ProfileService.php");
@@ -46,6 +48,10 @@ class Configuration
         return new RegisterController(self::getRegisterModel(), self::getPresenter());
     }
 
+    public static function getUserController(){
+        return new UserController(self::getUserModel(), self::getPresenter());
+    }
+
 
 
     // MODELS
@@ -62,6 +68,9 @@ class Configuration
     private static function getRegisterModel()
     {
         return new RegisterModel(self::getDatabase());
+    }
+    private static function getUserModel(){
+        return new UserModel(self::getDatabase());
     }
 
 
