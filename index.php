@@ -9,41 +9,41 @@ $sessionManager = new SessionManager();
 $controller = $_GET["controller"] ?? "";
 $action = $_GET["action"] ?? "";
 
+// Load the auth.ini file
+$authConfig = parse_ini_file("config/auth.ini", true);
+
+// Determine the role of the user
+$role = 'guest'; // Default role
+if (isset($_SESSION['role'])) {
+    $role = $_SESSION['role'];
+}
+
+// Get allowed controllers and actions for the role
+$allowedControllers = $authConfig[$role]['controllers'] ?? [];
+$allowedActions = $authConfig[$role]['actions'] ?? [];
+
 // Check if the user is logged in
 if (!isset($_SESSION['userID'])) {
-
-    // If the user is not logged in, allow access only to login and signup actions
-    if (in_array($controller, ['login', 'register']) && in_array($action, ['login', 'register', 'authenticate', 'create'])) {
+    // If the user is not logged in, allow access only to allowed guest controllers and actions
+    if (in_array($controller, $allowedControllers) && in_array($action, $allowedActions)) {
         $router->route($controller, $action);
         exit;
     }
 
     // Redirect to login page if trying to access other actions
-
-//    $controller = "user";
-//    $action = "login";
-
     $controller = "login";
     $action = "login";
-
-} else if ($_SESSION['role'] === 'admin') {
-    // let's leave this log for now
-    echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
-    // If the user is logged in as admin, allow access to all actions except login and register
-    if (in_array($controller, ['login', 'register', ""]) && $action !== "exit") {
-        $controller = "lobby";
-        $action = "";
-    }
-} else if ($_SESSION['role'] === 'user') {
-    // let's leave this log for now
-    echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
-    // If the user is logged in as user, allow access to all actions except login and register
-    if (in_array($controller, ['login', 'register', ""]) && $action !== "exit") {
+} else {
+    // If the user is logged in, allow access based on their role
+    if (!in_array($controller, $allowedControllers) || !in_array($action, $allowedActions)) {
+        // If the requested controller or action is not allowed, redirect to a default page
         $controller = "lobby";
         $action = "";
     }
 }
-// log user id on the console // lets leave this log for now
+
+// Log user role and ID to the console for debugging
+echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
 echo "<script>console.log('user id: ".$_SESSION['userID']."');</script>";
 
 $router->route($controller, $action);
