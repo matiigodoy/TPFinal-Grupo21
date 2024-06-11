@@ -25,11 +25,13 @@ CREATE TABLE `user`(
                        is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
+
 -- PASSWORD: 1234
 INSERT INTO `user` (fullname,birth_year,gender,latitude,longitude,email,username,password,profile_picture,score, register_date, role, is_active)
 VALUES ('Mariano Saldivar',1990,'Masculino',-34.670678159005746, -58.56332018874492,'admin@grupo21.com','MarianCapo','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
 ('admin',1990,'Masculino',-34.670678159005746, -58.56332018874492,'admin@gmail.com','admin','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
 ('user',1990,'Masculino',-34.670678159005746, -58.56332018874492,'user@gmail.com','user','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','user', 0);
+
 
 
 CREATE TABLE `question` (
@@ -52,14 +54,28 @@ CREATE TABLE `answer`(
 
 CREATE TABLE `partida`(
                           id INT PRIMARY KEY AUTO_INCREMENT,
-                          id_partida INT NOT NULL,
-                          id_user INT NOT NULL ,
-                          id_question INT NOT NULL,
+                          id_user INT NOT NULL,
                           id_opponent INT,
-                          was_right BOOLEAN NOT NULL,
+                          partida_date DATE NOT NULL,
                           FOREIGN KEY (id_user) REFERENCES user(id),
-                          FOREIGN KEY (id_question) REFERENCES question(id)
+                          FOREIGN KEY (id_opponent) REFERENCES user(id)
 );
+
+CREATE TABLE `user_question`(
+                            id INT PRIMARY KEY AUTO_INCREMENT,
+                            id_user INT NOT NULL,
+                            id_question INT NOT NULL,
+                            wasRight BOOLEAN,
+                            FOREIGN KEY (id_user) REFERENCES user(id),
+                            FOREIGN KEY (id_question) REFERENCES question(id)
+);
+
+-- PASSWORD: 1234
+INSERT INTO `user` (fullname,birth_year,gender,city, province, country,email,username,password,profile_picture,score, register_date, role, is_active)
+VALUES ('Mariano Saldivar',1990,'Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','admin@grupo21.com','MarianCapo','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
+       ('admin',1990,'Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','admin@gmail.com','admin','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','admin', 0),
+       ('user',1990,'Masculino','Buenos Aires City','Buenos Aires City', 'Argentina','user@gmail.com','user','$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.',NULL,0, '2024-06-05','user', 0);
+
 
 INSERT INTO question (pregunta, category) VALUES
                                               ('¿Cuál es la capital de Francia?', 'cultura'),
