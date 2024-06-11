@@ -1,27 +1,32 @@
 <?php
 
-class LoginModel {
+class LoginModel
+{
     private $database;
 
-    public function __construct($database) {
+    public function __construct($database)
+    {
         $this->database = $database;
     }
 
-    public function getUserByUsername($username) {
-        $query = "SELECT * FROM user WHERE username = ?";
+    public function validateLogin($username, $password)
+    {
+        $query = "SELECT id, role, password FROM user WHERE username = ?";
         $stmt = $this->database->prepare($query);
-
-        if ($stmt === false) {
-            die('Prepare failed: ' . htmlspecialchars($this->database->error));
-        }
-
         $stmt->bind_param("s", $username);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
-
+        $id = null;
+        $role = null;
+        $hashedPassword = null;
+        $stmt->bind_result($id, $role, $hashedPassword);
+        $stmt->fetch();
         $stmt->close();
 
-        return $user;
+
+        if ($id && password_verify($password, $hashedPassword)) {
+            return ['id' => $id, 'role' => $role];
+        } else {
+            return false;
+        }
     }
 }

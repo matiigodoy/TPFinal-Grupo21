@@ -7,10 +7,9 @@ class SessionManager {
         }
     }
 
-    public function setUser($userID, $role, $username) {
+    public function setUser($userID, $role) {
         $_SESSION['userID'] = $userID;
         $_SESSION['role'] = $role;
-        $_SESSION['username'] = $username;
     }
 
     public function destroy() {

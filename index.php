@@ -13,7 +13,7 @@ $action = $_GET["action"] ?? "";
 if (!isset($_SESSION['userID'])) {
 
     // If the user is not logged in, allow access only to login and signup actions
-    if (in_array($controller, ['login', 'register']) && in_array($action, ['login', 'register', 'authenticate', 'create', 'verifyUser'])) {
+    if (in_array($controller, ['login', 'register']) && in_array($action, ['login', 'register', 'authenticate', 'create'])) {
         $router->route($controller, $action);
         exit;
     }
