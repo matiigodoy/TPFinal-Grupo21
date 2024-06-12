@@ -22,7 +22,7 @@ class LoginController {
             $result = $this->verifyUser($formData);
 
             if ($result !== false) {
-                $this->sessionManager->setUser($result['id'], $result['role'], $result['username']);
+                $this->sessionManager->setUser($result['id'], $result['role']);
                 $this->renderLoginSuccess();
             } else {
                 $this->renderLoginError("Usuario y/o contraseña inválidos. Intente nuevamente");
@@ -38,13 +38,7 @@ class LoginController {
         $username = $formData["username"];
         $password = $formData["password"];
 
-        $user = $this->loginModel->getUserByUsername($username);
-
-        if ($user && password_verify($password, $user['password'])) {
-            return $user;
-        } else {
-            return false;
-        }
+        return $this->loginModel->validateLogin($username, $password);
     }
 
     private function renderLoginSuccess() {

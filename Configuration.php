@@ -4,11 +4,15 @@ include_once("controller/ProfileController.php");
 include_once("controller/LobbyController.php");
 include_once ("controller/RegisterController.php");
 include_once ("controller/PartidaController.php");
+include_once ("controller/UserController.php");
+
 
 include_once("model/LoginModel.php");
 include_once("model/ProfileModel.php");
 include_once ("model/RegisterModel.php");
 include_once("model/PartidaModel.php");
+include_once ("model/UserModel.php");
+
 
 include_once ("helper/ProfileService.php");
 
@@ -49,6 +53,11 @@ class Configuration
     public static function getPartidaController(){
         return new PartidaController(self::getPartidaModel(), self::getPresenter());
     }
+  
+    public static function getUserController(){
+        return new UserController(self::getUserModel(), self::getPresenter());
+    }
+
 
     // MODELS
     private static function getLoginModel()
@@ -65,6 +74,11 @@ class Configuration
     {
         return new RegisterModel(self::getDatabase());
     }
+    private static function getUserModel(){
+        return new UserModel(self::getDatabase());
+    }
+
+
 
     private static function getPartidaModel(){
         return new PartidaModel(self::getDatabase());
