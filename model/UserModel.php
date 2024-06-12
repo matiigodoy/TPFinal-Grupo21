@@ -10,7 +10,7 @@ class UserModel
     }
 
     public function getAllUsersOrderedByScore() {
-        $query = "SELECT fullname, score FROM user ORDER BY score DESC";
+        $query = "SELECT id, fullname, score FROM user ORDER BY score DESC";
         $stmt = $this->database->prepare($query);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -22,6 +22,19 @@ class UserModel
 
         $stmt->close();
         return $users;
+    }
+
+    public function getUserById($id) {
+        $query = "SELECT id, fullname, score, email FROM user WHERE id = ?";
+        $stmt = $this->database->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $user = $result->fetch_assoc();
+
+        $stmt->close();
+        return $user;
     }
 
 }
