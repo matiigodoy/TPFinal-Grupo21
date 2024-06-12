@@ -1,10 +1,4 @@
 <main class="py-5">
-    {{#isLogged}}
-    <div>
-        <a href="/login/exit" class="btn btn-danger btn-lg">Cerrar Sesión</a>
-    </div>
-    {{/isLogged}}
-    {{^isLogged}}
     <div class="content container px-lg-5 p-4 bg-light rounded-3">
         <h2 class="text-center display-3 fw-bold">Iniciar Sesión</h2>
         <br>
@@ -12,7 +6,7 @@
             <div class="col-md-6">
                 <div class="col-md-12">
                     <label for="username" class="form-label">Nombre de Usuario:</label>
-                    <input id="username" type="text" name="username" class="form-control" required placeholder="Ingrese un nombre de usuario">
+                    <input id="username" type="text" name="username" class="form-control" required placeholder="Ingrese un nombre de usuario" value="{{username}}">
                 </div>
 
                 <div class="col-md-12">
@@ -27,11 +21,10 @@
                 </div>
             </div>
             {{#showMessage}}
-            <div>
-                <h4>{{message}}</h4>
-            </div>
+                <div>
+                    <h4>{{message}}</h4>
+                </div>
             {{/showMessage}}
         </form>
     </div>
-    {{/isLogged}}
 </main>

@@ -86,13 +86,14 @@ class RegisterController {
     {
         $username = $_GET['username'] ?? '';
         $auth_code = $_GET['auth_code'] ?? '';
-        $data = [];
+        $data= [];
 
         if ($username && $auth_code) {
             $database = Configuration::getDatabase();
             $registerModel = new RegisterModel($database);
 
             if ($registerModel->activateUser($username, $auth_code)) {
+                $data["username"] = $username;
                 $this->presenter->render("login", $data);
             } else {
                 $this->renderRegisterError("Error al activar la cuenta. Por favor, intente nuevamente.", $data);
