@@ -1,13 +1,17 @@
 <?php
 
+include_once('vendor/phpqrcode-master/qrlib.php');
+
 class UserController
 {
     private $userModel;
     private $presenter;
+    private $qrCreator;
 
-    public function __construct($userModel, $presenter) {
+    public function __construct($userModel, $presenter, $qrCreator) {
         $this->userModel = $userModel;
         $this->presenter = $presenter;
+        $this->qrCreator = $qrCreator;
     }
 
     public function get() {
@@ -27,6 +31,7 @@ class UserController
 
         $userId = $_GET['id'];
         $user = $this->userModel->getUserById($userId);
+        $username = $user['username'];
 
         if (!$user) {
             // Manejar el caso cuando el usuario no es encontrado
@@ -34,13 +39,19 @@ class UserController
             return;
         }
 
+        // Obtener todos los usuarios ordenados por puntuación
         $allUsers = $this->userModel->getAllUsersOrderedByScore();
 
+        // Buscar el índice del usuario actual en la lista ordenada
         $userPosition = array_search($userId, array_column($allUsers, 'id')) + 1;
 
+        // Agregar la posición al array de datos del usuario
         $user['position'] = $userPosition;
 
-        $data = ['user' => $user];
+        $qrImagePath = $this->qrCreator->createQr($userId, $username);
+
+        // Pasar los datos del usuario a la vista
+        $data = ['user' => $user, 'qr' => $qrImagePath];
         $this->presenter->render("profileOtherUser", $data);
     }
 
