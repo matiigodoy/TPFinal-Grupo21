@@ -1,6 +1,6 @@
 <?php
 
-class RegisterController{
+class RegisterController {
 
     private $registerModel;
     private $presenter;
@@ -43,19 +43,20 @@ class RegisterController{
                     }
 
                     $userData = [
-                            'fullname' => $formData['fullname'],
-                            'birth_year' => $formData['birth_year'],
-                            'gender' => $formData['gender'],
-                            'latitude' => $formData['latitude'],
-                            'longitude' => $formData['longitude'],
-                            'email' => $formData['email'],
-                            'password' => $formData['password'],
-                            'username' => $formData['username'],
-                            'profile_picture' => $uploadFile // Ruta del archivo de imagen
-                        ];
+                        'fullname' => $formData['fullname'],
+                        'birth_year' => $formData['birth_year'],
+                        'gender' => $formData['gender'],
+                        'latitude' => $formData['latitude'],
+                        'longitude' => $formData['longitude'],
+                        'email' => $formData['email'],
+                        'password' => $formData['password'],
+                        'username' => $formData['username'],
+                        'profile_picture' => $uploadFile // Ruta del archivo de imagen
+                    ];
 
-                    if ($this->registerModel->register($userData)) {
-                        $this->renderRegisterSuccess();
+                    $authCode = $this->registerModel->register($userData);
+                    if ($authCode) {
+                        $this->renderRegisterSuccess($formData['username'], $authCode);
                     } else {
                         $this->renderRegisterError("Error al registrar el usuario.", $data);
                     }
@@ -73,9 +74,32 @@ class RegisterController{
         }
     }
 
-    private function renderRegisterSuccess() {
+    private function renderRegisterSuccess($username, $authCode) {
+        $data = [
+            'message' => 'Registro exitoso. Por favor, Haga click en el siguiente boton para activar su cuenta.',
+            'activationLink' => "http://localhost:8888/register/validateUser?username={$username}&auth_code={$authCode}"
+        ];
+        $this->presenter->render("register_success", $data);
+    }
+
+    public function validateUser()
+    {
+        $username = $_GET['username'] ?? '';
+        $auth_code = $_GET['auth_code'] ?? '';
         $data = [];
-        $this->presenter->render("login", $data);
+
+        if ($username && $auth_code) {
+            $database = Configuration::getDatabase();
+            $registerModel = new RegisterModel($database);
+
+            if ($registerModel->activateUser($username, $auth_code)) {
+                $this->presenter->render("login", $data);
+            } else {
+                $this->renderRegisterError("Error al activar la cuenta. Por favor, intente nuevamente.", $data);
+            }
+        } else {
+            $this->renderRegisterError("Error al activar la cuenta. Por favor, intente nuevamente.", $data);
+        }
     }
 
     private function renderRegisterError($message, $data) {
