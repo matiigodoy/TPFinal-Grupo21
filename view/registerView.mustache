@@ -1,75 +1,79 @@
-<main class="py-5">
+<!-- Page content -->
+    <div class="w3-content" style="max-width:2000px;margin-top:46px">
+        <main class="py-5">
 
-    <div class="content container px-lg-5 p-4 bg-light rounded-3">
-        <h2 class="text-center display-3 fw-bold">Registro de Usuario</h2>
-        <br>
-        <form action="/register/register" method="post" enctype="multipart/form-data" class="row g-3">
-            <div class="col-md-6">
-                <div class="col-md-12">
-                    <label for="fullname" class="form-label">Nombre Completo:</label>
-                    <input id="fullname" type="text" name="fullname" class="form-control" required placeholder="Ingrese su nombre completo">
-                </div>
-
-                <div class="col-md-12">
-                    <label for="birth_year" class="form-label">Año de Nacimiento:</label>
-                    <input id="birth_year" type="number" name="birth_year" class="form-control" required placeholder="Ingrese su año de nacimiento">
-                </div>
-
-                <div class="col-md-12">
-                    <label for="gender" class="form-label">Género:</label>
-                    <select id="gender" name="gender" class="form-control" required>
-                        <option value="male">Masculino</option>
-                        <option value="female">Femenino</option>
-                        <option value="other">Otro</option>
-                    </select>
-                </div>
-
-                <div class="col-md-12">
-                    <label for="country" class="form-label">País:</label>
-                    <input id="country" type="text" name="country" class="form-control" required placeholder="Ingrese su país">
-                </div>
-
-                <div class="col-md-12">
-                    <label for="city" class="form-label">Ciudad:</label>
-                    <input id="city" type="text" name="city" class="form-control" required placeholder="Ingrese su ciudad">
-                </div>
-
-                <div class="col-md-12">
-                    <label for="email" class="form-label">Correo Electrónico:</label>
-                    <input id="email" type="email" name="email" class="form-control" required placeholder="Ingrese su correo electrónico">
-                </div>
-
-                <div class="col-md-12">
-                    <label for="password" class="form-label">Contraseña:</label>
-                    <input id="password" type="password" name="password" class="form-control" required placeholder="Ingrese una contraseña">
-                </div>
-
-                <div class="col-md-12">
-                    <label for="confirm_password" class="form-label">Confirmar Contraseña:</label>
-                    <input id="confirm_password" type="password" name="confirm_password" class="form-control" required placeholder="Confirme la contraseña">
-                </div>
-
-                <div class="col-md-12">
-                    <label for="username" class="form-label">Nombre de Usuario:</label>
-                    <input id="username" type="text" name="username" class="form-control" required placeholder="Ingrese un nombre de usuario">
-                </div>
-
-                <div class="col-md-12">
-                    <label for="profile_picture" class="form-label">Imagen de Perfil:</label>
-                    <input id="profile_picture" type="file" name="profile_picture" class="form-control" accept="image/*">
-                </div>
-            </div>
-            <div class="col-12">
+            <div class="content container px-lg-5 p-4 bg-light rounded-3">
+                <h2 class="text-center display-3 fw-bold">Registro de Usuario</h2>
                 <br>
-                <div class="d-flex justify-content-center">
-                    <input type="submit" value="Registrar" class="btn btn-primary btn-lg">
-                </div>
+                <form action="/register/register" method="post" enctype="multipart/form-data" class="row g-3">
+                    <div class="col-md-6">
+                        <div class="col-md-12">
+                            <label for="fullname" class="form-label">Nombre Completo:</label>
+                            <input id="fullname" type="text" name="fullname" class="form-control" required placeholder="Ingrese su nombre completo">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="birth_year" class="form-label">Año de Nacimiento:</label>
+                            <input id="birth_year" type="number" name="birth_year" class="form-control" required placeholder="Ingrese su año de nacimiento">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="gender" class="form-label">Género:</label>
+                            <select id="gender" name="gender" class="form-control" required>
+                                <option value="male">Masculino</option>
+                                <option value="female">Femenino</option>
+                                <option value="other">Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="country" class="form-label">País:</label>
+                            <input id="country" type="text" name="country" class="form-control" required placeholder="Ingrese su país">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="city" class="form-label">Ciudad:</label>
+                            <input id="city" type="text" name="city" class="form-control" required placeholder="Ingrese su ciudad">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="email" class="form-label">Correo Electrónico:</label>
+                            <input id="email" type="email" name="email" class="form-control" required placeholder="Ingrese su correo electrónico">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="password" class="form-label">Contraseña:</label>
+                            <input id="password" type="password" name="password" class="form-control" required placeholder="Ingrese una contraseña">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="confirm_password" class="form-label">Confirmar Contraseña:</label>
+                            <input id="confirm_password" type="password" name="confirm_password" class="form-control" required placeholder="Confirme la contraseña">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="username" class="form-label">Nombre de Usuario:</label>
+                            <input id="username" type="text" name="username" class="form-control" required placeholder="Ingrese un nombre de usuario">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="profile_picture" class="form-label">Imagen de Perfil:</label>
+                            <input id="profile_picture" type="file" name="profile_picture" class="form-control" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <br>
+                        <div class="d-flex justify-content-center">
+                            <input type="submit" value="Registrar" class="btn btn-primary btn-lg">
+                        </div>
+                    </div>
+                    {{#showMessage}}
+                        <div>
+                            <h4>{{message}}</h4>
+                        </div>
+                    {{/showMessage}}
+                </form>
             </div>
-            {{#showMessage}}
-                <div>
-                    <h4>{{message}}</h4>
-                </div>
-            {{/showMessage}}
-        </form>
+        </main>
     </div>
-</main>
+</body>
