@@ -12,7 +12,7 @@ class LoginController {
     }
 
     public function get() {
-        $data["isLogged"] = false;
+        $data = [];
         $this->presenter->render("login", $data);
     }
 

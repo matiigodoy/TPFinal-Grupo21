@@ -278,7 +278,8 @@ CREATE TABLE `user` (
   `score` int(6) NOT NULL DEFAULT 0,
   `register_date` datetime NOT NULL DEFAULT current_timestamp(),
   `role` varchar(30) NOT NULL DEFAULT 'user',
-  `is_active` tinyint(1) NOT NULL DEFAULT 1
+  `auth_code` varchar(250) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -286,9 +287,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `fullname`, `birth_year`, `gender`, `latitude`, `longitude`, `email`, `username`, `password`, `profile_picture`, `score`, `register_date`, `role`, `is_active`) VALUES
-(1, 'Mariano Saldivar', 1990, 'Masculino', -34.67067815900575, -58.56332018874492, 'admin@grupo21.com', 'MarianCapo', '$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.', NULL, 0, '2024-06-05 00:00:00', 'admin', 0),
-(2, 'admin', 1990, 'Masculino', -34.67067815900575, -58.56332018874492, 'admin@gmail.com', 'admin', '$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.', NULL, 0, '2024-06-05 00:00:00', 'admin', 0),
-(3, 'user', 1990, 'Masculino', -34.67067815900575, -58.56332018874492, 'user@gmail.com', 'user', '$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.', NULL, 10, '2024-06-05 00:00:00', 'user', 0),
+(1, 'Mariano Saldivar', 1990, 'Masculino', -34.67067815900575, -58.56332018874492, 'admin@grupo21.com', 'MarianCapo', '$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.', NULL, 0, '2024-06-05 00:00:00', 'admin', 1),
+(2, 'admin', 1990, 'Masculino', -34.67067815900575, -58.56332018874492, 'admin@gmail.com', 'admin', '$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.', NULL, 0, '2024-06-05 00:00:00', 'admin', 1),
+(3, 'user', 1990, 'Masculino', -34.67067815900575, -58.56332018874492, 'user@gmail.com', 'user', '$2y$10$sra18NyRZW3RR58JMLDZkup29zmPLi8PqB.CbBHjISjjqV3JCla6.', NULL, 10, '2024-06-05 00:00:00', 'user', 1),
 (6, 'Tomas Cernik', 2003, 'Masculino', 0.00000000000000, 0.00000000000000, '1@1', '1', '$2y$10$oQb.lgj75SbdLubZwdQQYu5ZCA0IoR772yNnisrqn3V.zlEPtmUdO', 'C:\\xampp\\htdocs\\controller/../public/E1y7mk9WEAEjXNZ.jpg', 0, '2024-06-11 17:28:23', 'user', 1);
 
 --
