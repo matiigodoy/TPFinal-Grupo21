@@ -25,7 +25,7 @@ class UserModel
     }
 
     public function getUserById($id) {
-        $query = "SELECT id, fullname, score, email FROM user WHERE id = ?";
+        $query = "SELECT id, fullname, username, score, email FROM user WHERE id = ?";
         $stmt = $this->database->prepare($query);
         $stmt->bind_param("i", $id);
         $stmt->execute();
