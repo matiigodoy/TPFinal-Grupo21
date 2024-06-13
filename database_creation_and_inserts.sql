@@ -23,7 +23,8 @@ CREATE TABLE `user`(
   score INT(6) NOT NULL DEFAULT 0,
   register_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   role VARCHAR(30) NOT NULL DEFAULT 'user',
-  is_active BOOLEAN NOT NULL DEFAULT TRUE
+  auth_code varchar(250) DEFAULT NULL,
+  is_active tinyint(1) NOT NULL DEFAULT 0
  );
 
 CREATE TABLE `partida`(

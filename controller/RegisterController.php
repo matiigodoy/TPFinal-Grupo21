@@ -77,7 +77,7 @@ class RegisterController {
     private function renderRegisterSuccess($username, $authCode) {
         $data = [
             'message' => 'Registro exitoso. Por favor, Haga click en el siguiente boton para activar su cuenta.',
-            'activationLink' => "http://localhost:8888/register/validateUser?username={$username}&auth_code={$authCode}"
+            'activationLink' => "/register/validateUser?username={$username}&auth_code={$authCode}"
         ];
         $this->presenter->render("register_success", $data);
     }

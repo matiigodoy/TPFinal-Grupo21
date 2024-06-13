@@ -96,6 +96,9 @@
                 draggable:true
             });
 
+            document.getElementById('latitude').value = marker.getPosition().lat();
+            document.getElementById('longitude').value = marker.getPosition().lng();
+
             google.maps.event.addListener(marker, "drag", function (event) { 
                 document.getElementById('latitude').value = marker.getPosition().lat();
                 document.getElementById('longitude').value = marker.getPosition().lng();
