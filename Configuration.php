@@ -23,6 +23,8 @@ include_once ("helper/Presenter.php");
 include_once ("helper/MustachePresenter.php");
 include_once ("helper/SessionManager.php");
 include_once ("helper/Redirect.php");
+include_once ("helper/QrCreator.php");
+
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 
@@ -55,7 +57,7 @@ class Configuration
     }
   
     public static function getUserController(){
-        return new UserController(self::getUserModel(), self::getPresenter());
+        return new UserController(self::getUserModel(), self::getPresenter(), self::getQrCreator());
     }
 
 
@@ -116,4 +118,10 @@ class Configuration
     {
         return new SessionManager();
     }
+
+    public static function getQrCreator(){
+        return new QrCreator();
+    }
+
+
 }

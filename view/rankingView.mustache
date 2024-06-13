@@ -9,6 +9,11 @@
 <body>
 <div class="w3-container w3-card w3-white w3-margin-top w3-padding">
     <h2 class="w3-center">Top 10 Usuarios</h2>
+    {{#showMessage}}
+        <div class="w3-panel w3-red">
+            <p>{{message}}</p>
+        </div>
+    {{/showMessage}}
     <table class="w3-table-all w3-centered">
         <thead>
         <tr>
@@ -19,7 +24,7 @@
         <tbody>
         {{#topUsers}}
             <tr>
-                <td>{{fullname}}</td>
+                <td><a href="/user/getUserProfile?id={{id}}">{{fullname}}</a></td>
                 <td>{{score}}</td>
             </tr>
         {{/topUsers}}
