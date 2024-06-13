@@ -22,4 +22,7 @@ class PartidaController {
     public function start(){
         $this->model->startPartida($this->presenter);
     }
+    public function checkAnswer(){
+        $this->model->checkAnswer();
+    }
 }
