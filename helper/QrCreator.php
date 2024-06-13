@@ -9,7 +9,7 @@ class QrCreator
     }
 
     public function createQr($id, $username){
-        $uploadDir = '../public/';
+        $uploadDir = __DIR__ . '/../public/';
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }
@@ -23,7 +23,9 @@ class QrCreator
 
         QRcode::png($contenido, $filename, $level, $tamanio, $frameSize);
 
-        return $filename; // Devuelve la ruta completa del archivo guardado
+        $relativePath = '/public/' . $id . '.png';
+
+        return $relativePath;
     }
 }
 
