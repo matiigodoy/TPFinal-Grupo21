@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,7 +19,9 @@
     {{#user.totalNewUsersLastWeek}}
         <li>{{date}}: {{count}}</li>
     {{/user.totalNewUsersLastWeek}}
+    <button onclick="generatePDF('newUsersLastWeekChart', 'Nuevos Usuarios la Última Semana')">Descargar PDF</button>
 </ul>
+
 
 <div style="max-width: 600px; margin: auto;">
     <canvas id="newUsersLastWeekChart" width="100" height="250"></canvas>
@@ -29,39 +31,47 @@
 <p>Total de Usuarios: {{user.totalUsers}}</p>
 <p>Total de Admins: {{user.totalAdmins}}</p>
 <p>Total de Admins: {{user.totalEditors}}</p>
+<button onclick="generatePDF('usersByRoleChart', 'Usuarios por Rol')">Descargar PDF</button>
 <div style="max-width: 600px; margin: auto;">
     <canvas id="usersByRoleChart" width="400" height="200"></canvas>
 </div>
+
 
 <h2>Usuarios por Género</h2>
 <ul>
     {{#user.usersCountByGender}}
         <li>{{gender}}: {{user_count}}</li>
     {{/user.usersCountByGender}}
+    <button onclick="generatePDF('usersByGenderChart', 'Usuarios por Género')">Descargar PDF</button>
 </ul>
 <div style="max-width: 600px; margin: auto;">
     <canvas id="usersByGenderChart" width="400" height="200"></canvas>
 </div>
+
 
 <h2>Usuarios por Grupo de Edad</h2>
 <ul>
     {{#user.usersCountByAgeGroup}}
         <li>{{age_group}}: {{user_count}}</li>
     {{/user.usersCountByAgeGroup}}
+    <button onclick="generatePDF('usersByAgeGroupChart', 'Usuarios por Grupo de Edad')">Descargar PDF</button>
 </ul>
 <div style="max-width: 600px; margin: auto;">
     <canvas id="usersByAgeGroupChart" width="400" height="200"></canvas>
 </div>
+
 
 <h2>Usuarios por País</h2>
 <ul>
     {{#user.usersCountByCountry}}
         <li>{{country}}: {{user_count}}</li>
     {{/user.usersCountByCountry}}
+    <button onclick="generatePDF('usersByCountryChart', 'Usuarios por País')">Descargar PDF</button>
 </ul>
 <div style="max-width: 300px; margin: auto;">
     <canvas id="usersByCountryChart" width="300" height="300"></canvas>
 </div>
+
 
 
 
@@ -307,6 +317,17 @@
             }
         }
     });
+
+
+    function generatePDF(canvasId, title) {
+        const { jsPDF } = window.jspdf;
+        const canvas = document.getElementById(canvasId);
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF();
+        pdf.text(title, 10, 10);
+        pdf.addImage(imgData, 'PNG', 10, 20, 180, 160); // Ajusta el tamaño y la posición de la imagen en el PDF
+        pdf.save(`${title}.pdf`);
+    }
 </script>
 
 </body>
