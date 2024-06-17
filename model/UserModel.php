@@ -78,7 +78,13 @@ class UserModel
     }
 
     public function getNewUsersLastWeek() {
-        $query = "SELECT COUNT(*) as total FROM user WHERE register_date >= DATE_SUB(NOW(), INTERVAL 1 WEEK)";
+        $query = "
+        SELECT DATE(register_date) as date, COUNT(*) as count 
+        FROM user 
+        WHERE register_date >= DATE_SUB(NOW(), INTERVAL 1 WEEK)
+        GROUP BY DATE(register_date)
+        ORDER BY DATE(register_date) ASC";
+
         $stmt = $this->database->prepare($query);
 
         if ($stmt === false) {
@@ -88,11 +94,17 @@ class UserModel
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $row = $result->fetch_assoc();
-        $totalNewUsers = $row['total'];
+        $newUsersLastWeek = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $newUsersLastWeek[] = [
+                'date' => $row['date'],
+                'count' => $row['count']
+            ];
+        }
 
         $stmt->close();
-        return $totalNewUsers;
+        return $newUsersLastWeek;
     }
 
     public function getUsersCountByCountry()

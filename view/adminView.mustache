@@ -13,7 +13,17 @@
 <h2>Estadísticas Generales</h2>
 <p>Total de Partidas Jugadas: {{user.totalPartidas}}</p>
 <p>Total de Preguntas: {{user.totalQuestions}}</p>
-<p>Nuevos Usuarios la Última Semana: {{user.totalNewUsersLastWeek}}</p>
+
+<h2>Nuevos Usuarios la Última Semana</h2>
+<ul>
+    {{#user.totalNewUsersLastWeek}}
+        <li>{{date}}: {{count}}</li>
+    {{/user.totalNewUsersLastWeek}}
+</ul>
+
+<div style="max-width: 600px; margin: auto;">
+    <canvas id="newUsersLastWeekChart" width="100" height="250"></canvas>
+</div>
 
 <h2>Usuarios por Rol</h2>
 <p>Total de Usuarios: {{user.totalUsers}}</p>
@@ -58,6 +68,71 @@
 
 
 
+
+<script>
+    // GRAFICO DE LINEAS PARA USUARIOS REGISTRADOS EN LA ULTIMA SEMANA
+    var dates = [];
+    var newUserCounts = [];
+
+        {{#user.totalNewUsersLastWeek}}
+        dates.push("{{date}}");
+        newUserCounts.push({{count}});
+        {{/user.totalNewUsersLastWeek}}
+
+    // Configurar el gráfico de líneas
+    var ctx = document.getElementById('newUsersLastWeekChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Nuevos Usuarios',
+                data: newUserCounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
+                borderColor: 'rgba(54, 162, 235, 1)', // Color de la línea
+                borderWidth: 1,
+                fill: true // Rellenar bajo la línea
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'top'
+            },
+            title: {
+                display: true,
+                text: 'Nuevos Usuarios la Última Semana'
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        tooltipFormat: 'll',
+                        displayFormats: {
+                            day: 'MMM D'
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Fecha'
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Cantidad de Usuarios'
+                    }
+                }]
+            }
+        }
+    });
+</script>
 
 <script>
     // GRAFICO DE TORTAS PARA USUARIOS POR ROL
