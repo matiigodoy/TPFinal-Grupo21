@@ -1,5 +1,7 @@
 <?php
 
+include_once('vendor/phpqrcode-master/qrlib.php');
+
 class QrCreator
 {
     public static function createQrCode($data, $filePath)

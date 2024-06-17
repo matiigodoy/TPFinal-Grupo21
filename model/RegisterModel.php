@@ -8,8 +8,8 @@ class RegisterModel {
     }
 
     public function register($data) {
-        $query = "INSERT INTO user (fullname, birth_year, gender, latitude, longitude, email, password, username, profile_picture, auth_code, is_active) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+        $query = "INSERT INTO user (fullname, birth_year, gender, country, latitude, longitude, email, password, username, profile_picture, auth_code, is_active) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
         $stmt = $this->database->prepare($query);
 
         if ($stmt === false) {
@@ -20,10 +20,11 @@ class RegisterModel {
         $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
         $auth_code = bin2hex(random_bytes(16)); // Generate a random auth code
 
-        $stmt->bind_param("sisddsssss",
+        $stmt->bind_param("sissddsssss",
             $data['fullname'],
             $data['birth_year'],
             $data['gender'],
+            $data['country'],
             $data['latitude'],
             $data['longitude'],
             $data['email'],

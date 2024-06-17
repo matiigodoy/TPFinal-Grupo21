@@ -24,6 +24,7 @@ include_once ("helper/MustachePresenter.php");
 include_once ("helper/SessionManager.php");
 include_once ("helper/Redirect.php");
 include_once ("helper/QrCreator.php");
+include_once ("helper/GraphCreator.php");
 
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
@@ -57,7 +58,7 @@ class Configuration
     }
   
     public static function getUserController(){
-        return new UserController(self::getUserModel(), self::getPresenter(), self::getQrCreator());
+        return new UserController(self::getUserModel(), self::getPresenter(), self::getQrCreator(), self::getGraphCreator());
     }
 
 
@@ -121,6 +122,10 @@ class Configuration
 
     public static function getQrCreator(){
         return new QrCreator();
+    }
+
+    public static function getGraphCreator(){
+        return new GraphCreator();
     }
 
 
