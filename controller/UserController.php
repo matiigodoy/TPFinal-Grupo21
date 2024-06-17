@@ -1,17 +1,18 @@
 <?php
 
-include_once('vendor/phpqrcode-master/qrlib.php');
 
 class UserController
 {
     private $userModel;
     private $presenter;
     private $qrCreator;
+    private $graphCreator;
 
-    public function __construct($userModel, $presenter, $qrCreator) {
+    public function __construct($userModel, $presenter, $qrCreator, $graphCreator) {
         $this->userModel = $userModel;
         $this->presenter = $presenter;
         $this->qrCreator = $qrCreator;
+        $this->graphCreator = $graphCreator;
     }
 
     public function get() {
@@ -24,7 +25,7 @@ class UserController
 
     public function getUserProfile() {
         if (!isset($_GET['id'])) {
-            // Manejar el caso cuando el ID no está presente
+
             $this->renderProfileError("El ID del usuario no está presente");
             return;
         }
@@ -34,18 +35,13 @@ class UserController
         $username = $user['username'];
 
         if (!$user) {
-            // Manejar el caso cuando el usuario no es encontrado
+
             $this->renderProfileError("El usuario con ID $userId no existe");
             return;
         }
 
-        // Obtener todos los usuarios ordenados por puntuación
-        $allUsers = $this->userModel->getAllUsersOrderedByScore();
+        $userPosition = $this->getUserPosition();
 
-        // Buscar el índice del usuario actual en la lista ordenada
-        $userPosition = array_search($userId, array_column($allUsers, 'id')) + 1;
-
-        // Agregar la posición al array de datos del usuario
         $user['position'] = $userPosition;
 
         $qrImagePath = $this->qrCreator->createQr($userId, $username);
@@ -55,13 +51,47 @@ class UserController
         $this->presenter->render("profileOtherUser", $data);
     }
 
+    public function getAdminView(){
+        // Obtener datos necesarios para la vista y el gráfico
+        $totalUsers = $this->userModel->getTotalUsersByRole('user');
+        $totalAdmins = $this->userModel->getTotalUsersByRole('admin');
+        $totalEditors = $this->userModel->getTotalUsersByRole('editor');
+        $totalPartidas = $this->userModel->getTotalPartidasJugadas();
+        $totalQuestions = $this->userModel->getTotalQuestions();
+        $totalNewUsersLastWeek = $this->userModel->getNewUsersLastWeek();
+        $usersCountByCountry = $this->userModel->getUsersCountByCountry();
+        $usersCountByGender = $this->userModel->getUsersCountByGender();
+        $usersCountByAgeGroup = $this->userModel->getUsersCountByAgeGroup();
+
+
+        // Preparar los datos y el gráfico para pasar a la vista
+        $data['user'] = [
+            'totalUsers' => $totalUsers,
+            'totalAdmins' => $totalAdmins,
+            'totalEditors' => $totalEditors,
+            'totalPartidas' => $totalPartidas,
+            'totalQuestions' => $totalQuestions,
+            'totalNewUsersLastWeek' => $totalNewUsersLastWeek,
+            'usersCountByCountry' => $usersCountByCountry,
+            'usersCountByGender' => $usersCountByGender,
+            'usersCountByAgeGroup' => $usersCountByAgeGroup,
+        ];
+
+        // Renderizar la vista con los datos y el gráfico
+        $this->presenter->render("admin", $data);
+    }
+
     public function renderProfileError($message){
         $data["message"] = $message;
         $data['showMessage'] = true;
         $this->presenter->render("ranking", $data);
     }
 
+    public function getUserPosition(){
+        $userId = $_GET['id'];
+        $allUsers = $this->userModel->getAllUsersOrderedByScore();
+        $userPosition = array_search($userId, array_column($allUsers, 'id')) + 1;
 
-
-
+        return $userPosition;
+    }
 }
