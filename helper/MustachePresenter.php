@@ -16,6 +16,8 @@ class MustachePresenter{
     public function render($contentFile , $data = array() ){
         $data['role']= isset($_SESSION['role']) ? $_SESSION['role'] : null;
         $data['userID']= isset($_SESSION['userID']) ? $_SESSION['userID'] : null;
+        $data['isAdmin'] = isset($_SESSION['isAdmin']) ? $_SESSION['isAdmin'] : false;
+        $data['isEditor'] = isset($_SESSION['isEditor']) ? $_SESSION['isEditor'] : false;
         echo  $this->generateHtml($contentFile, $data);
     }
 

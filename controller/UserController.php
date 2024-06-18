@@ -6,13 +6,11 @@ class UserController
     private $userModel;
     private $presenter;
     private $qrCreator;
-    private $graphCreator;
 
-    public function __construct($userModel, $presenter, $qrCreator, $graphCreator) {
+    public function __construct($userModel, $presenter, $qrCreator) {
         $this->userModel = $userModel;
         $this->presenter = $presenter;
         $this->qrCreator = $qrCreator;
-        $this->graphCreator = $graphCreator;
     }
 
     public function get() {
@@ -51,36 +49,6 @@ class UserController
         $this->presenter->render("profileOtherUser", $data);
     }
 
-    public function getAdminView(){
-        // Obtener datos necesarios para la vista y el gráfico
-        $totalUsers = $this->userModel->getTotalUsersByRole('user');
-        $totalAdmins = $this->userModel->getTotalUsersByRole('admin');
-        $totalEditors = $this->userModel->getTotalUsersByRole('editor');
-        $totalPartidas = $this->userModel->getTotalPartidasJugadas();
-        $totalQuestions = $this->userModel->getTotalQuestions();
-        $totalNewUsersLastWeek = $this->userModel->getNewUsersLastWeek();
-        $usersCountByCountry = $this->userModel->getUsersCountByCountry();
-        $usersCountByGender = $this->userModel->getUsersCountByGender();
-        $usersCountByAgeGroup = $this->userModel->getUsersCountByAgeGroup();
-
-
-        // Preparar los datos y el gráfico para pasar a la vista
-        $data['user'] = [
-            'totalUsers' => $totalUsers,
-            'totalAdmins' => $totalAdmins,
-            'totalEditors' => $totalEditors,
-            'totalPartidas' => $totalPartidas,
-            'totalQuestions' => $totalQuestions,
-            'totalNewUsersLastWeek' => $totalNewUsersLastWeek,
-            'usersCountByCountry' => $usersCountByCountry,
-            'usersCountByGender' => $usersCountByGender,
-            'usersCountByAgeGroup' => $usersCountByAgeGroup,
-        ];
-
-        // Renderizar la vista con los datos y el gráfico
-        $this->presenter->render("admin", $data);
-    }
-
     public function renderProfileError($message){
         $data["message"] = $message;
         $data['showMessage'] = true;
@@ -94,4 +62,6 @@ class UserController
 
         return $userPosition;
     }
+
+
 }
