@@ -35,10 +35,16 @@
          {{#userID}}
              <a href="/profile" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Perfil {{role}} </a>
              <a href="/partida/get" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Jugar!</a>
-              <a href="/login/exit" class="w3-bar-item w3-button w3-padding-medium w3-hide-small w3-right logout-button btn btn-danger btn-m">Cerrar Sesión</a>
+             <a href="/login/exit" class="w3-bar-item w3-button w3-padding-medium w3-hide-small w3-right logout-button btn btn-danger btn-m">Cerrar Sesión</a>
              <a href="/lobby" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Lobby</a>
              <a href="/user" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Ranking</a>
-             <a href="/user/getAdminView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Admin</a>
+             {{#isAdmin}}
+                 <a href="/admin/getAdminView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Admin</a>
+             {{/isAdmin}}
+             {{#isEditor}}
+                 <a href="/editor/getEditorView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Editor</a>
+             {{/isEditor}}
+
 
          {{/userID}}
     </div>
