@@ -1,6 +1,5 @@
 <?php
 
-include_once('vendor/phpqrcode-master/qrlib.php');
 
 class UserController
 {
@@ -24,7 +23,7 @@ class UserController
 
     public function getUserProfile() {
         if (!isset($_GET['id'])) {
-            // Manejar el caso cuando el ID no está presente
+
             $this->renderProfileError("El ID del usuario no está presente");
             return;
         }
@@ -34,18 +33,13 @@ class UserController
         $username = $user['username'];
 
         if (!$user) {
-            // Manejar el caso cuando el usuario no es encontrado
+
             $this->renderProfileError("El usuario con ID $userId no existe");
             return;
         }
 
-        // Obtener todos los usuarios ordenados por puntuación
-        $allUsers = $this->userModel->getAllUsersOrderedByScore();
+        $userPosition = $this->getUserPosition();
 
-        // Buscar el índice del usuario actual en la lista ordenada
-        $userPosition = array_search($userId, array_column($allUsers, 'id')) + 1;
-
-        // Agregar la posición al array de datos del usuario
         $user['position'] = $userPosition;
 
         $qrImagePath = $this->qrCreator->createQr($userId, $username);
@@ -61,7 +55,13 @@ class UserController
         $this->presenter->render("ranking", $data);
     }
 
+    public function getUserPosition(){
+        $userId = $_GET['id'];
+        $allUsers = $this->userModel->getAllUsersOrderedByScore();
+        $userPosition = array_search($userId, array_column($allUsers, 'id')) + 1;
 
+        return $userPosition;
+    }
 
 
 }

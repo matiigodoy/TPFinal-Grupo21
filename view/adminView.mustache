@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View</title>
+</head>
+<body>
+<h1>Admin View</h1>
+
+<h2>Estadísticas Generales</h2>
+<p>Total de Partidas Jugadas: {{user.totalPartidas}}</p>
+<p>Total de Preguntas: {{user.totalQuestions}}</p>
+
+<h2>Nuevos Usuarios la Última Semana</h2>
+<ul>
+    {{#user.totalNewUsersLastWeek}}
+        <li>{{date}}: {{count}}</li>
+    {{/user.totalNewUsersLastWeek}}
+    <button onclick="generatePDF('newUsersLastWeekChart', 'Nuevos Usuarios la Última Semana')">Descargar PDF</button>
+</ul>
+
+
+<div style="max-width: 600px; margin: auto;">
+    <canvas id="newUsersLastWeekChart" width="100" height="250"></canvas>
+</div>
+
+<h2>Usuarios por Rol</h2>
+<p>Total de Usuarios: {{user.totalUsers}}</p>
+<p>Total de Admins: {{user.totalAdmins}}</p>
+<p>Total de Admins: {{user.totalEditors}}</p>
+<button onclick="generatePDF('usersByRoleChart', 'Usuarios por Rol')">Descargar PDF</button>
+<div style="max-width: 600px; margin: auto;">
+    <canvas id="usersByRoleChart" width="400" height="200"></canvas>
+</div>
+
+
+<h2>Usuarios por Género</h2>
+<ul>
+    {{#user.usersCountByGender}}
+        <li>{{gender}}: {{user_count}}</li>
+    {{/user.usersCountByGender}}
+    <button onclick="generatePDF('usersByGenderChart', 'Usuarios por Género')">Descargar PDF</button>
+</ul>
+<div style="max-width: 600px; margin: auto;">
+    <canvas id="usersByGenderChart" width="400" height="200"></canvas>
+</div>
+
+
+<h2>Usuarios por Grupo de Edad</h2>
+<ul>
+    {{#user.usersCountByAgeGroup}}
+        <li>{{age_group}}: {{user_count}}</li>
+    {{/user.usersCountByAgeGroup}}
+    <button onclick="generatePDF('usersByAgeGroupChart', 'Usuarios por Grupo de Edad')">Descargar PDF</button>
+</ul>
+<div style="max-width: 600px; margin: auto;">
+    <canvas id="usersByAgeGroupChart" width="400" height="200"></canvas>
+</div>
+
+
+<h2>Usuarios por País</h2>
+<ul>
+    {{#user.usersCountByCountry}}
+        <li>{{country}}: {{user_count}}</li>
+    {{/user.usersCountByCountry}}
+    <button onclick="generatePDF('usersByCountryChart', 'Usuarios por País')">Descargar PDF</button>
+</ul>
+<div style="max-width: 300px; margin: auto;">
+    <canvas id="usersByCountryChart" width="300" height="300"></canvas>
+</div>
+
+
+
+
+
+
+
+
+<script>
+    // GRAFICO DE LINEAS PARA USUARIOS REGISTRADOS EN LA ULTIMA SEMANA
+    var dates = [];
+    var newUserCounts = [];
+
+        {{#user.totalNewUsersLastWeek}}
+        dates.push("{{date}}");
+        newUserCounts.push({{count}});
+        {{/user.totalNewUsersLastWeek}}
+
+    // Configurar el gráfico de líneas
+    var ctx = document.getElementById('newUsersLastWeekChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Nuevos Usuarios',
+                data: newUserCounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
+                borderColor: 'rgba(54, 162, 235, 1)', // Color de la línea
+                borderWidth: 1,
+                fill: true // Rellenar bajo la línea
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'top'
+            },
+            title: {
+                display: true,
+                text: 'Nuevos Usuarios la Última Semana'
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        tooltipFormat: 'll',
+                        displayFormats: {
+                            day: 'MMM D'
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Fecha'
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Cantidad de Usuarios'
+                    }
+                }]
+            }
+        }
+    });
+</script>
+
+<script>
+    // GRAFICO DE TORTAS PARA USUARIOS POR ROL
+    var roles = ["Editor", "Usuario", "Administrador"];
+    var userCounts = [{{ user.totalEditors }}, {{ user.totalUsers }}, {{ user.totalAdmins }}];
+
+    var ctx = document.getElementById('usersByRoleChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: roles,
+            datasets: [{
+                label: 'Usuarios por Rol',
+                data: userCounts,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',  // Orange for Editors
+                    'rgba(54, 162, 235, 0.6)',  // Blue for Users
+                    'rgba(255, 206, 86, 0.6)'   // Yellow for Admins
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Usuarios por Rol'
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+</script>
+
+<script>
+    //GRAFICO DE TORTAS PARA USUARIOS POR GENERO
+    var countries = [];
+    var userCounts = [];
+
+        {{#user.usersCountByGender}}
+        countries.push("{{gender}}");
+        userCounts.push({{user_count}});
+        {{/user.usersCountByGender}}
+
+    var ctx = document.getElementById('usersByGenderChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: countries,
+            datasets: [{
+                label: 'Usuarios por País',
+                data: userCounts,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Usuarios por género'
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+</script>
+
+<script>
+    //GRAFICO DE TORTAS PARA USUARIOS POR PAIS
+    var countries = [];
+    var userCounts = [];
+
+        {{#user.usersCountByCountry}}
+        countries.push("{{country}}");
+        userCounts.push({{user_count}});
+        {{/user.usersCountByCountry}}
+
+    var ctx = document.getElementById('usersByCountryChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: countries,
+            datasets: [{
+                label: 'Usuarios por País',
+                data: userCounts,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                    // Puedes añadir más colores si necesitas más datos
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Usuarios por País'
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+</script>
+
+<script>
+    //GRAFICO DE BARRAS DE USUARIOS POR GRUPO DE EDAD
+    var ageGroups = [];
+    var userCountsByAgeGroup = [];
+
+        {{#user.usersCountByAgeGroup}}
+        ageGroups.push("{{age_group}}");
+        userCountsByAgeGroup.push({{user_count}});
+        {{/user.usersCountByAgeGroup}}
+
+    // Configurar el gráfico de barras
+    var ctx = document.getElementById('usersByAgeGroupChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ageGroups,
+            datasets: [{
+                label: 'Usuarios por Grupo de Edad',
+                data: userCountsByAgeGroup,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)', // Color de las barras
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display: false // Ocultar la leyenda si no es necesaria
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true, // Empezar desde 0 en el eje Y
+                        stepSize: 1 // Paso de la escala del eje Y
+                    }
+                }]
+            },
+            title: {
+                display: true,
+                text: 'Usuarios por Grupo de Edad'
+            }
+        }
+    });
+
+
+    function generatePDF(canvasId, title) {
+        const { jsPDF } = window.jspdf;
+        const canvas = document.getElementById(canvasId);
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF();
+        pdf.text(title, 10, 10);
+        pdf.addImage(imgData, 'PNG', 10, 20, 180, 160); // Ajusta el tamaño y la posición de la imagen en el PDF
+        pdf.save(`${title}.pdf`);
+    }
+</script>
+
+</body>
+</html>

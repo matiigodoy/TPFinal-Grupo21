@@ -5,6 +5,8 @@ include_once("controller/LobbyController.php");
 include_once ("controller/RegisterController.php");
 include_once ("controller/PartidaController.php");
 include_once ("controller/UserController.php");
+include_once ("controller/EditorController.php");
+include_once ("controller/AdminController.php");
 
 
 include_once("model/LoginModel.php");
@@ -12,6 +14,8 @@ include_once("model/ProfileModel.php");
 include_once ("model/RegisterModel.php");
 include_once("model/PartidaModel.php");
 include_once ("model/UserModel.php");
+include_once ("model/EditorModel.php");
+include_once ("model/AdminModel.php");
 
 
 include_once ("helper/ProfileService.php");
@@ -24,6 +28,7 @@ include_once ("helper/MustachePresenter.php");
 include_once ("helper/SessionManager.php");
 include_once ("helper/Redirect.php");
 include_once ("helper/QrCreator.php");
+include_once ("helper/GraphCreator.php");
 
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
@@ -60,6 +65,14 @@ class Configuration
         return new UserController(self::getUserModel(), self::getPresenter(), self::getQrCreator());
     }
 
+    public static function getEditorController(){
+        return new EditorController(self::getEditorModel(), self::getPresenter());
+    }
+
+    public static function getAdminController(){
+        return new AdminController(self::getAdminModel(), self::getPresenter());
+    }
+
 
     // MODELS
     private static function getLoginModel()
@@ -80,11 +93,18 @@ class Configuration
         return new UserModel(self::getDatabase());
     }
 
-
-
     private static function getPartidaModel(){
         return new PartidaModel(self::getDatabase());
     }
+
+    private static function getEditorModel(){
+        return new EditorModel(self::getDatabase());
+    }
+
+    private static function getAdminModel(){
+        return new AdminModel(self::getDatabase());
+    }
+
 
     // HELPERS
     public static function getDatabase()
@@ -121,6 +141,10 @@ class Configuration
 
     public static function getQrCreator(){
         return new QrCreator();
+    }
+
+    public static function getGraphCreator(){
+        return new GraphCreator();
     }
 
 
