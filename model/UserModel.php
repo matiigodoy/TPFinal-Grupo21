@@ -24,6 +24,32 @@ class UserModel
         return $users;
     }
 
+    public function getUserQuestionStats($userId) {
+        $query = "SELECT 
+                    SUM(CASE WHEN wasRight = 1 THEN 1 ELSE 0 END) AS correct,
+                    SUM(CASE WHEN wasRight = 0 THEN 1 ELSE 0 END) AS incorrect
+                  FROM user_question
+                  WHERE id_user = ?";
+
+        $stmt = $this->database->prepare($query);
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result === false) {
+            die('Execute failed: ' . htmlspecialchars($stmt->error));
+        }
+
+        $stats = $result->fetch_assoc();
+
+        $stmt->close();
+        return $stats;
+    }
+
     public function getUserById($id) {
         $query = "SELECT * FROM user WHERE id = ?";
         $stmt = $this->database->prepare($query);
