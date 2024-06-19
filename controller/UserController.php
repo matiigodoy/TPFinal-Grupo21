@@ -66,5 +66,27 @@ class UserController
         return $userPosition;
     }
 
+    public function getSuggestQuestionView(){
+
+        $data=[];
+        $this->presenter->render("suggestQuestion", $data);
+    }
+
+    public function addInactiveQuestion()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $question = $_POST['question'];
+            $category = $_POST['category'];
+            $option_a = $_POST['option_a'];
+            $option_b = $_POST['option_b'];
+            $option_c = $_POST['option_c'];
+            $option_d = $_POST['option_d'];
+            $right_answer = $_POST['right_answer'];
+
+            $this->userModel->addInactiveQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer);
+
+            return $this->getSuggestQuestionView();
+        }
+    }
 
 }

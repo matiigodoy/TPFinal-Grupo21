@@ -10,10 +10,11 @@ class EditorModel
     }
 
 
-    public function getAllQuestions() {
+    public function getActiveQuestions() {
         $query = "SELECT q.id, q.pregunta, q.category, a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
               FROM question q
-              JOIN answer a ON q.id = a.question_id";
+              JOIN answer a ON q.id = a.question_id
+              WHERE q.active = 1";  // Solo traer preguntas activas
 
         $stmt = $this->database->prepare($query);
         if ($stmt === false) {
@@ -63,26 +64,51 @@ class EditorModel
         return $questionsWithReports;
     }
 
+    public function getInactiveQuestions() {
+        $query = "SELECT q.id, q.pregunta, q.category, a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
+              FROM question q
+              JOIN answer a ON q.id = a.question_id
+              WHERE q.active = 0";  // Solo traer preguntas inactivas
+
+        $stmt = $this->database->prepare($query);
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result === false) {
+            die('Execute failed: ' . htmlspecialchars($stmt->error));
+        }
+
+        $inactiveQuestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $inactiveQuestions[] = $row;
+        }
+
+        $stmt->close();
+        return $inactiveQuestions;
+    }
+
     public function addQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer) {
-        $query = "INSERT INTO question (pregunta, category) VALUES (?, ?)";
+        $query = "INSERT INTO question (pregunta, category, active) VALUES (?, ?, 1)";
         $stmt = $this->database->prepare($query);
         if ($stmt === false) {
             die('Prepare failed: ' . htmlspecialchars($this->database->error));
         }
         $stmt->bind_param('ss', $question, $category);
         $stmt->execute();
+
         $question_id = $stmt->insert_id;
         $stmt->close();
 
-        $query = "
-            INSERT INTO answer (option_a, option_b, option_c, option_d, right_answer, question_id) 
-            VALUES (?, ?, ?, ?, ?, ?)
-        ";
+        $query = "INSERT INTO answer (question_id, option_a, option_b, option_c, option_d, right_answer) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->database->prepare($query);
         if ($stmt === false) {
             die('Prepare failed: ' . htmlspecialchars($this->database->error));
         }
-        $stmt->bind_param('sssssi', $option_a, $option_b, $option_c, $option_d, $right_answer, $question_id);
+        $stmt->bind_param('isssss', $question_id, $option_a, $option_b, $option_c, $option_d, $right_answer);
         $stmt->execute();
         $stmt->close();
     }
@@ -122,6 +148,17 @@ class EditorModel
         $stmt->close();
 
         $query = "DELETE FROM question WHERE id = ?";
+        $stmt = $this->database->prepare($query);
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    public function activateQuestionById($id) {
+        $query = "UPDATE question SET active = 1 WHERE id = ?";
         $stmt = $this->database->prepare($query);
         if ($stmt === false) {
             die('Prepare failed: ' . htmlspecialchars($this->database->error));

@@ -13,11 +13,13 @@ class EditorController
 
     public function getEditorView()
     {
-        $totalQuestions = $this->editorModel->getAllQuestions();
+        $activeQuestions = $this->editorModel->getActiveQuestions();
+        $inactiveQuestions = $this->editorModel->getInactiveQuestions();
         $questionsWithReports = $this->editorModel->getQuestionsWithReports();
 
         $data = [
-            'totalQuestions' => $totalQuestions,
+            'activeQuestions' => $activeQuestions,
+            'inactiveQuestions' => $inactiveQuestions,
             'questionsWithReports' => $questionsWithReports
         ];
 
@@ -42,7 +44,8 @@ class EditorController
         }
     }
 
-    public function updateQuestion() {
+    public function updateQuestion()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
             $question = $_POST['question'];
@@ -60,7 +63,8 @@ class EditorController
         }
     }
 
-    public function deleteQuestion() {
+    public function deleteQuestion()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'];
 
@@ -68,6 +72,16 @@ class EditorController
 
             // Volver a cargar la vista del editor después de eliminar la pregunta
             return $this->getEditorView();
+        }
+    }
+
+    public function activateQuestion()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'];
+            $this->editorModel->activateQuestionById($id);
+
+            $this->getEditorView();
         }
     }
 }

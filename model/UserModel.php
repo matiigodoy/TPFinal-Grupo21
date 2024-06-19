@@ -63,4 +63,26 @@ class UserModel
         return $user;
     }
 
+    public function addInactiveQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer) {
+        $query = "INSERT INTO question (pregunta, category, active) VALUES (?, ?, 0)";
+        $stmt = $this->database->prepare($query);
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+        $stmt->bind_param('ss', $question, $category);
+        $stmt->execute();
+
+        $question_id = $stmt->insert_id;
+        $stmt->close();
+
+        $query = "INSERT INTO answer (question_id, option_a, option_b, option_c, option_d, right_answer) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $this->database->prepare($query);
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+        $stmt->bind_param('isssss', $question_id, $option_a, $option_b, $option_c, $option_d, $right_answer);
+        $stmt->execute();
+        $stmt->close();
+    }
+
 }

@@ -76,8 +76,39 @@
     <hr>
 {{/questionsWithReports}}
 
+<h2>Preguntas sugeridas por usuarios</h2>
+{{#inactiveQuestions}}
+    <form action="/editor/activateQuestion" method="POST">
+        <input type="hidden" name="id" value="{{id}}">
+
+        <label for="question_{{id}}">Pregunta:</label>
+        <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" disabled><br>
+
+        <label for="category_{{id}}">Categoría:</label>
+        <input type="text" id="category_{{id}}" name="category" value="{{category}}" disabled><br>
+
+        <label for="option_a_{{id}}">Opción A:</label>
+        <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" disabled><br>
+
+        <label for="option_b_{{id}}">Opción B:</label>
+        <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" disabled><br>
+
+        <label for="option_c_{{id}}">Opción C:</label>
+        <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" disabled><br>
+
+        <label for="option_d_{{id}}">Opción D:</label>
+        <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" disabled><br>
+
+        <label for="right_answer_{{id}}">Respuesta Correcta:</label>
+        <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" disabled><br>
+
+        <input type="submit" value="Activar Pregunta">
+    </form>
+    <hr>
+{{/inactiveQuestions}}
+
 <h2>Preguntas Existentes</h2>
-{{#totalQuestions}}
+{{#activeQuestions}}
     <form action="/editor/updateQuestion" method="POST">
         <input type="hidden" name="id" value="{{id}}">
 
@@ -109,6 +140,6 @@
         <input type="submit" value="Eliminar Pregunta">
     </form>
     <hr>
-{{/totalQuestions}}
+{{/activeQuestions}}
 </body>
 </html>
