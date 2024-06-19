@@ -30,6 +30,7 @@ class UserController
 
         $userId = $_GET['id'];
         $user = $this->userModel->getUserById($userId);
+        $stats = $this->userModel->getUserQuestionStats($userId);
         $username = $user['username'];
 
         if (!$user) {
@@ -45,7 +46,9 @@ class UserController
         $qrImagePath = $this->qrCreator->createQr($userId, $username);
 
         // Pasar los datos del usuario a la vista
-        $data = ['user' => $user, 'qr' => $qrImagePath];
+        $data = ['user' => $user, 'qr' => $qrImagePath,
+            'correct' => $stats['correct'],
+            'incorrect' => $stats['incorrect']];
         $this->presenter->render("profileOtherUser", $data);
     }
 
