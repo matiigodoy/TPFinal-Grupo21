@@ -27,4 +27,8 @@ class PartidaController {
     public function checkAnswer(){
         $this->model->checkAnswer($this->presenter);
     }
+    
+    public function continuePartida(){
+        $this->model->continuePartida($this->presenter);
+    }
 }

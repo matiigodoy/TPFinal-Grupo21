@@ -16,10 +16,15 @@ class PartidaModel
 
         $this->registerPartida();
 
+        $this->handlePartida($presenter);
+    }
+
+    public function handlePartida($presenter){
+
         $flowValues = $this->startFlowPartida();
 
-        if($flowValues['userHadThatQuestion']){
-            $this->startFlowPartida();
+        while ($flowValues['userHadThatQuestion']) {
+            $flowValues = $this->startFlowPartida();
         }
 
         $this->registerUserWithThatQuestion($flowValues['question']);
@@ -30,10 +35,11 @@ class PartidaModel
                             "answerKeys" => $flowValues['answerKeys'],
                             "correct" => $flowValues['correct']['right_answer']]);
     }
+
     public function startFlowPartida(){
         $data = [];
 
-        $data = $this->bringQuestionAndAnswers( $data);
+        $data = $this->bringQuestionAndAnswers($data);
         $data['userHadThatQuestion'] = $this->checkUserAndQuestion($data['question']);
         return $data;
     }
@@ -72,6 +78,7 @@ class PartidaModel
         $successful = $this->executionSuccessful($stmt);
         return $successful;
     }
+
     public function registerPartida() {
         $userId = $_SESSION['userID'];
         $time = date('Y-m-d');
@@ -87,6 +94,7 @@ class PartidaModel
 
         return $this->executionSuccessful($stmt);
     }
+
     public function prepareQuery($query){
         $stmt = $this->database->prepare($query);
 
@@ -95,6 +103,7 @@ class PartidaModel
         }
         return $stmt;
     }
+
     public function executionSuccessful($stmt){
 
         if ($stmt->execute()) {
@@ -108,8 +117,8 @@ class PartidaModel
     public function checkAnswer($presenter){
         $correctAnswer = $_SESSION['correct']['right_answer'];
         $answerGivenByUser =  array_keys($_POST);
-        $optionSubstring = substr($answerGivenByUser[0], 7);
-        $quetieneesto = strpos($answerGivenByUser[0], $correctAnswer);
+        $optionSubstring = $answerGivenByUser != null ? substr($answerGivenByUser[0], 7) : null;
+        $quetieneesto = $answerGivenByUser != null ? strpos($answerGivenByUser[0], $correctAnswer) : null;
 
         if($correctAnswer === $optionSubstring){
             $presenter->render("successfulAnswer");
@@ -117,5 +126,9 @@ class PartidaModel
         else{
             $presenter->render("failedAnswer");
         }
+    }
+
+    public function continuePartida($presenter){
+        $this->handlePartida();
     }
 }

@@ -29,9 +29,6 @@
                         </button>
                     </div>
                 </form>
-                
-
-
         </main>
     </div>
     <script>
@@ -46,6 +43,8 @@
                 if (countdownValue <= 0) {
                     clearInterval(countdown);
                     countdownDisplay.textContent = '¡Tiempo acabado!';
+
+                    window.location.href = '/partida/checkAnswer';
                 }
             }, 1000); // Decrementa cada segundo
         });

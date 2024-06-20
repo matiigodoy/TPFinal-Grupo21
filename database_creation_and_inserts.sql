@@ -33,6 +33,7 @@ CREATE TABLE `partida`(
   id_user INT NOT NULL,
   id_opponent INT,
   partida_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  isOpen TINYINT(1) NOT NULL DEFAULT 0;
   FOREIGN KEY (id_user) REFERENCES user(id),
   FOREIGN KEY (id_opponent) REFERENCES user(id)
  );
