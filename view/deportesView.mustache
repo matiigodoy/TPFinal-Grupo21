@@ -2,16 +2,16 @@
     <div class="w3-content" style="max-width:2000px;margin-top:46px">
         <main class="py-5">
             <div class="content container px-lg-5 p-4 bg-light rounded-3 min-vh-100">
-                <h2 class="text-center display-3 fw-bold">Cultura</h2>
+                <h2 class="text-center display-3 fw-bold">Deportes</h2>
                 
-                <div class="d-grid gap-2" style = "background-color:blueviolet; color:white;">
+                <div class="d-grid gap-2 bg-success text-light">
                     <h1 class="display-2 fw-bold">{{pregunta}}</h1>
                 </div>
                 <br />
                 <div class="grid text-center" style="--bs-columns: 2; --bs-gap: 5rem;">
                     {{#answers}}
-                        <button id = "{{.}}" class="g-col-2 btn" style ="width:100%; height:35%;margin: 0em 0em 2em 0em;;background-color:blueviolet;color:white;" type="button">
-                            <b>{{.}}</b>
+                        <button id = "{{.}}" class="g-col-2 btn btn-success" style ="width:100%; height:35%;margin: 0em 0em 2em 0em;;color:white;" type="button" data-toggle="modal" data-target="#exampleModal">
+                            {{.}}
                         </button>
                     {{/answers}}
                 </div>

@@ -24,7 +24,11 @@ class PartidaModel
 
         $this->registerUserWithThatQuestion($flowValues['question']);
 
-        $presenter->render("historia", ["pregunta" => $flowValues['question']['pregunta'], "answers" => $flowValues['answers'], "correct" => $flowValues['correct']]);
+        $presenter->render(array_key_last($_GET), 
+                            ["pregunta" => $flowValues['question']['pregunta'], 
+                            "answers" => $flowValues['answers'], 
+                            "answerKeys" => $flowValues['answerKeys'],
+                            "correct" => $flowValues['correct']['right_answer']]);
     }
     public function startFlowPartida(){
         $data = [];
@@ -53,9 +57,10 @@ class PartidaModel
                         LIMIT 1";
         $dataRaw = $this->database->query($this->query);
         $data['question'] = array_slice($dataRaw[0], 0, 3);
-        $answersWithKeys = array_slice($dataRaw[0], 3, 4);
+        $answersWithKeys = array_slice($dataRaw[0], 5, 4);
+        $data['answerKeys'] = array_keys($answersWithKeys);
         $data['answers'] = array_values($answersWithKeys);
-        $data['correct'] = array_slice($dataRaw[0], 7, 1);
+        $data['correct'] = array_slice($dataRaw[0], 9, 1);
         $_SESSION['correct'] = $data['correct'];
         return $data;
     }
@@ -100,7 +105,17 @@ class PartidaModel
         return false;
     }
 
-    public function checkAnswer(){
-        $answer = array_key_exists("answer", $_POST);
+    public function checkAnswer($presenter){
+        $correctAnswer = $_SESSION['correct']['right_answer'];
+        $answerGivenByUser =  array_keys($_POST);
+        $optionSubstring = substr($answerGivenByUser[0], 7);
+        $quetieneesto = strpos($answerGivenByUser[0], $correctAnswer);
+
+        if($correctAnswer === $optionSubstring){
+            $presenter->render("successfulAnswer");
+        }
+        else{
+            $presenter->render("failedAnswer");
+        }
     }
 }
