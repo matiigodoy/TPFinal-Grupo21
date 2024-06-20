@@ -1,6 +1,6 @@
 <?php
 
-include_once('vendor/phpqrcode/qrlib.php');
+include_once('vendor/phpqrcode-master/qrlib.php');
 
 class QrCreator
 {
