@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">
+    <link rel="stylesheet" href="/public/css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <style>
         .navbar-right {
@@ -19,9 +21,8 @@
         }
     </style>
 </head>
-<body>
+<body class="pt-5 text-nunito">
 
-<!-- Navbar -->
 <div class="w3-top">
     <div class="w3-bar w3-orange w3-card">
         <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
@@ -41,9 +42,12 @@
              {{#isAdmin}}
                  <a href="/admin/getAdminView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Admin</a>
              {{/isAdmin}}
-             {{#isEditor}}
+
                  <a href="/editor/getEditorView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Editor</a>
-             {{/isEditor}}
+
+             {{#isUser}}
+                 <a href="/user/getSuggestQuestionView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Sugerí tu pregunta</a>
+             {{/isUser}}
 
 
          {{/userID}}

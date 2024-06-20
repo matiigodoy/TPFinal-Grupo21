@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor View</title>
+</head>
+<body>
+<h1>Editor View</h1>
+
+
+
+<h2>Agregar Nueva Pregunta</h2>
+<form action="/editor/addQuestion" method="POST">
+    <label for="question">Pregunta:</label>
+    <input type="text" id="question" name="question" required><br>
+
+    <label for="category">Categoría:</label>
+    <input type="text" id="category" name="category" required><br>
+
+    <label for="option_a">Opción A:</label>
+    <input type="text" id="option_a" name="option_a" required><br>
+
+    <label for="option_b">Opción B:</label>
+    <input type="text" id="option_b" name="option_b" required><br>
+
+    <label for="option_c">Opción C:</label>
+    <input type="text" id="option_c" name="option_c" required><br>
+
+    <label for="option_d">Opción D:</label>
+    <input type="text" id="option_d" name="option_d" required><br>
+
+    <label for="right_answer">Respuesta Correcta:</label>
+    <input type="text" id="right_answer" name="right_answer" required><br>
+
+    <input type="submit" value="Agregar Pregunta">
+</form>
+
+
+<h2>Preguntas con al menos un Reporte</h2>
+
+{{#questionsWithReports}}
+    <div>
+        <form action="/editor/updateQuestion" method="POST">
+            <input type="hidden" name="id" value="{{id}}">
+
+            <label for="question_{{id}}">Pregunta:</label>
+            <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" required><br>
+
+            <label for="category_{{id}}">Categoría:</label>
+            <input type="text" id="category_{{id}}" name="category" value="{{category}}" required><br>
+
+            <label for="option_a_{{id}}">Opción A:</label>
+            <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" required><br>
+
+            <label for="option_b_{{id}}">Opción B:</label>
+            <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" required><br>
+
+            <label for="option_c_{{id}}">Opción C:</label>
+            <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" required><br>
+
+            <label for="option_d_{{id}}">Opción D:</label>
+            <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" required><br>
+
+            <label for="right_answer_{{id}}">Respuesta Correcta:</label>
+            <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" required><br>
+
+            <input type="submit" value="Actualizar Pregunta">
+        </form>
+
+        <form action="/editor/deleteQuestion" method="POST">
+            <input type="hidden" name="id" value="{{id}}">
+            <input type="submit" value="Eliminar Pregunta">
+        </form>
+    </div>
+    <hr>
+{{/questionsWithReports}}
+
+<h2>Preguntas sugeridas por usuarios</h2>
+{{#inactiveQuestions}}
+    <form action="/editor/activateQuestion" method="POST">
+        <input type="hidden" name="id" value="{{id}}">
+
+        <label for="question_{{id}}">Pregunta:</label>
+        <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" disabled><br>
+
+        <label for="category_{{id}}">Categoría:</label>
+        <input type="text" id="category_{{id}}" name="category" value="{{category}}" disabled><br>
+
+        <label for="option_a_{{id}}">Opción A:</label>
+        <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" disabled><br>
+
+        <label for="option_b_{{id}}">Opción B:</label>
+        <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" disabled><br>
+
+        <label for="option_c_{{id}}">Opción C:</label>
+        <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" disabled><br>
+
+        <label for="option_d_{{id}}">Opción D:</label>
+        <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" disabled><br>
+
+        <label for="right_answer_{{id}}">Respuesta Correcta:</label>
+        <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" disabled><br>
+
+        <input type="submit" value="Activar Pregunta">
+    </form>
+    <hr>
+{{/inactiveQuestions}}
+
+<h2>Preguntas Existentes</h2>
+{{#activeQuestions}}
+    <form action="/editor/updateQuestion" method="POST">
+        <input type="hidden" name="id" value="{{id}}">
+
+        <label for="question_{{id}}">Pregunta:</label>
+        <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" required><br>
+
+        <label for="category_{{id}}">Categoría:</label>
+        <input type="text" id="category_{{id}}" name="category" value="{{category}}" required><br>
+
+        <label for="option_a_{{id}}">Opción A:</label>
+        <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" required><br>
+
+        <label for="option_b_{{id}}">Opción B:</label>
+        <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" required><br>
+
+        <label for="option_c_{{id}}">Opción C:</label>
+        <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" required><br>
+
+        <label for="option_d_{{id}}">Opción D:</label>
+        <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" required><br>
+
+        <label for="right_answer_{{id}}">Respuesta Correcta:</label>
+        <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" required><br>
+
+        <input type="submit" value="Actualizar Pregunta">
+    </form>
+    <form action="/editor/deleteQuestion" method="POST">
+        <input type="hidden" name="id" value="{{id}}">
+        <input type="submit" value="Eliminar Pregunta">
+    </form>
+    <hr>
+{{/activeQuestions}}
+</body>
+</html>

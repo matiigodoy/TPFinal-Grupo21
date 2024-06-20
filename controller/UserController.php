@@ -30,6 +30,7 @@ class UserController
 
         $userId = $_GET['id'];
         $user = $this->userModel->getUserById($userId);
+        $stats = $this->userModel->getUserQuestionStats($userId);
         $username = $user['username'];
 
         if (!$user) {
@@ -45,7 +46,9 @@ class UserController
         $qrImagePath = $this->qrCreator->createQr($userId, $username);
 
         // Pasar los datos del usuario a la vista
-        $data = ['user' => $user, 'qr' => $qrImagePath];
+        $data = ['user' => $user, 'qr' => $qrImagePath,
+            'correct' => $stats['correct'],
+            'incorrect' => $stats['incorrect']];
         $this->presenter->render("profileOtherUser", $data);
     }
 
@@ -63,5 +66,27 @@ class UserController
         return $userPosition;
     }
 
+    public function getSuggestQuestionView(){
+
+        $data=[];
+        $this->presenter->render("suggestQuestion", $data);
+    }
+
+    public function addInactiveQuestion()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $question = $_POST['question'];
+            $category = $_POST['category'];
+            $option_a = $_POST['option_a'];
+            $option_b = $_POST['option_b'];
+            $option_c = $_POST['option_c'];
+            $option_d = $_POST['option_d'];
+            $right_answer = $_POST['right_answer'];
+
+            $this->userModel->addInactiveQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer);
+
+            return $this->getSuggestQuestionView();
+        }
+    }
 
 }

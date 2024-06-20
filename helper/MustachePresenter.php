@@ -18,6 +18,7 @@ class MustachePresenter{
         $data['userID']= isset($_SESSION['userID']) ? $_SESSION['userID'] : null;
         $data['isAdmin'] = isset($_SESSION['isAdmin']) ? $_SESSION['isAdmin'] : false;
         $data['isEditor'] = isset($_SESSION['isEditor']) ? $_SESSION['isEditor'] : false;
+        $data['isUser'] = isset($_SESSION['isUser']) ? $_SESSION['isUser'] : false;
         echo  $this->generateHtml($contentFile, $data);
     }
 
