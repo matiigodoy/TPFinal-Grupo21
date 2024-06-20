@@ -69,7 +69,7 @@ CREATE TABLE `answer`(
  );
 
  INSERT INTO `user` (`id`, `fullname`, `birth_year`, `gender`, `country`, `latitude`, `longitude`, `email`, `username`, `password`, `profile_picture`, `score`, `register_date`, `role`, `auth_code`, `is_active`) VALUES
-(1, 'Mariano Saldivar', 1990, 'Masculino', '', -34.67067815900575, -58.56332018874492, 'admin@grupo21.com', 'MarianCapo', '1234', NULL, 0, '2024-06-17 00:00:00', 'admin', NULL, 1),
+(1, 'Mariano Saldivar', 1990, 'Masculino', '', -34.67067815900575, -58.56332018874492, 'admin@grupo21.com', 'MarianCapo', '$2a$12$ispOhCnknPxb/9ScWRuYzeyP3OHujBVWu1tJCZeLbLxLPCM/ArCOO', NULL, 0, '2024-06-17 00:00:00', 'admin', NULL, 1),
 (2, 'admin', 1990, 'Masculino', '', -34.67067815900575, -58.56332018874492, 'admin@gmail.com', 'admin', '1234', NULL, 0, '2024-06-18 11:06:26', 'admin', NULL, 1),
 (3, 'user', 1990, 'Masculino', '', -34.67067815900575, -58.56332018874492, 'user@gmail.com', 'user', '1234', NULL, 0, '2024-06-11 11:06:26', 'user', NULL, 0),
 (4, 'a', 2, 'Masculino', '', -34.66869860000000, -58.56149470000000, '1@1', '1', '$2y$10$jHyLS1.gE2lT90YXuo4Qs.MPmb30VHRRnFTpNvJ4hFCYTtmwU9KTK', 'C:\\xampp\\htdocs\\controller/../public/2Q.png', 0, '2024-06-14 11:06:26', 'admin', '8afbf6984ab131a384beb515d67a8d40', 1),

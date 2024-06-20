@@ -48,7 +48,7 @@ class PartidaModel
     }
     public function bringQuestionAndAnswers($data){
         $category = array_key_last($_GET);
-        //por ahora no busca por categoria(AND q.category = '$category'), al generar una pregunta al azar, tenemos que colocar preguntas en tablas separadas.
+        
         $this->query = "SELECT q.*, a.* FROM question q 
                         LEFT JOIN answer a 
                         ON q.id = a.question_id 
@@ -57,10 +57,10 @@ class PartidaModel
                         LIMIT 1";
         $dataRaw = $this->database->query($this->query);
         $data['question'] = array_slice($dataRaw[0], 0, 3);
-        $answersWithKeys = array_slice($dataRaw[0], 5, 4);
+        $answersWithKeys = array_slice($dataRaw[0], 8, 4);
         $data['answerKeys'] = array_keys($answersWithKeys);
         $data['answers'] = array_values($answersWithKeys);
-        $data['correct'] = array_slice($dataRaw[0], 9, 1);
+        $data['correct'] = array_slice($dataRaw[0], 12, 1);
         $_SESSION['correct'] = $data['correct'];
         return $data;
     }
