@@ -16,20 +16,30 @@ class PartidaModel
 
         $this->registerPartida();
 
+        $this->handlePartida($presenter);
+    }
+
+    public function handlePartida($presenter){
+
         $flowValues = $this->startFlowPartida();
 
-        if($flowValues['userHadThatQuestion']){
-            $this->startFlowPartida();
+        while ($flowValues['userHadThatQuestion']) {
+            $flowValues = $this->startFlowPartida();
         }
 
         $this->registerUserWithThatQuestion($flowValues['question']);
 
-        $presenter->render("historia", ["pregunta" => $flowValues['question']['pregunta'], "answers" => $flowValues['answers'], "correct" => $flowValues['correct']]);
+        $presenter->render(array_key_last($_GET), 
+                            ["pregunta" => $flowValues['question']['pregunta'], 
+                            "answers" => $flowValues['answers'], 
+                            "answerKeys" => $flowValues['answerKeys'],
+                            "correct" => $flowValues['correct']['right_answer']]);
     }
+
     public function startFlowPartida(){
         $data = [];
 
-        $data = $this->bringQuestionAndAnswers( $data);
+        $data = $this->bringQuestionAndAnswers($data);
         $data['userHadThatQuestion'] = $this->checkUserAndQuestion($data['question']);
         return $data;
     }
@@ -44,7 +54,7 @@ class PartidaModel
     }
     public function bringQuestionAndAnswers($data){
         $category = array_key_last($_GET);
-        //por ahora no busca por categoria(AND q.category = '$category'), al generar una pregunta al azar, tenemos que colocar preguntas en tablas separadas.
+        
         $this->query = "SELECT q.*, a.* FROM question q 
                         LEFT JOIN answer a 
                         ON q.id = a.question_id 
@@ -53,9 +63,10 @@ class PartidaModel
                         LIMIT 1";
         $dataRaw = $this->database->query($this->query);
         $data['question'] = array_slice($dataRaw[0], 0, 3);
-        $answersWithKeys = array_slice($dataRaw[0], 3, 4);
+        $answersWithKeys = array_slice($dataRaw[0], 8, 4);
+        $data['answerKeys'] = array_keys($answersWithKeys);
         $data['answers'] = array_values($answersWithKeys);
-        $data['correct'] = array_slice($dataRaw[0], 7, 1);
+        $data['correct'] = array_slice($dataRaw[0], 12, 1);
         $_SESSION['correct'] = $data['correct'];
         return $data;
     }
@@ -67,6 +78,7 @@ class PartidaModel
         $successful = $this->executionSuccessful($stmt);
         return $successful;
     }
+
     public function registerPartida() {
         $userId = $_SESSION['userID'];
         $time = date('Y-m-d');
@@ -82,6 +94,7 @@ class PartidaModel
 
         return $this->executionSuccessful($stmt);
     }
+
     public function prepareQuery($query){
         $stmt = $this->database->prepare($query);
 
@@ -90,6 +103,7 @@ class PartidaModel
         }
         return $stmt;
     }
+
     public function executionSuccessful($stmt){
 
         if ($stmt->execute()) {
@@ -100,7 +114,21 @@ class PartidaModel
         return false;
     }
 
-    public function checkAnswer(){
-        $answer = array_key_exists("answer", $_POST);
+    public function checkAnswer($presenter){
+        $correctAnswer = $_SESSION['correct']['right_answer'];
+        $answerGivenByUser =  array_keys($_POST);
+        $optionSubstring = $answerGivenByUser != null ? substr($answerGivenByUser[0], 7) : null;
+        $quetieneesto = $answerGivenByUser != null ? strpos($answerGivenByUser[0], $correctAnswer) : null;
+
+        if($correctAnswer === $optionSubstring){
+            $presenter->render("successfulAnswer");
+        }
+        else{
+            $presenter->render("failedAnswer");
+        }
+    }
+
+    public function continuePartida($presenter){
+        $this->handlePartida();
     }
 }

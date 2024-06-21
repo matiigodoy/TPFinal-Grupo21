@@ -14,6 +14,7 @@ CREATE TABLE `user`(
   fullname VARCHAR(50) NOT NULL,
   birth_year INT(4) NOT NULL,
   gender VARCHAR(30) NOT NULL,
+  country VARCHAR(50) NOT NULL,
   latitude DECIMAL(17, 14) NOT NULL,
   longitude DECIMAL(17, 14) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
@@ -23,8 +24,8 @@ CREATE TABLE `user`(
   score INT(6) NOT NULL DEFAULT 0,
   register_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   role VARCHAR(30) NOT NULL DEFAULT 'user',
-  auth_code varchar(250) DEFAULT NULL,
-  is_active tinyint(1) NOT NULL DEFAULT 0
+  auth_code VARCHAR(250) DEFAULT NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 0
  );
 
 CREATE TABLE `partida`(
@@ -32,6 +33,7 @@ CREATE TABLE `partida`(
   id_user INT NOT NULL,
   id_opponent INT,
   partida_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  isOpen TINYINT(1) NOT NULL DEFAULT 0;
   FOREIGN KEY (id_user) REFERENCES user(id),
   FOREIGN KEY (id_opponent) REFERENCES user(id)
  );
@@ -41,7 +43,10 @@ CREATE TABLE `question`(
   pregunta TEXT NOT NULL,
   category VARCHAR(100) NOT NULL,
   count_acertada INT(30) DEFAULT 0,
-  count_ofrecida INT(30) DEFAULT 0
+  count_ofrecida INT(30) DEFAULT 0,
+  isCreada TINYINT(1) NOT NULL,
+  reports INT(10) NOT NULL,
+  active TINYINT(1) NOT NULL
 );
 
 CREATE TABLE `answer`(
@@ -64,10 +69,13 @@ CREATE TABLE `answer`(
   FOREIGN KEY (id_question) REFERENCES question(id)
  );
 
- INSERT INTO `user` (fullname,birth_year,gender,latitude,longitude,email,username,password,profile_picture,score, register_date, role, is_active)
- VALUES ('Mariano Saldivar',1990,'Masculino',-34.670678159005746, -58.56332018874492,'admin@grupo21.com','MarianCapo','1234',NULL,0, '2024-06-05','admin', 0),
- ('admin',1990,'Masculino',-34.670678159005746, -58.56332018874492,'admin@gmail.com','admin','1234',NULL,0, '2024-06-05','admin', 0),
- ('user',1990,'Masculino',-34.670678159005746, -58.56332018874492,'user@gmail.com','user','1234',NULL,0, '2024-06-05','user', 0);
+ INSERT INTO `user` (`id`, `fullname`, `birth_year`, `gender`, `country`, `latitude`, `longitude`, `email`, `username`, `password`, `profile_picture`, `score`, `register_date`, `role`, `auth_code`, `is_active`) VALUES
+(1, 'Mariano Saldivar', 1990, 'Masculino', '', -34.67067815900575, -58.56332018874492, 'admin@grupo21.com', 'MarianCapo', '$2a$12$ispOhCnknPxb/9ScWRuYzeyP3OHujBVWu1tJCZeLbLxLPCM/ArCOO', NULL, 0, '2024-06-17 00:00:00', 'admin', NULL, 1),
+(2, 'admin', 1990, 'Masculino', '', -34.67067815900575, -58.56332018874492, 'admin@gmail.com', 'admin', '1234', NULL, 0, '2024-06-18 11:06:26', 'admin', NULL, 1),
+(3, 'user', 1990, 'Masculino', '', -34.67067815900575, -58.56332018874492, 'user@gmail.com', 'user', '1234', NULL, 0, '2024-06-11 11:06:26', 'user', NULL, 0),
+(4, 'a', 2, 'Masculino', '', -34.66869860000000, -58.56149470000000, '1@1', '1', '$2y$10$jHyLS1.gE2lT90YXuo4Qs.MPmb30VHRRnFTpNvJ4hFCYTtmwU9KTK', 'C:\\xampp\\htdocs\\controller/../public/2Q.png', 0, '2024-06-14 11:06:26', 'admin', '8afbf6984ab131a384beb515d67a8d40', 1),
+(7, '2', 2, 'Masculino', 'Argentina', -34.66869860000000, -58.56149470000000, '2@2', '2', '$2y$10$aFMlhbJ4nG0.kpiYI/gMX.x3IIeKvToO1NLK0C.rDY3yxdmNdpodO', 'C:\\xampp\\htdocs\\controller/../public/53e395ab-2269-44f1-a627-ddffbda7920d.jpg', 0, '2024-06-17 09:50:14', 'user', '44aa648fab6f1473e546eb5c4cd12807', 1),
+(8, '3', 3, 'Masculino', 'Bolivia', -34.66869860000000, -58.56149470000000, '3@3', '3', '$2y$10$8aILKg5rzdRsUKZnUMi6qu6WvvUhW0uvUqhPQZ9dorxHLMYBC2n8m', 'C:\\xampp\\htdocs\\controller/../public/E-E8umqUUAU51R5.jfif', 0, '2024-06-17 11:48:56', 'user', '133ba1949154c6dd3706f38ff0c3e7c0', 1);
 
 INSERT INTO `question` (`id`, `pregunta`, `category`, `count_acertada`, `count_ofrecida`) VALUES
 (1, '¿Cuál es la capital de Francia?', 'cultura', 0, 0),

@@ -3,23 +3,25 @@
         <main class="py-5">
             <div class="content container px-lg-5 p-4 bg-light rounded-3 min-vh-100">
                 <h2 class="text-center display-3 fw-bold">Partida</h2>
-                <h5 class="text-center">Bienvenido a la partida, <b>{{username}}</b></h5>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>Recordá:</strong> <p>No se puede actualizar la página o apretar F5 (podes perder si lo hacés)</p>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <p>A continuación elige un tema para comenzar el juego</p>
-                <div class = "px-lg-5 p-4 bg-light rounded-3">
-                    <img src="/public/trivia.png" style="position: absolute; z-index: 0; opacity: 50%;"/>
+                <div class = "px-lg-5 p-4 rounded-3" style="background-image: url('/public/trivia.png')">
 
                     <a href="/partida/start/historia" class="text-decoration-none">
-                        <div class="rounded-3" style="z-index:1; display:flex; justify-content:center; align-items:center; background-color: yellow; color: black; font-size:500%; min-height: 30%; min-width: 70%; text-align-all: center;opacity: 70%;}">
+                        <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: yellow; color: black; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
                             <p>Historia</p>
                         </div>
                     </a>
                     <a href="/partida/start/cultura" class="text-decoration-none">
-                        <div class="rounded-3" style="z-index:1; display:flex; justify-content:center; align-items:center; background-color: blueviolet; color: rebeccapurple; font-size:500%; min-height: 30%; min-width: 70%; text-align-all: center;opacity: 70%;}">
+                        <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: blueviolet; color: orange; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
                             <p>Cultura</p>
                         </div>
                     </a>
                     <a href="/partida/start/deportes" class="text-decoration-none">
-                        <div class="rounded-3" style="z-index:1; display:flex; justify-content:center; align-items:center; background-color: forestgreen; color: white; font-size:500%; min-height: 30%; min-width: 70%; text-align-all: center;opacity: 70%;}">
+                        <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: forestgreen; color: white; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
                             <p>Deportes</p>
                         </div>
                     </a>
@@ -27,4 +29,6 @@
             </div>
         </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
 </body>
