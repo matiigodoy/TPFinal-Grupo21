@@ -1,6 +1,5 @@
 <?php
 include_once("controller/LoginController.php");
-include_once("controller/ProfileController.php");
 include_once("controller/LobbyController.php");
 include_once ("controller/RegisterController.php");
 include_once ("controller/PartidaController.php");
@@ -10,15 +9,11 @@ include_once ("controller/AdminController.php");
 
 
 include_once("model/LoginModel.php");
-include_once("model/ProfileModel.php");
 include_once ("model/RegisterModel.php");
 include_once("model/PartidaModel.php");
 include_once ("model/UserModel.php");
 include_once ("model/EditorModel.php");
 include_once ("model/AdminModel.php");
-
-
-include_once ("helper/ProfileService.php");
 
 include_once ("helper/Database.php");
 include_once ("helper/Router.php");
@@ -41,11 +36,6 @@ class Configuration
         return new LoginController(self::getLoginModel(),self::getSessionManager(),self::getPresenter());
     }
 
-    public static function getProfileController()
-    {
-        return new ProfileController(self::getProfileService(),self::getPresenter());
-    }
-
     public static function getLobbyController()
     {
         return new LobbyController(self::getPresenter());
@@ -61,7 +51,7 @@ class Configuration
     }
   
     public static function getUserController(){
-        return new UserController(self::getUserModel(), self::getPresenter(), self::getQrCreator());
+        return new UserController(self::getUserModel(), self::getPresenter(), self::getQrCreator(), self::getSessionManager());
     }
 
     public static function getEditorController(){
@@ -77,11 +67,6 @@ class Configuration
     private static function getLoginModel()
     {
         return new LoginModel(self::getDatabase());
-    }
-
-    private static function getProfileModel()
-    {
-        return new ProfileModel(self::getDatabase());
     }
 
     private static function getRegisterModel()
@@ -126,11 +111,6 @@ class Configuration
     private static function getPresenter()
     {
         return new MustachePresenter("view/template");
-    }
-
-    public static function getProfileService()
-    {
-        return new ProfileService(self::getProfileModel());
     }
 
     public static function getSessionManager()
