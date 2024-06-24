@@ -1,9 +1,9 @@
 <div class="w3-content" style="max-width:2000px;margin-top:46px">
         <main class="py-5">
             <div class="content container px-lg-5 p-4 bg-light rounded-3">
-                <form action = "/partida/continuePartida" method = "post">
-                    <h1>ACERTASTE! CLICK PARA VER LS SIGUIENTE PREGUNTA</h1>
-                    <button class = "btn btn-primary" type="submit">Siguiente pregunta</button>
+                <form action = "/partida/continuePartida" method = "POST">
+                    <h1>ACERTASTE! CLICK AL BOTÓN DE ABAJO PARA VER LA SIGUIENTE PREGUNTA!</h1>
+                    <button class = "btn btn-primary" type="submit" name = "{{category}}">Siguiente pregunta</button>
                 </form>
             </div>
         </main>

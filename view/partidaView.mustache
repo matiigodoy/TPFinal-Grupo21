@@ -10,21 +10,23 @@
                 <p>A continuación elige un tema para comenzar el juego</p>
                 <div class = "px-lg-5 p-4 rounded-3" style="background-image: url('/public/trivia.png')">
 
-                    <a href="/partida/start/historia" class="text-decoration-none">
-                        <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: yellow; color: black; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
-                            <p>Historia</p>
-                        </div>
-                    </a>
-                    <a href="/partida/start/cultura" class="text-decoration-none">
-                        <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: blueviolet; color: orange; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
-                            <p>Cultura</p>
-                        </div>
-                    </a>
-                    <a href="/partida/start/deportes" class="text-decoration-none">
-                        <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: forestgreen; color: white; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
-                            <p>Deportes</p>
-                        </div>
-                    </a>
+                    <form action="/partida/start" method="POST">
+                        <button class="text-decoration-none" name = "historia">
+                            <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: yellow; color: black; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
+                                <p>Historia</p>
+                            </div>
+                        </button>
+                        <button class="text-decoration-none" name = "cultura">
+                            <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: blueviolet; color: orange; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
+                                <p>Cultura</p>
+                            </div>
+                        </button>
+                        <button class="text-decoration-none" name = "deportes">
+                            <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: forestgreen; color: white; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
+                                <p>Deportes</p>
+                            </div>
+                        </button>
+                    </form>
                 </div>
             </div>
         </main>
