@@ -1,0 +1,64 @@
+<!-- Page content -->
+    <div class="w3-content" style="max-width:2000px;margin-top:46px">
+        {{#questionOk}}
+             <main class="py-5">
+                <div class="content container px-lg-5 p-4 bg-light rounded-3 min-vh-100">
+                    <h2 class="text-center display-3 fw-bold">{{category}}</h2>
+                    <div style = "display: flex;justify-content: center; align-items: center; flex-direction: column; margin-top: 50px;">
+                      <div style = "font-size: 2em;margin: 20px 0;" id="countdown">15</div>
+                    </div>
+
+                    <form action="/partida/checkAnswer" method="POST" name = "{{category}}">
+                        <input type="hidden" name="{{category}}" value="{{category}}">
+                        <div class="{{questionClass}}" style = "{{questionStyle}}">
+                            <h1 class="display-2 fw-bold">{{pregunta}}</h1>
+                        </div>
+                        <label name = "{{category}}" class = "text-white">.</label>
+                        <br />
+                        <div class="grid text-center" style="--bs-columns: 2; --bs-gap: 5rem;">
+
+                            <button id = "{{answerKeys.0}}" name = "{{answerKeys.0}}" class = "{{buttonClass}}" style = "{{buttonStyle}}" type="submit" value = "{{answers.0}}">
+                                <b>{{answers.0}}</b>
+                            </button>
+                            <button id = "{{answerKeys.1}}" name = "{{answerKeys.1}}" class = "{{buttonClass}}" style = "{{buttonStyle}}" type="submit" value = "{{answers.1}}">
+                                <b>{{answers.1}}</b>
+                            </button>
+                            <button id = "{{answerKeys.2}}" name = "{{answerKeys.2}}" class = "{{buttonClass}}" style = "{{buttonStyle}}" type="submit" value = "{{answers.2}}">
+                                <b>{{answers.2}}</b>
+                            </button>
+                            <button id = "{{answerKeys.3}}" name = "{{answerKeys.3}}" class = "{{buttonClass}}" style = "{{buttonStyle}}" type="submit" value = "{{answers.3}}">
+                                <b>{{answers.3}}</b>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        {{/questionOk}}
+        {{^questionOk}}
+            <form action = "/lobby/get" method = "POST">
+                    <h1>LO LAMENTO, HUBO UN ERROR, INTENTE MÁS TARDE</h1>
+                    <button class = "btn btn-primary" type="submit">Volver al lobby</button>
+                </form>
+        {{/questionOk}}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const countdownDisplay = document.getElementById('countdown');
+            let countdownValue = 15; // Valor inicial de la cuenta regresiva
+
+            const countdown = setInterval(() => {
+                countdownValue--;
+                countdownDisplay.textContent = countdownValue;
+
+                if (countdownValue <= 0) {
+                    clearInterval(countdown);
+                    countdownDisplay.textContent = '¡Tiempo acabado!';
+
+                    window.location.href = '/partida/checkAnswer';
+                }
+            }, 1000); // Decrementa cada segundo
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
