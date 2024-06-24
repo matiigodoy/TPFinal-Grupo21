@@ -42,8 +42,4 @@ if (!isset($_SESSION['userID'])) {
     }
 }
 
-// Log user role and ID to the console for debugging
-echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
-echo "<script>console.log('user id: ".$_SESSION['userID']."');</script>";
-
 $router->route($controller, $action);
