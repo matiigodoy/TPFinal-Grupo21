@@ -94,7 +94,7 @@ class UserController
     public function claimQuestionWrong(){
         $data[] = $_POST['questionId'];
 
-        this->userModel->claimQuestionWrong();
+        $this->userModel->claimQuestionWrong();
         $this->presenter->render("claimQuestionWrong", $data);
     }
 
