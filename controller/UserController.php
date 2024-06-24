@@ -6,11 +6,13 @@ class UserController
     private $userModel;
     private $presenter;
     private $qrCreator;
+    private $sessionManager;
 
-    public function __construct($userModel, $presenter, $qrCreator) {
+    public function __construct($userModel, $presenter, $qrCreator, $sessionManager) {
         $this->userModel = $userModel;
         $this->presenter = $presenter;
         $this->qrCreator = $qrCreator;
+        $this->sessionManager = $sessionManager;
     }
 
     public function get() {
@@ -88,10 +90,29 @@ class UserController
             return $this->getSuggestQuestionView();
         }
     }
+
     public function claimQuestionWrong(){
         $data[] = $_POST['questionId'];
 
         $this->userModel->claimQuestionWrong();
         $this->presenter->render("claimQuestionWrong", $data);
     }
+
+    public function getProfile() {
+        $userID = null;
+        if (isset($_SESSION["userID"])) {
+            $userID = $_SESSION["userID"];
+        }
+
+        $data = $this->userModel->getProfile($userID);
+
+        $this->presenter->render("profile", $data);
+    }
+
+    public function exit() {
+        $this->sessionManager->destroy();
+        header("Location: index.php");
+        exit();
+    }
+
 }
