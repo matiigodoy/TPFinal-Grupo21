@@ -90,6 +90,7 @@ class UserController
             return $this->getSuggestQuestionView();
         }
     }
+
     public function claimQuestionWrong(){
         $data[] = $_POST['questionId'];
 
