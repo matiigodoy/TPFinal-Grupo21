@@ -236,7 +236,7 @@ class PartidaModel
     public function checkAnswer($presenter){
         $correctAnswer = $_SESSION['correct']['right_answer'];
         $answerGivenByUser =  array_keys($_POST);
-        $optionSubstring = $answerGivenByUser != null ? substr($answerGivenByUser[0], 7) : null;
+        $optionSubstring = $answerGivenByUser != null ? substr($answerGivenByUser[1], 7) : null;
         $userCorrect = $correctAnswer === $optionSubstring;
         $this->registerUserRespondedRightOrWrong($userCorrect, $_SESSION['userID'], $_SESSION['questionId']);
         $this->registerQuestionOfferedAndHitCount($_SESSION['questionId'], $userCorrect);
