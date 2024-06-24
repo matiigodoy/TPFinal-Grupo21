@@ -85,4 +85,7 @@ class UserModel
         $stmt->close();
     }
 
+    public function claimQuestionWrong(){
+        
+    }
 }
