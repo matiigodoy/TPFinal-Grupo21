@@ -9,6 +9,24 @@ class AdminModel
         $this->database = $database;
     }
 
+    public function getTotalUsers() {
+        $query = "SELECT COUNT(*) as total FROM user";
+        $stmt = $this->database->prepare($query);
+
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $row = $result->fetch_assoc();
+        $totalUsers = $row['total'];
+
+        $stmt->close();
+        return $totalUsers;
+    }
+
     public function getTotalUsersByRole($role) {
         $query = "SELECT COUNT(*) as total FROM user WHERE role = ?";
         $stmt = $this->database->prepare($query);
@@ -26,27 +44,6 @@ class AdminModel
 
         $stmt->close();
         return $totalUsers;
-    }
-
-    public function getCountsByRole() {
-        $query = "SELECT role, COUNT(*) AS total_users FROM user GROUP BY role";
-
-        $stmt = $this->database->prepare($query);
-
-        if ($stmt === false) {
-            die('Prepare failed: ' . htmlspecialchars($this->database->error));
-        }
-
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $roles = [];
-        while ($row = $result->fetch_assoc()) {
-            $roles[$row['role']] = $row['total_users'];
-        }
-
-        $stmt->close();
-        return $roles;
     }
 
     public function getUserRoleById($userID) {
@@ -207,6 +204,7 @@ class AdminModel
         return $totalPartidas;
     }
 
+
     public function getTotalQuestions() {
         $query = "SELECT COUNT(*) as total FROM question";
         $stmt = $this->database->prepare($query);
@@ -223,6 +221,30 @@ class AdminModel
 
         $stmt->close();
         return $totalQuestions;
+    }
+
+    public function getQuestionsByCreationStatus() {
+        $query = "SELECT 
+                SUM(CASE WHEN isCreada = 1 AND active = 1 THEN 1 ELSE 0 END) as createdQuestions,
+                SUM(CASE WHEN isCreada = 0 AND active = 1 THEN 1 ELSE 0 END) as notCreatedQuestions
+              FROM question";
+        $stmt = $this->database->prepare($query);
+
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $row = $result->fetch_assoc();
+        $questionsByCreationStatus = [
+            'createdQuestions' => $row['createdQuestions'],
+            'notCreatedQuestions' => $row['notCreatedQuestions']
+        ];
+
+        $stmt->close();
+        return $questionsByCreationStatus;
     }
 
 }

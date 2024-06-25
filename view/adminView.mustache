@@ -12,7 +12,7 @@
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                     <h6>Total de Partidas Jugadas</h6></div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{user.totalPartidas}}</div>
+                                    {{totalPartidas}}</div>
                             </div>
                         </div>
                     </div>
@@ -20,114 +20,103 @@
             </div>
 
             <div class="col-xl-3 col-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
+                <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    <h6>Total de Preguntas</h6></div>
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    <h6>TOTAL DE USUARIOS</h6></div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{user.totalQuestions}}</div>
+                                    {{totalUsers}}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-xl-3 col-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    <h6>Otra métrica</h6></div>
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="progress progress-sm mr-2">
-                                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
+
+
+            <div class="row">
+                <div class="col-xl-6 col-md-6 text-center">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 text-primary">Usuarios por Rol</h6>
+                        </div>
+                        <div class="card-body">
+                            <div style="max-width: 600px; margin: auto;">
+                                <canvas id="usersByRoleChart" width="400" height="200"></canvas>
+                            </div>
+                            <div class="row">
+                                <div class="col-4"><h6>Usuarios: {{totalRolUsers}}</h6></div>
+                                <div class="col-4"><h6>Admin: {{totalAdmins}}</h6></div>
+                                <div class="col-4"><h6>Editores: {{totalEditors}}</h6></div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger m-2" onclick="generatePDF('usersByRoleChart', 'Usuarios por Rol')">Descargar PDF</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-6 text-center">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 text-primary">Preguntas por Estado de Creación</h6>
+                        </div>
+                        <div class="card-body">
+                            <div style="max-width: 600px; margin: auto;">
+                                <canvas id="questionsByCreationStatusChart" width="400" height="200"></canvas>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Preguntas Creadas: {{questionsByCreationStatus.createdQuestions}}</h6>
                                 </div>
-                            </div>   
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    <h6>Otra métrica</h6></div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                <div class="col">
+                                    <h6>Preguntas No Creadas: {{questionsByCreationStatus.notCreatedQuestions}}</h6>
+                                </div>
                             </div>
+                            <button class="btn btn-sm btn-outline-danger m-2" onclick="generatePDF('questionsByCreationStatusChart', 'Preguntas por Estado de Creación')">Descargar PDF</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-<div class="row">
-    <div class="col-xl-4 col-md-6 text-center">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 text-primary">Usuarios por Rol</h6>
-            </div>
-            <div class="card-body">
-                <div style="max-width: 600px; margin: auto;">
-                    <canvas id="usersByRoleChart" width="400" height="200"></canvas>
+
+            <div class="row">
+                <div class="col-xl-6 col-md-6 text-center">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 text-primary">Usuarios por Género</h6>
+                        </div>
+                        <div class="card-body">
+                            <div style="max-width: 600px; margin: auto;">
+                                <canvas id="usersByGenderChart" width="400" height="200"></canvas>
+                            </div>
+                            <div class="row">
+                                {{#usersCountByGender}}
+                                    <div class="col"><h6>{{gender}}: {{user_count}}</h6></div>
+                                {{/usersCountByGender}}
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger m-2" onclick="generatePDF('usersByGenderChart', 'Usuarios por Género')">Descargar PDF</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-4"><h6>Usuarios: {{user.totalUsers}}</h6></div>
-                    <div class="col-4"><h6>Admin: {{user.totalAdmins}}</h6></div>
-                    <div class="col-4"><h6>Editores: {{user.totalEditors}}</h6></div>
-                </div>  
-                <button class="btn btn-sm btn-outline-danger m-2" onclick="generatePDF('usersByRoleChart', 'Usuarios por Rol')">Descargar PDF</button>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-4 col-md-6 text-center">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 text-primary">Usuarios por Género</h6>
-            </div>
-            <div class="card-body">
-                <div style="max-width: 600px; margin: auto;">
-                    <canvas id="usersByGenderChart" width="400" height="200"></canvas>
+                <div class="col-xl-6 col-md-6 text-center">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 text-primary">Usuarios por País</h6>
+                        </div>
+                        <div class="card-body">
+                            <div style="max-width: 600px; margin: auto;">
+                                <canvas id="usersByCountryChart" width="400" height="200"></canvas>
+                            </div>
+                            <div class="row">
+                                {{#usersCountByCountry}}
+                                    <div class="col"><h6>{{country}}: {{user_count}}</h6></div>
+                                {{/usersCountByCountry}}
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger m-2" onclick="generatePDF('usersByCountryChart', 'Usuarios por País')">Descargar PDF</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="row">
-                    {{#user.usersCountByGender}}
-                    <div class="col"><h6>{{gender}}: {{user_count}}</h6></div>
-                    {{/user.usersCountByGender}}
-                </div>
-                <button class="btn btn-sm btn-outline-danger m-2" onclick="generatePDF('usersByGenderChart', 'Usuarios por Género')">Descargar PDF</button>
             </div>
-        </div>
-    </div>
-    <div class="col-xl-4 col-md-6 text-center">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 text-primary">Usuarios por País</h6>
-            </div>
-            <div class="card-body">
-                <div style="max-width: 600px; margin: auto;">
-                    <canvas id="usersByCountryChart" width="400" height="200"></canvas>
-                </div>
-                <div class="row">
-                    {{#user.usersCountByCountry}}
-                    <div class="col"><h6>{{country}}: {{user_count}}</h6></div>
-                    {{/user.usersCountByCountry}}
-                </div>
-                <button class="btn btn-sm btn-outline-danger m-2" onclick="generatePDF('usersByCountryChart', 'Usuarios por País')">Descargar PDF</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="row">
     <div class="col-xl-6 col-md-12 text-center">
@@ -157,15 +146,59 @@
         </div>
     </div>
 </div>
+
+    <script>
+        // Gráfico de torta para preguntas por estado de creación
+        var ctx = document.getElementById('questionsByCreationStatusChart').getContext('2d');
+        var questionsByCreationStatusChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Preguntas creadas por usuarios', 'Preguntas no creadas por usuarios'],
+                datasets: [{
+                    data: [{{questionsByCreationStatus.createdQuestions }}, {{ questionsByCreationStatus.notCreatedQuestions }}],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.6)', // Azul para Preguntas Creadas
+                        'rgba(255, 99, 132, 0.6)'  // Rojo para Preguntas No Creadas
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Preguntas por Estado de Creación'
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+
+        function generatePDF(canvasId, title) {
+            const { jsPDF } = window.jspdf;
+            const canvas = document.getElementById(canvasId);
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jsPDF();
+            pdf.text(title, 10, 10);
+            pdf.addImage(imgData, 'PNG', 10, 20, 180, 160); // Ajusta el tamaño y la posición de la imagen en el PDF
+            pdf.save(`${title}.pdf`);
+        }
+    </script>
         <script>
             // GRAFICO DE LINEAS PARA USUARIOS REGISTRADOS EN LA ULTIMA SEMANA
             var dates = [];
             var newUserCounts = [];
 
-            {{#user.totalNewUsersLastWeek}}
+            {{#totalNewUsersLastWeek}}
             dates.push("{{date}}");
             newUserCounts.push({{count}});
-            {{/user.totalNewUsersLastWeek}}
+            {{/totalNewUsersLastWeek}}
 
         // Configurar el gráfico de líneas
         var ctx = document.getElementById('newUsersLastWeekChart').getContext('2d');
@@ -225,7 +258,7 @@
     <script>
         // GRAFICO DE TORTAS PARA USUARIOS POR ROL
         var roles = ["Editor", "Usuario", "Administrador"];
-        var userCounts = [{{ user.totalEditors }}, {{ user.totalUsers }}, {{ user.totalAdmins }}];
+        var userCounts = [{{totalEditors }}, {{ totalRolUsers }}, {{totalAdmins }}];
 
         var ctx = document.getElementById('usersByRoleChart').getContext('2d');
         var chart = new Chart(ctx, {
@@ -266,10 +299,10 @@
         var countries = [];
         var userCounts = [];
 
-            {{#user.usersCountByGender}}
+            {{#usersCountByGender}}
             countries.push("{{gender}}");
             userCounts.push({{user_count}});
-            {{/user.usersCountByGender}}
+            {{/usersCountByGender}}
 
         var ctx = document.getElementById('usersByGenderChart').getContext('2d');
         var chart = new Chart(ctx, {
@@ -310,10 +343,10 @@
         var countries = [];
         var userCounts = [];
 
-            {{#user.usersCountByCountry}}
+            {{#usersCountByCountry}}
             countries.push("{{country}}");
             userCounts.push({{user_count}});
-            {{/user.usersCountByCountry}}
+            {{/usersCountByCountry}}
 
         var ctx = document.getElementById('usersByCountryChart').getContext('2d');
         var chart = new Chart(ctx, {
@@ -358,10 +391,10 @@
         var ageGroups = [];
         var userCountsByAgeGroup = [];
 
-            {{#user.usersCountByAgeGroup}}
+            {{#usersCountByAgeGroup}}
             ageGroups.push("{{age_group}}");
             userCountsByAgeGroup.push({{user_count}});
-            {{/user.usersCountByAgeGroup}}
+            {{/usersCountByAgeGroup}}
 
         // Configurar el gráfico de barras
         var ctx = document.getElementById('usersByAgeGroupChart').getContext('2d');
