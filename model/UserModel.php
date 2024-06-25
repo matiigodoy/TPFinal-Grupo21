@@ -63,8 +63,8 @@ class UserModel
         return $user;
     }
 
-    public function addInactiveQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer) {
-        $query = "INSERT INTO question (pregunta, category, active) VALUES (?, ?, 0)";
+    public function addInactiveAndCreadaQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer) {
+        $query = "INSERT INTO question (pregunta, category, isCreada, active) VALUES (?, ?, 1, 0)";
         $stmt = $this->database->prepare($query);
         if ($stmt === false) {
             die('Prepare failed: ' . htmlspecialchars($this->database->error));

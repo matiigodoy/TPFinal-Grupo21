@@ -74,7 +74,7 @@ class UserController
         $this->presenter->render("suggestQuestion", $data);
     }
 
-    public function addInactiveQuestion()
+    public function addInactiveAndCreadaQuestion()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $question = $_POST['question'];
@@ -85,7 +85,7 @@ class UserController
             $option_d = $_POST['option_d'];
             $right_answer = $_POST['right_answer'];
 
-            $this->userModel->addInactiveQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer);
+            $this->userModel->addInactiveAndCreadaQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer);
 
             return $this->getSuggestQuestionView();
         }
