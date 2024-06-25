@@ -44,6 +44,9 @@
                  <a href="/editor/getEditorView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Editor</a>
              {{/isAdmin}}
 
+             {{#isEditor}}
+                 <a href="/editor/getEditorView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Editor</a>
+             {{/isEditor}}
 
              {{#isUser}}
                  <a href="/user/getSuggestQuestionView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Sugerí tu pregunta</a>
