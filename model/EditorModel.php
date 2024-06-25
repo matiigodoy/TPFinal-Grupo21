@@ -64,11 +64,38 @@ class EditorModel
         return $questionsWithReports;
     }
 
+    public function getInactiveAndCreadaQuestions() {
+        $query = "SELECT q.id, q.pregunta, q.category, a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
+              FROM question q
+              JOIN answer a ON q.id = a.question_id
+              WHERE q.active = 0 AND q.isCreada = 1";
+
+        $stmt = $this->database->prepare($query);
+        if ($stmt === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result === false) {
+            die('Execute failed: ' . htmlspecialchars($stmt->error));
+        }
+
+        $inactiveQuestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $inactiveQuestions[] = $row;
+        }
+
+        $stmt->close();
+        return $inactiveQuestions;
+    }
+
     public function getInactiveQuestions() {
         $query = "SELECT q.id, q.pregunta, q.category, a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
               FROM question q
               JOIN answer a ON q.id = a.question_id
-              WHERE q.active = 0";  // Solo traer preguntas inactivas
+              WHERE q.active = 0";
 
         $stmt = $this->database->prepare($query);
         if ($stmt === false) {

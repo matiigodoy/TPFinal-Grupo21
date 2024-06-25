@@ -14,12 +14,14 @@ class EditorController
     public function getEditorView()
     {
         $activeQuestions = $this->editorModel->getActiveQuestions();
+        $inactiveAndCreadaQuestions = $this->editorModel->getInactiveAndCreadaQuestions();
         $inactiveQuestions = $this->editorModel->getInactiveQuestions();
         $questionsWithReports = $this->editorModel->getQuestionsWithReports();
 
         $data = [
             'activeQuestions' => $activeQuestions,
             'inactiveQuestions' => $inactiveQuestions,
+            'inactiveAndCreadaQuestions' => $inactiveAndCreadaQuestions,
             'questionsWithReports' => $questionsWithReports
         ];
 
