@@ -23,7 +23,7 @@ $allowedControllers = $authConfig[$role]['controllers'] ?? [];
 $allowedActions = $authConfig[$role]['actions'] ?? [];
 
 // Check if the user is logged in
-/*if (!isset($_SESSION['userID'])) {
+if (!isset($_SESSION['userID'])) {
     // If the user is not logged in, allow access only to allowed guest controllers and actions
     if (in_array($controller, $allowedControllers) && in_array($action, $allowedActions)) {
         $router->route($controller, $action);
@@ -40,10 +40,6 @@ $allowedActions = $authConfig[$role]['actions'] ?? [];
         $controller = "lobby";
         $action = "";
     }
-}*/
-
-// Log user role and ID to the console for debugging
-// echo "<script>console.log('role: ".$_SESSION['role']."');</script>";
-// echo "<script>console.log('user id: ".$_SESSION['userID']."');</script>";
+}
 
 $router->route($controller, $action);

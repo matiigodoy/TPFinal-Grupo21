@@ -53,9 +53,4 @@ class LoginController {
         $this->presenter->render("login", $data);
     }
 
-    public function exit() {
-        $this->sessionManager->destroy();
-        header("Location: index.php");
-        exit();
-    }
 }
