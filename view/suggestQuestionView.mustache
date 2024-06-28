@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Pregunta</title>
+</head>
+<body>
+<h1>Sugeri tu pregunta</h1>
+<form action="/user/addInactiveAndCreadaQuestion" method="POST">
+    <label for="question">Pregunta:</label>
+    <input type="text" id="question" name="question" required><br>
+
+    <label for="category">Categoría:</label>
+    <input type="text" id="category" name="category" required><br>
+
+    <label for="option_a">Opción A:</label>
+    <input type="text" id="option_a" name="option_a" required><br>
+
+    <label for="option_b">Opción B:</label>
+    <input type="text" id="option_b" name="option_b" required><br>
+
+    <label for="option_c">Opción C:</label>
+    <input type="text" id="option_c" name="option_c" required><br>
+
+    <label for="option_d">Opción D:</label>
+    <input type="text" id="option_d" name="option_d" required><br>
+
+    <label for="right_answer">Respuesta Correcta:</label>
+    <input type="text" id="right_answer" name="right_answer" required><br>
+
+    <input type="submit" value="Agregar Pregunta">
+</form>
+</body>
+</html>

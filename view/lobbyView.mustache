@@ -6,18 +6,22 @@
                 <h2 class="text-center display-3 fw-bold">Lobby</h2>
         
         <h5 class="text-center">Bienvenido <b>{{username}}</b>!!</h5>
+                <br />
+                <h5 class="text-center">Actualmente eres <b>{{role}}</b></h5>
                 <div class ="px-lg-5 p-4 bg-light rounded-3">
                     <p>Inicia una nueva partida aquí mismo</p>
                     <form action="/partida/play" method="POST">
                         <button type="submit" class="btn btn-primary" name="iniciarPartida">Iniciar Partida!</button>
                     </form>
                 </div>
-                <h5 class="text-center">Bienvenido {{role}}</h5>
+                <div class ="px-lg-5 p-4 bg-light rounded-3">
+                    <p>O también podés crear preguntas nuevas!</p>
+                    <form action="/user/getSuggestQuestionView" method="GET">
+                        <button type="submit" class="btn btn-primary" name="suggestQuestion">Sugerir Pregunta</button>
+                    </form>
+                </div>
     </div>
-    <div class="w3-center">
-        <a href="/partida/play" class="w3-button w3-orange w3-padding-large">Jugar</a>
-
-    </div>        </main>
+    </main>
 
     </div>
 </body>

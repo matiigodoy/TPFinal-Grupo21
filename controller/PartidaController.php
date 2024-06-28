@@ -19,10 +19,16 @@ class PartidaController {
         $data = [];
         $this->model->renderPartidaView($this->presenter);
     }
+
     public function start(){
         $this->model->startPartida($this->presenter);
     }
+
     public function checkAnswer(){
-        $this->model->checkAnswer();
+        $this->model->checkAnswer($this->presenter);
+    }
+    
+    public function continuePartida(){
+        $this->model->continuePartida($this->presenter);
     }
 }

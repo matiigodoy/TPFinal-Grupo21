@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,6 +19,13 @@
             <p><strong>Correo Electrónico:</strong> {{user.email}}</p>
             <p><strong>Puntuación:</strong> {{user.score}}</p>
             <p><strong>Posicion:</strong> {{user.position}}</p>
+
+            {{#isAdmin}}
+            <h5>Estadísticas de Preguntas</h5>
+            <canvas id="questionStatsChart" width="350" height="200"></canvas>
+                <button class="btn btn-sm btn-outline-danger m-2" onclick="generatePDF('questionStatsChart', 'Estadisticas usuario')">Descargar PDF</button>
+            {{/isAdmin}}
+
             <p><img src="{{qr}}" alt="Código QR"></p>
 
             <div class="col-md-12">
@@ -47,5 +56,37 @@
                 .bindPopup('Ubicación del usuario')
                 .openPopup();
     });
+
+        var ctx = document.getElementById('questionStatsChart').getContext('2d');
+        var questionStatsChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+        labels: ['Correctas', 'Incorrectas'],
+        datasets: [{
+        data: [{{correct}}, {{incorrect}}],
+        backgroundColor: ['#36A2EB', '#FF6384'],
+    }]
+    },
+        options: {
+        responsive: false,
+        plugins: {
+        legend: {
+        position: 'top',
+    },
+    }
+    }
+    });
+
+    function generatePDF(canvasId, title) {
+        const { jsPDF } = window.jspdf;
+        const canvas = document.getElementById(canvasId);
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF();
+        pdf.text(title, 10, 10);
+        pdf.addImage(imgData, 'PNG', 10, 20, 180, 160); // Ajusta el tamaño y la posición de la imagen en el PDF
+        pdf.save(`${title}.pdf`);
+    }
+
 </script>
+
 </html>

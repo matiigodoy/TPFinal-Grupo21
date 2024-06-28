@@ -23,7 +23,7 @@ class LoginController {
 
             if ($result !== false) {
                 $this->sessionManager->setUser($result['id'], $result['role']);
-                $this->renderLoginSuccess();
+                $this->renderLoginSuccess($_POST["username"]);
             } else {
                 $this->renderLoginError("Usuario y/o contraseña inválidos. Intente nuevamente");
             }
@@ -41,8 +41,9 @@ class LoginController {
         return $this->loginModel->validateLogin($username, $password);
     }
 
-    private function renderLoginSuccess() {
+    private function renderLoginSuccess($username) {
         $data = [];
+        $data['username'] = $username;
         $this->presenter->render("lobby", $data);
     }
 
@@ -52,9 +53,4 @@ class LoginController {
         $this->presenter->render("login", $data);
     }
 
-    public function exit() {
-        $this->sessionManager->destroy();
-        header("Location: index.php");
-        exit();
-    }
 }

@@ -6,11 +6,13 @@ class UserController
     private $userModel;
     private $presenter;
     private $qrCreator;
+    private $sessionManager;
 
-    public function __construct($userModel, $presenter, $qrCreator) {
+    public function __construct($userModel, $presenter, $qrCreator, $sessionManager) {
         $this->userModel = $userModel;
         $this->presenter = $presenter;
         $this->qrCreator = $qrCreator;
+        $this->sessionManager = $sessionManager;
     }
 
     public function get() {
@@ -30,6 +32,7 @@ class UserController
 
         $userId = $_GET['id'];
         $user = $this->userModel->getUserById($userId);
+        $stats = $this->userModel->getUserQuestionStats($userId);
         $username = $user['username'];
 
         if (!$user) {
@@ -45,7 +48,9 @@ class UserController
         $qrImagePath = $this->qrCreator->createQr($userId, $username);
 
         // Pasar los datos del usuario a la vista
-        $data = ['user' => $user, 'qr' => $qrImagePath];
+        $data = ['user' => $user, 'qr' => $qrImagePath,
+            'correct' => $stats['correct'],
+            'incorrect' => $stats['incorrect']];
         $this->presenter->render("profileOtherUser", $data);
     }
 
@@ -63,5 +68,51 @@ class UserController
         return $userPosition;
     }
 
+    public function getSuggestQuestionView(){
+
+        $data=[];
+        $this->presenter->render("suggestQuestion", $data);
+    }
+
+    public function addInactiveAndCreadaQuestion()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $question = $_POST['question'];
+            $category = $_POST['category'];
+            $option_a = $_POST['option_a'];
+            $option_b = $_POST['option_b'];
+            $option_c = $_POST['option_c'];
+            $option_d = $_POST['option_d'];
+            $right_answer = $_POST['right_answer'];
+
+            $this->userModel->addInactiveAndCreadaQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer);
+
+            return $this->getSuggestQuestionView();
+        }
+    }
+
+    public function claimQuestionWrong(){
+        $data[] = $_POST['questionId'];
+
+        $this->userModel->claimQuestionWrong();
+        $this->presenter->render("claimQuestionWrong", $data);
+    }
+
+    public function getProfile() {
+        $userID = null;
+        if (isset($_SESSION["userID"])) {
+            $userID = $_SESSION["userID"];
+        }
+
+        $data = $this->userModel->getProfile($userID);
+
+        $this->presenter->render("profile", $data);
+    }
+
+    public function exit() {
+        $this->sessionManager->destroy();
+        header("Location: index.php");
+        exit();
+    }
 
 }
