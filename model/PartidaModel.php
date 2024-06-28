@@ -224,6 +224,15 @@ class PartidaModel
         $stmt->bind_param("i", $questionId);
         return $this->executionSuccessful($stmt);
     }
+    
+    public function bringUserAccuracy($userId){
+        $sql = "SELECT SUM(uq.wasRight) / COUNT(*) * 100 AS accuracy
+	            FROM user_question uq
+                WHERE uq.id_user = $userId";
+
+        return $this->database->query($query);
+    }
+
     public function registerScoreToUser($userId){
         $sql = "UPDATE user u SET score = score + 5 WHERE u.id = ?";
 
