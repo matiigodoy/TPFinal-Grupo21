@@ -105,6 +105,9 @@ class PartidaModel
 
         $category = array_key_first($_POST);
         $data['category'] = $category;
+        $userAccuracy = $this->bringUserAccuracy($_SESSION['userID']);
+        $questionEasiness = $this->bringQuestionEasiness();
+
         $query = $this->prepareBringQuestionQuery($category);
         $dataRaw = $this->database->query($query);
         if (count($dataRaw) > 0) {
@@ -224,13 +227,20 @@ class PartidaModel
         $stmt->bind_param("i", $questionId);
         return $this->executionSuccessful($stmt);
     }
-    
+    public function bringQuestionEasiness(){
+        $sql = "SELECT SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 as question_easiness
+                FROM question q
+                GROUP BY q.id";
+
+        return $this->database->query($sql);
+    }
+
     public function bringUserAccuracy($userId){
         $sql = "SELECT SUM(uq.wasRight) / COUNT(*) * 100 AS accuracy
 	            FROM user_question uq
                 WHERE uq.id_user = $userId";
 
-        return $this->database->query($query);
+        return $this->database->query($sql);
     }
 
     public function registerScoreToUser($userId){
