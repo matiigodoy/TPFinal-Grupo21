@@ -37,7 +37,7 @@
 
 
          {{#userID}}
-             <a href="/user/getProfile" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Perfil {{role}} </a>
+             
              <a href="/partida/get" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Jugar!</a>
              <a href="/user/exit" class="w3-bar-item w3-button w3-padding-medium w3-hide-small w3-right logout-button btn btn-danger btn-m">Cerrar Sesión</a>
              <a href="/lobby" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Lobby</a>
@@ -46,14 +46,13 @@
                  <a href="/admin/getAdminView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Admin</a>
                  <a href="/editor/getEditorView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Editor</a>
              {{/isAdmin}}
-
              {{#isEditor}}
                  <a href="/editor/getEditorView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Editor</a>
              {{/isEditor}}
-
              {{#isUser}}
                  <a href="/user/getSuggestQuestionView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Sugerí tu pregunta</a>
              {{/isUser}}
+             <a href="/user/getUserProfile?id={{userID}}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Mi perfil</a>
 
 
          {{/userID}}

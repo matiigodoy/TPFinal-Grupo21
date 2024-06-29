@@ -99,17 +99,6 @@ class UserController
             $this->presenter->render("claimQuestionWrong", $data);
     }
 
-    public function getProfile() {
-        $userID = null;
-        if (isset($_SESSION["userID"])) {
-            $userID = $_SESSION["userID"];
-        }
-
-        $data = $this->userModel->getProfile($userID);
-
-        $this->presenter->render("profile", $data);
-    }
-
     public function exit() {
         $this->sessionManager->destroy();
         header("Location: index.php");
