@@ -86,7 +86,6 @@ class UserModel
     }
 
     public function claimQuestionWrong($questionId) {
-        // Example query to increment the reports field by 1
         $query = "UPDATE question SET reports = reports + 1 WHERE id = ?";
         $stmt = $this->database->prepare($query);
         $stmt->bind_param('i', $questionId);
@@ -94,8 +93,6 @@ class UserModel
         $stmt->close();
         return true;
     }
-
-
 
     public function getProfile($userID) {
         $sql = "SELECT u.fullname, u.birth_year, u.gender, u.register_date

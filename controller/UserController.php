@@ -94,14 +94,10 @@ class UserController
     public function claimQuestionWrong() {
             $questionId = $_POST['questionId'];
             $data = ['questionId' => $questionId];
-
-            // Pass the questionId to the model and check if the model method is successful
             $this->userModel->claimQuestionWrong($questionId);
 
             $this->presenter->render("claimQuestionWrong", $data);
     }
-
-
 
     public function getProfile() {
         $userID = null;
