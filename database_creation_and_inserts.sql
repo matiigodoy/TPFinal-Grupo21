@@ -45,7 +45,7 @@ CREATE TABLE `question`(
   count_acertada INT(30) DEFAULT 0,
   count_ofrecida INT(30) DEFAULT 0,
   isCreada TINYINT(1) NOT NULL DEFAULT 1,
-  reports INT(10) NOT NULL,
+  reports INT(10) NOT NULL DEFAULT 0,
   active TINYINT(1) NOT NULL DEFAULT 1
 );
 
