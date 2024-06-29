@@ -85,8 +85,13 @@ class UserModel
         $stmt->close();
     }
 
-    public function claimQuestionWrong(){
-        
+    public function claimQuestionWrong($questionId) {
+        $query = "UPDATE question SET reports = reports + 1 WHERE id = ?";
+        $stmt = $this->database->prepare($query);
+        $stmt->bind_param('i', $questionId);
+        $stmt->execute();
+        $stmt->close();
+        return true;
     }
 
     public function getProfile($userID) {

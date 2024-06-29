@@ -33,7 +33,7 @@ CREATE TABLE `partida`(
   id_user INT NOT NULL,
   id_opponent INT,
   partida_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  isOpen TINYINT(1) NOT NULL DEFAULT 0;
+  isOpen TINYINT(1) NOT NULL DEFAULT 0,
   FOREIGN KEY (id_user) REFERENCES user(id),
   FOREIGN KEY (id_opponent) REFERENCES user(id)
  );
@@ -45,7 +45,7 @@ CREATE TABLE `question`(
   count_acertada INT(30) DEFAULT 0,
   count_ofrecida INT(30) DEFAULT 0,
   isCreada TINYINT(1) NOT NULL DEFAULT 1,
-  reports INT(10) NOT NULL,
+  reports INT(10) NOT NULL DEFAULT 0,
   active TINYINT(1) NOT NULL DEFAULT 1
 );
 
