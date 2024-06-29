@@ -129,6 +129,7 @@ class PartidaModel
                 LEFT JOIN answer a ON q.id = a.question_id
                 LEFT JOIN user_question uq ON q.id = uq.id_question
                 WHERE q.category = '$category'
+                AND q.active = 1
                 AND q.id NOT IN(SELECT uq.id_question FROM user_question uq WHERE uq.id_user = $sessionId)
                 ORDER BY RAND()
                 LIMIT 1;";
