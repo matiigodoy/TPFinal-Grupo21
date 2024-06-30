@@ -99,19 +99,28 @@ class PartidaModel
         return $data;
     }
 
-    public function bringQuestionAndAnswers($data)
-    {
+    public function bringQuestionAndAnswers($data){
         //si chotea escribiendo a mano 'continue partida' tenemos como atajarnos
         if(!$_POST)
             return [];
+
+        $sessionId = $_SESSION['userID'];
         $category = array_key_first($_POST);
         $data['category'] = $category;
-        $userAccuracy = $this->bringUserAccuracy($_SESSION['userID'])[0];
-        $questionEasiness = $this->bringQuestionEasiness();
+        $accuracyPerc = $this->bringUserAccuracy($_SESSION['userID']);
+        $userEasinessOfQuestions = 100 - $accuracyPerc;
+        //$questionEasiness = $this->bringQuestionEasiness($userEasinessOfQuestions, $category);
 
-        $query = $this->prepareBringQuestionQuery($category);
+        $query = $this->prepareBringQuestionAccToUserQuery($category, $userEasinessOfQuestions, $sessionId);
         $dataRaw = $this->database->query($query);
-
+        if(empty($dataRaw)){
+            $query = $this->prepareBringOnlyQuestionsWronglyAnswered($category, $sessionId);
+            $dataRaw = $this->database->query($query);
+        }
+        if(empty($dataRaw)){
+            $query = $this->prepareBringAllQuestionsQuery();
+            $dataRaw = $this->database->query($query);
+        }
         if (count($dataRaw) > 0) {
             // Procesar los datos de la pregunta y respuestas obtenidas
             $data['question'] = array_slice($dataRaw[0], 0, 3);
@@ -122,54 +131,64 @@ class PartidaModel
             $_SESSION['correct'] = $data['correct'];
 
             return $data;
-        } else {
-            // Si no se encontró ninguna pregunta, traer todas usando prepareBringAllQuestionsQuery
-            $allQuestionsQuery = $this->prepareBringAllQuestionsQuery($category);
-            $dataRaw = $this->database->query($allQuestionsQuery);
-
-            if (count($dataRaw) > 0) {
-                // Procesar los datos de todas las preguntas obtenidas (primer resultado)
-                $data['question'] = array_slice($dataRaw[0], 0, 3);
-                $answersWithKeys = array_slice($dataRaw[0], 8, 4);
-                $data['answerKeys'] = array_keys($answersWithKeys);
-                $data['answers'] = array_values($answersWithKeys);
-                $data['correct'] = array_slice($dataRaw[0], 12, 1);
-                $_SESSION['correct'] = $data['correct'];
-
-                return $data;
-            } else {
-                return null; // Si no hay preguntas en absoluto
-            }
+        } 
+        else {
+            return null;
         }
     }
 
-        public function prepareBringQuestionQuery($category)
-        {
-            $sessionId = $_SESSION['userID'];
+    public function prepareBringQuestionAccToUserQuery($category, $userEaseNumber, $sessionId){
+        return "SELECT subquery.*, a.* FROM ( 
+                    SELECT q.id, q.category, q.pregunta, q.active, 
+                    SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 
+                    as question_easiness 
+                    FROM question q 
+                    WHERE q.category = 'deportes' 
+                    GROUP BY q.id 
+                    HAVING question_easiness <= 36.3636 )
+                as subquery 
+                LEFT JOIN answer a ON subquery.id = a.question_id 
+                LEFT JOIN user_question uq ON subquery.id = uq.id_question 
+                WHERE subquery.active = 1 
+                AND subquery.id NOT IN(
+                                        SELECT uq.id_question 
+                                        FROM user_question uq 
+                                        WHERE uq.id_user = 2) 
+                ORDER BY RAND() LIMIT 1;";
+    }
 
-            return "SELECT q.*, a.* 
+    public function prepareBringOnlyQuestionsWronglyAnswered($category, $sessionId)
+    {
+        return "SELECT q.*, a.* 
                 FROM question q
                 LEFT JOIN answer a ON q.id = a.question_id
                 LEFT JOIN user_question uq ON q.id = uq.id_question
                 WHERE q.category = '$category'
                 AND q.active = 1
-                AND q.id NOT IN(SELECT uq.id_question FROM user_question uq WHERE uq.id_user = $sessionId)
+                AND q.id IN(SELECT uq.id_question 
+                            FROM user_question uq 
+                            WHERE uq.id_user = $sessionId
+                            AND uq.wasRight = 0)
                 ORDER BY RAND()
                 LIMIT 1;";
-        }
-
-    public function prepareBringAllQuestionsQuery($category)
-    {
-        return "
-        SELECT q.*, a.* 
-        FROM question q
-        LEFT JOIN answer a ON q.id = a.question_id
-        WHERE q.category = '$category'
-        AND q.active = 1
-        ORDER BY RAND()
-        LIMIT 1;
-    ";
     }
+    public function prepareBringAllQuestionsQuery($category, $sessionId){
+        return "SELECT q.*, a.* 
+                FROM question q
+                LEFT JOIN answer a ON q.id = a.question_id
+                LEFT JOIN user_question uq ON q.id = uq.id_question
+                WHERE q.category = '$category'
+                AND q.active = 1
+                AND q.id NOT IN(SELECT uq.id_question 
+                            FROM user_question uq 
+                            WHERE uq.id_user = $sessionId
+                            AND uq.wasRight = 0)
+                ORDER BY RAND()
+                LIMIT 1;";
+    }
+
+    //TODO: HACER UN METODO QUE TRAIGA SOLO LAS QUE NO TUVO
+    //ESTE DE ARRIBA ES PARA TRAER LAS QUE RESPONDIO MAL
 
     public function setQuestionsList(){
         if (!isset($_SESSION['selected_questions'])) {
@@ -256,12 +275,23 @@ class PartidaModel
         $stmt->bind_param("i", $questionId);
         return $this->executionSuccessful($stmt);
     }
-    public function bringQuestionEasiness(){
-        $sql = "SELECT SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 as question_easiness
-                FROM question q
-                GROUP BY q.id";
-
-        return $this->database->query($sql);
+    public function bringQuestionEasiness($userRatio, $category){
+        
+        do {
+                $sql = "
+                SELECT q.*, SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 as question_easiness 
+                FROM question q 
+                WHERE q.category = '$category'
+                GROUP BY q.id 
+                HAVING question_easiness <= $userRatio";
+    
+                $results = $this->database->query($sql);
+    
+            if (empty($results)) {
+            $userRatio += $increment;
+            }
+        } while (empty($results));
+    return $results;
     }
 
     public function bringUserAccuracy($userId){
@@ -269,7 +299,8 @@ class PartidaModel
 	            FROM user_question uq
                 WHERE uq.id_user = $userId";
 
-        return $this->database->query($sql);
+        $accuracyArray = $this->database->query($sql);
+        return $accuracyArray[0]['accuracy'];
     }
 
     public function registerScoreToUser($userId){
