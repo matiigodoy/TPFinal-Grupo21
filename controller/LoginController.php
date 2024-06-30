@@ -44,6 +44,7 @@ class LoginController {
     private function renderLoginSuccess($username) {
         $data = [];
         $data['username'] = $username;
+        $_SESSION['username'] = $username;
         $this->presenter->render("lobby", $data);
     }
 

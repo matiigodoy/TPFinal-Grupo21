@@ -12,32 +12,29 @@ class PartidaModel
         return $presenter->render("partida");
     }
 
-    public function startPartida($presenter){
-
+    public function startPartida(){
+        $cheat = $this->validateUserCheated();
+        if($cheat) return $cheat;
         $this->registerPartida();
-
-        $this->handlePartida($presenter);
+        return $this->handlePartida();
     }
+    
     public function validateUserCheated(){
-        if (!isset($_SESSION['page_loaded'])) {
-            $_SESSION['page_loaded'] = true;
-        }
-        elseif (isset($_SESSION['page_loaded']) && $_REQUEST['action'] == "continuePartida") {
+        if (!isset($_SESSION['questionId'])) {
+
+            $_SESSION['questionId'] = 0;
             return;
         }
-        else {
-            // Si ya está marcado, significa que se ha recargado la página
-            $_SESSION['page_reloaded'] = true;
-            $presenter->render("recargaste");
-            unset($_SESSION['page_loaded']);
-            exit();
+        elseif (isset($_SESSION['questionId']) && $_REQUEST['action'] == "continuePartida") {
+            return;
         }
+        // Si ya está marcado, significa que se ha recargado la página
+        //$presenter->render("recargaste");
+        unset($_SESSION['questionId']);
+        return ["fail" => "Lo siento, registramos que has hecho trampa o pasó algo raro. Podés volver al lobby y reintentar otra partida."];
     }
 
-    public function handlePartida($presenter){
-        //chequeamos que no haya recargado la pagina
-
-        $this->validateUserCheated();
+    public function handlePartida(){
 
         $flowValues = $this->startFlowPartida();
         $questionOK = false;
@@ -47,19 +44,20 @@ class PartidaModel
             if($questionOK){
                 $_SESSION['questionId'] = $flowValues['question']['id'];
             }
+            $flowValues = $this->determineCategoryView($flowValues['category'], $flowValues);
+            
+        return ["category" => $flowValues['category'],
+                "pregunta" => $flowValues['question']['pregunta'], 
+                "answers" => $flowValues['answers'], 
+                "answerKeys" => $flowValues['answerKeys'],
+                "correct" => $flowValues['correct']['right_answer'],
+                "questionOk" => $questionOK,
+                "questionClass" => $flowValues['questionClass'],
+                "questionStyle" => $flowValues['questionStyle'],
+                "buttonClass" => $flowValues['buttonClass'],
+                "buttonStyle" => $flowValues['buttonStyle']];
         }
-        $flowValues = $this->determineCategoryView($flowValues['category'], $flowValues);
-        $presenter->render("category",
-                            ["category" => $flowValues['category'],
-                            "pregunta" => $flowValues['question']['pregunta'],
-                            "answers" => $flowValues['answers'],
-                            "answerKeys" => $flowValues['answerKeys'],
-                            "correct" => $flowValues['correct']['right_answer'],
-                            "questionOk" => $questionOK,
-                            "questionClass" => $flowValues['questionClass'],
-                            "questionStyle" => $flowValues['questionStyle'],
-                            "buttonClass" => $flowValues['buttonClass'],
-                            "buttonStyle" => $flowValues['buttonStyle']]);
+        return ["fail" => "Lo sentimos, hubo un error, intente en un momento más tarde"];
     }
     public function determineCategoryView($category, $flowValues){
         switch ($category) {
@@ -101,72 +99,95 @@ class PartidaModel
         return $data;
     }
 
-    public function bringQuestionAndAnswers($data)
-    {
+    public function bringQuestionAndAnswers($data){
+        //si chotea escribiendo a mano 'continue partida' tenemos como atajarnos
+        if(!$_POST)
+            return [];
+
+        $sessionId = $_SESSION['userID'];
         $category = array_key_first($_POST);
         $data['category'] = $category;
+        $accuracyPerc = $this->bringUserAccuracy($_SESSION['userID']);
+        $userEasinessOfQuestions = 100 - $accuracyPerc;
+        //$questionEasiness = $this->bringQuestionEasiness($userEasinessOfQuestions, $category);
 
-        // Intentar traer una pregunta usando prepareBringQuestionQuery
-        $query = $this->prepareBringQuestionQuery($category);
+        $query = $this->prepareBringQuestionAccToUserQuery($category, $userEasinessOfQuestions, $sessionId);
         $dataRaw = $this->database->query($query);
-
+        if(empty($dataRaw)){
+            $query = $this->prepareBringOnlyQuestionsWronglyAnswered($category, $sessionId);
+            $dataRaw = $this->database->query($query);
+        }
+        if(empty($dataRaw)){
+            $query = $this->prepareBringAllQuestionsQuery($category, $sessionId);
+            $dataRaw = $this->database->query($query);
+        }
         if (count($dataRaw) > 0) {
-            // Procesar los datos de la pregunta y respuestas obtenidas
             $data['question'] = array_slice($dataRaw[0], 0, 3);
-            $answersWithKeys = array_slice($dataRaw[0], 8, 4);
+            $answersWithKeys = array_slice($dataRaw[0], 4, 4);
             $data['answerKeys'] = array_keys($answersWithKeys);
             $data['answers'] = array_values($answersWithKeys);
-            $data['correct'] = array_slice($dataRaw[0], 12, 1);
+            $data['correct'] = array_slice($dataRaw[0], 8, 1);
             $_SESSION['correct'] = $data['correct'];
 
             return $data;
-        } else {
-            // Si no se encontró ninguna pregunta, traer todas usando prepareBringAllQuestionsQuery
-            $allQuestionsQuery = $this->prepareBringAllQuestionsQuery($category);
-            $dataRaw = $this->database->query($allQuestionsQuery);
-
-            if (count($dataRaw) > 0) {
-                // Procesar los datos de todas las preguntas obtenidas (primer resultado)
-                $data['question'] = array_slice($dataRaw[0], 0, 3);
-                $answersWithKeys = array_slice($dataRaw[0], 8, 4);
-                $data['answerKeys'] = array_keys($answersWithKeys);
-                $data['answers'] = array_values($answersWithKeys);
-                $data['correct'] = array_slice($dataRaw[0], 12, 1);
-                $_SESSION['correct'] = $data['correct'];
-
-                return $data;
-            } else {
-                return null; // Si no hay preguntas en absoluto
-            }
+        } 
+        //SI ENTRA ACÁ ES PORQUE YA NO HAY MÁS PREGUNTAS, RESPONDIÓ TODO BIEN: GANÓ
+        else {
+            return null;
         }
     }
 
-        public function prepareBringQuestionQuery($category)
-        {
-            $sessionId = $_SESSION['userID'];
+    public function prepareBringQuestionAccToUserQuery($category, $userEaseNumber, $sessionId){
+        return "SELECT quest.*, a.option_a,a.option_b,a.option_c,a.option_d,a.right_answer FROM ( 
+                    SELECT q.id, q.category, q.pregunta, q.active, 
+                    SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 
+                    as question_easiness 
+                    FROM question q 
+                    WHERE q.category = '$category' 
+                    GROUP BY q.id 
+                    HAVING question_easiness <= $userEaseNumber )
+                as quest 
+                LEFT JOIN answer a ON quest.id = a.question_id 
+                LEFT JOIN user_question uq ON quest.id = uq.id_question 
+                WHERE quest.active = 1 
+                AND quest.id NOT IN(
+                                        SELECT uq.id_question 
+                                        FROM user_question uq 
+                                        WHERE uq.id_user = $sessionId) 
+                ORDER BY RAND() LIMIT 1;";
+    }
 
-            return "SELECT q.*, a.* 
+    public function prepareBringOnlyQuestionsWronglyAnswered($category, $sessionId)
+    {
+        return "SELECT q.id, q.category, q.pregunta, q.active, 
+                       a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
                 FROM question q
                 LEFT JOIN answer a ON q.id = a.question_id
                 LEFT JOIN user_question uq ON q.id = uq.id_question
                 WHERE q.category = '$category'
                 AND q.active = 1
-                AND q.id NOT IN(SELECT uq.id_question FROM user_question uq WHERE uq.id_user = $sessionId)
+                AND q.id IN(SELECT uq.id_question 
+                            FROM user_question uq 
+                            WHERE uq.id_user = $sessionId
+                            AND uq.wasRight = 0)
                 ORDER BY RAND()
                 LIMIT 1;";
-        }
+    }
 
-    public function prepareBringAllQuestionsQuery($category)
-    {
-        return "
-        SELECT q.*, a.* 
-        FROM question q
-        LEFT JOIN answer a ON q.id = a.question_id
-        WHERE q.category = '$category'
-        AND q.active = 1
-        ORDER BY RAND()
-        LIMIT 1;
-    ";
+    public function prepareBringAllQuestionsQuery($category, $sessionId){
+        return "SELECT q.id, q.category, q.pregunta, q.active, 
+                       a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
+                FROM question q
+                LEFT JOIN answer a ON q.id = a.question_id
+                LEFT JOIN user_question uq ON q.id = uq.id_question
+                WHERE q.category = '$category'
+                AND q.active = 1
+                AND q.id NOT IN(SELECT uq.id_question 
+                            FROM user_question uq 
+                            WHERE uq.id_user = $sessionId
+                            AND uq.wasRight = 0)
+                ORDER BY RAND()
+                LIMIT 1;";
     }
 
     public function setQuestionsList(){
@@ -201,15 +222,10 @@ class PartidaModel
                   VALUES (?, ?)";
         $stmt = $this->prepareQuery($query);
 
-
         $stmt->bind_param("is",
             $userId,
             $time
         );
-        //aca borron y cuenta nueva para jugar otra partida
-        if(isset($_SESSION['page_loaded'])){
-            unset($_SESSION['page_loaded']);
-        }
         return $this->executionSuccessful($stmt);
     }
 
@@ -259,6 +275,34 @@ class PartidaModel
         $stmt->bind_param("i", $questionId);
         return $this->executionSuccessful($stmt);
     }
+    public function bringQuestionEasiness($userRatio, $category){
+        
+        do {
+                $sql = "
+                SELECT q.*, SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 as question_easiness 
+                FROM question q 
+                WHERE q.category = '$category'
+                GROUP BY q.id 
+                HAVING question_easiness <= $userRatio";
+    
+                $results = $this->database->query($sql);
+    
+            if (empty($results)) {
+            $userRatio += $increment;
+            }
+        } while (empty($results));
+    return $results;
+    }
+
+    public function bringUserAccuracy($userId){
+        $sql = "SELECT SUM(uq.wasRight) / COUNT(*) * 100 AS accuracy
+	            FROM user_question uq
+                WHERE uq.id_user = $userId";
+
+        $accuracyArray = $this->database->query($sql);
+        return $accuracyArray[0]['accuracy'];
+    }
+
     public function registerScoreToUser($userId){
         $sql = "UPDATE user u SET score = score + 5 WHERE u.id = ?";
 
@@ -268,24 +312,31 @@ class PartidaModel
         return $this->executionSuccessful($stmt);
     }
 
-    public function checkAnswer($presenter){
+    public function checkAnswer(){
+        
+        if(!array_key_exists('questionId', $_SESSION))
+            return ["fail" => "Has recargado la pagina check answer"];
+        
+        $questionId = $_SESSION['questionId'];
         $correctAnswer = $_SESSION['correct']['right_answer'];
         $answerGivenByUser =  array_keys($_POST);
         $optionSubstring = $answerGivenByUser != null ? substr($answerGivenByUser[1], 7) : null;
         $userCorrect = $correctAnswer === $optionSubstring;
-        $this->registerUserRespondedRightOrWrong($userCorrect, $_SESSION['userID'], $_SESSION['questionId']);
-        $this->registerQuestionOfferedAndHitCount($_SESSION['questionId'], $userCorrect);
+
+        $this->registerUserRespondedRightOrWrong($userCorrect, $_SESSION['userID'], $questionId);
+        $this->registerQuestionOfferedAndHitCount($questionId, $userCorrect);
         if($userCorrect){
             $this->registerScoreToUser($_SESSION['userID']);
-            $presenter->render("successfulAnswer", ["category" => array_key_first($_POST)]);
+            return ["category" => array_key_first($_POST)];
         }
         else{
-            $presenter->render("failedAnswer", ["questionId" => $_SESSION['questionId']]);
+            unset($_SESSION['questionId']);
+            return ["questionId" => $questionId];
         }
     }
 
-    public function continuePartida($presenter){
-        $this->handlePartida($presenter);
+    public function continuePartida(){
+        return $this->handlePartida();
     }
 
 }
