@@ -20,7 +20,6 @@ class Database {
             die("Query failed: " . $this->conn->error);
         }
 
-
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
