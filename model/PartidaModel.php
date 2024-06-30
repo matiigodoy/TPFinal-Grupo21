@@ -24,7 +24,7 @@ class PartidaModel
         }
         elseif (isset($_SESSION['page_loaded']) && $_REQUEST['action'] == "continuePartida") {
             return;
-        } 
+        }
         else {
             // Si ya está marcado, significa que se ha recargado la página
             $_SESSION['page_reloaded'] = true;
@@ -36,23 +36,23 @@ class PartidaModel
 
     public function handlePartida($presenter){
         //chequeamos que no haya recargado la pagina
-        
+
         $this->validateUserCheated();
 
         $flowValues = $this->startFlowPartida();
         $questionOK = false;
         if ($flowValues) {
             $questionOK = $this->registerUserWithThatQuestion($flowValues['question']);
-        
+
             if($questionOK){
                 $_SESSION['questionId'] = $flowValues['question']['id'];
             }
         }
         $flowValues = $this->determineCategoryView($flowValues['category'], $flowValues);
-        $presenter->render("category", 
+        $presenter->render("category",
                             ["category" => $flowValues['category'],
-                            "pregunta" => $flowValues['question']['pregunta'], 
-                            "answers" => $flowValues['answers'], 
+                            "pregunta" => $flowValues['question']['pregunta'],
+                            "answers" => $flowValues['answers'],
                             "answerKeys" => $flowValues['answerKeys'],
                             "correct" => $flowValues['correct']['right_answer'],
                             "questionOk" => $questionOK,
@@ -67,23 +67,23 @@ class PartidaModel
                 $flowValues['questionClass'] = "d-grid gap-2 bg-warning";
                 $flowValues['questionStyle'] = "";
                 $flowValues['buttonClass'] = "g-col-2 btn btn-warning";
-                $flowValues['buttonStyle'] = "width:100%; margin: 0em 0em 2em 0em;"; 
+                $flowValues['buttonStyle'] = "width:100%; margin: 0em 0em 2em 0em;";
                 return $flowValues;
-                
+
             case 'cultura':
                 $flowValues['questionClass'] = "d-grid gap-2";
                 $flowValues['questionStyle'] = "background-color:blueviolet; color:white;";
                 $flowValues['buttonClass'] = "g-col-2 btn";
-                $flowValues['buttonStyle'] = "width:100%; margin: 0em 0em 2em 0em;background-color:blueviolet;color:white;"; 
+                $flowValues['buttonStyle'] = "width:100%; margin: 0em 0em 2em 0em;background-color:blueviolet;color:white;";
                 return $flowValues;
-            
+
             case 'deportes':
                 $flowValues['questionClass'] = "d-grid gap-2 bg-success text-light";
                 $flowValues['questionStyle'] = "";
                 $flowValues['buttonClass'] = "g-col-2 btn btn-success";
-                $flowValues['buttonStyle'] = "width:100%; margin: 0em 0em 2em 0em;";  
+                $flowValues['buttonStyle'] = "width:100%; margin: 0em 0em 2em 0em;";
                 return $flowValues;
-            
+
             default:
                 $flowValues['questionClass'] = "d-grid gap-2 bg-success text-light";
                 $flowValues['questionStyle'] = "";
@@ -93,24 +93,26 @@ class PartidaModel
         }
     }
 
-    public function startFlowPartida(){
+    public function startFlowPartida() {
         $data = [];
 
         $data = $this->bringQuestionAndAnswers($data);
-        
+
         return $data;
     }
 
-    public function bringQuestionAndAnswers($data){
-
+    public function bringQuestionAndAnswers($data)
+    {
         $category = array_key_first($_POST);
         $data['category'] = $category;
+
+        // Intentar traer una pregunta usando prepareBringQuestionQuery
         $query = $this->prepareBringQuestionQuery($category);
         $dataRaw = $this->database->query($query);
+
         if (count($dataRaw) > 0) {
-            
+            // Procesar los datos de la pregunta y respuestas obtenidas
             $data['question'] = array_slice($dataRaw[0], 0, 3);
-        
             $answersWithKeys = array_slice($dataRaw[0], 8, 4);
             $data['answerKeys'] = array_keys($answersWithKeys);
             $data['answers'] = array_values($answersWithKeys);
@@ -118,13 +120,32 @@ class PartidaModel
             $_SESSION['correct'] = $data['correct'];
 
             return $data;
-        }
-        return null;
-    }
-    public function prepareBringQuestionQuery($category){
-        $sessionId = $_SESSION['userID'];
+        } else {
+            // Si no se encontró ninguna pregunta, traer todas usando prepareBringAllQuestionsQuery
+            $allQuestionsQuery = $this->prepareBringAllQuestionsQuery($category);
+            $dataRaw = $this->database->query($allQuestionsQuery);
 
-        return "SELECT q.*, a.* 
+            if (count($dataRaw) > 0) {
+                // Procesar los datos de todas las preguntas obtenidas (primer resultado)
+                $data['question'] = array_slice($dataRaw[0], 0, 3);
+                $answersWithKeys = array_slice($dataRaw[0], 8, 4);
+                $data['answerKeys'] = array_keys($answersWithKeys);
+                $data['answers'] = array_values($answersWithKeys);
+                $data['correct'] = array_slice($dataRaw[0], 12, 1);
+                $_SESSION['correct'] = $data['correct'];
+
+                return $data;
+            } else {
+                return null; // Si no hay preguntas en absoluto
+            }
+        }
+    }
+
+        public function prepareBringQuestionQuery($category)
+        {
+            $sessionId = $_SESSION['userID'];
+
+            return "SELECT q.*, a.* 
                 FROM question q
                 LEFT JOIN answer a ON q.id = a.question_id
                 LEFT JOIN user_question uq ON q.id = uq.id_question
@@ -133,6 +154,19 @@ class PartidaModel
                 AND q.id NOT IN(SELECT uq.id_question FROM user_question uq WHERE uq.id_user = $sessionId)
                 ORDER BY RAND()
                 LIMIT 1;";
+        }
+
+    public function prepareBringAllQuestionsQuery($category)
+    {
+        return "
+        SELECT q.*, a.* 
+        FROM question q
+        LEFT JOIN answer a ON q.id = a.question_id
+        WHERE q.category = '$category'
+        AND q.active = 1
+        ORDER BY RAND()
+        LIMIT 1;
+    ";
     }
 
     public function setQuestionsList(){
