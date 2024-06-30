@@ -91,22 +91,12 @@ class UserController
         }
     }
 
-    public function claimQuestionWrong(){
-        $data[] = $_POST['questionId'];
+    public function claimQuestionWrong() {
+            $questionId = $_POST['questionId'];
+            $data = ['questionId' => $questionId];
+            $this->userModel->claimQuestionWrong($questionId);
 
-        $this->userModel->claimQuestionWrong();
-        $this->presenter->render("claimQuestionWrong", $data);
-    }
-
-    public function getProfile() {
-        $userID = null;
-        if (isset($_SESSION["userID"])) {
-            $userID = $_SESSION["userID"];
-        }
-
-        $data = $this->userModel->getProfile($userID);
-
-        $this->presenter->render("profile", $data);
+            $this->presenter->render("claimQuestionWrong", $data);
     }
 
     public function exit() {

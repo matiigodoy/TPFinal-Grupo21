@@ -37,11 +37,15 @@ class EditorModel
         return $questions;
     }
 
-    public function getQuestionsWithReports() {
-        $query = "SELECT q.id, q.pregunta, q.category, a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
-              FROM question q
-              JOIN answer a ON q.id = a.question_id
-              WHERE q.reports > 0";
+    public function getQuestionsWithReports()
+    {
+        $query = "
+        SELECT q.id, q.pregunta, q.category, a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
+        FROM question q
+        JOIN answer a ON q.id = a.question_id
+        WHERE q.reports > 0
+        ORDER BY q.reports DESC;
+    ";
 
         $stmt = $this->database->prepare($query);
         if ($stmt === false) {
