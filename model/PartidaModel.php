@@ -31,7 +31,7 @@ class PartidaModel
         // Si ya está marcado, significa que se ha recargado la página
         //$presenter->render("recargaste");
         unset($_SESSION['questionId']);
-        return ["cheat" => "cheat"];
+        return ["fail" => "Lo siento, registramos que has hecho trampa o pasó algo raro. Podés volver al lobby y reintentar otra partida."];
     }
 
     public function handlePartida(){
@@ -101,6 +101,9 @@ class PartidaModel
 
     public function bringQuestionAndAnswers($data)
     {
+        //si chotea escribiendo a mano 'continue partida' tenemos como atajarnos
+        if(!$_POST)
+            return [];
         $category = array_key_first($_POST);
         $data['category'] = $category;
         $userAccuracy = $this->bringUserAccuracy($_SESSION['userID'])[0];
@@ -278,10 +281,10 @@ class PartidaModel
         return $this->executionSuccessful($stmt);
     }
 
-    public function checkAnswer($presenter){
+    public function checkAnswer(){
         
         if(!array_key_exists('questionId', $_SESSION))
-            return ["recargo_check" => "has recargado la pagina check answer"];
+            return ["fail" => "Has recargado la pagina check answer"];
         
         $questionId = $_SESSION['questionId'];
         $correctAnswer = $_SESSION['correct']['right_answer'];
@@ -301,8 +304,8 @@ class PartidaModel
         }
     }
 
-    public function continuePartida($presenter){
-        $this->handlePartida($presenter);
+    public function continuePartida(){
+        return $this->handlePartida();
     }
 
 }

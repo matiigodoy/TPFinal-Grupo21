@@ -40,7 +40,12 @@ class PartidaController {
     }
     
     public function continuePartida(){
-        $this->model->continuePartida($this->presenter);
+        $contPartidaData = $this->model->continuePartida();
+        $contPartidaDataFirstKey = array_key_first($contPartidaData);
+
+        $contPartidaDataFirstKey == "category" ? 
+        $this->presenter->render($contPartidaDataFirstKey, $contPartidaData) : 
+        $this->presenter->render("error", $contPartidaData);
     }
     public function timeout(){
         $this->presenter->render("failedAnswer");
