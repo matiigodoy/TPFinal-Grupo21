@@ -8,11 +8,11 @@
                     <button class = "btn btn-primary" type="submit">Volver al lobby</button>
                     
                 </form>
-                <form action="/user/claimquestionwrong" method="POST">
+                <form action="/user/claimQuestionWrong" method="POST">
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
                         <strong>Crees que hay un error con la pregunta?</strong>
                         <p>Podés reclamar la corrección de la pregunta para que un administrador la evalúe</p>
-                         <input type="hidden" name="{{questionId}}" value="{{questionId}}">
+                         <input type="hidden" name="questionId" value="{{questionId}}">
                          <button class = "btn btn-warning" type="submit">Reclamar Corrección</button>
                     </div>
                 </form>

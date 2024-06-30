@@ -106,7 +106,6 @@ class PartidaModel
         $category = array_key_first($_POST);
         $data['category'] = $category;
 
-        // Intentar traer una pregunta usando prepareBringQuestionQuery
         $query = $this->prepareBringQuestionQuery($category);
         $dataRaw = $this->database->query($query);
 
@@ -126,7 +125,7 @@ class PartidaModel
             $dataRaw = $this->database->query($allQuestionsQuery);
 
             if (count($dataRaw) > 0) {
-                // Procesar los datos de todas las preguntas obtenidas (primer resultado)
+
                 $data['question'] = array_slice($dataRaw[0], 0, 3);
                 $answersWithKeys = array_slice($dataRaw[0], 8, 4);
                 $data['answerKeys'] = array_keys($answersWithKeys);
@@ -136,7 +135,7 @@ class PartidaModel
 
                 return $data;
             } else {
-                return null; // Si no hay preguntas en absoluto
+                return null;
             }
         }
     }
