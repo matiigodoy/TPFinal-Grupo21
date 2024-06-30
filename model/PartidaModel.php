@@ -12,32 +12,29 @@ class PartidaModel
         return $presenter->render("partida");
     }
 
-    public function startPartida($presenter){
-
+    public function startPartida(){
+        $cheat = $this->validateUserCheated();
+        if($cheat) return $cheat;
         $this->registerPartida();
-
-        $this->handlePartida($presenter);
+        return $this->handlePartida();
     }
+    
     public function validateUserCheated(){
-        if (!isset($_SESSION['page_loaded'])) {
-            $_SESSION['page_loaded'] = true;
-        }
-        elseif (isset($_SESSION['page_loaded']) && $_REQUEST['action'] == "continuePartida") {
+        if (!isset($_SESSION['questionId'])) {
+
+            $_SESSION['questionId'] = 0;
             return;
-        } 
-        else {
-            // Si ya está marcado, significa que se ha recargado la página
-            $_SESSION['page_reloaded'] = true;
-            $presenter->render("recargaste");
-            unset($_SESSION['page_loaded']);
-            exit();
         }
+        elseif (isset($_SESSION['questionId']) && $_REQUEST['action'] == "continuePartida") {
+            return;
+        }
+        // Si ya está marcado, significa que se ha recargado la página
+        //$presenter->render("recargaste");
+        unset($_SESSION['questionId']);
+        return ["cheat" => "cheat"];
     }
 
-    public function handlePartida($presenter){
-        //chequeamos que no haya recargado la pagina
-        
-        $this->validateUserCheated();
+    public function handlePartida(){
 
         $flowValues = $this->startFlowPartida();
         $questionOK = false;
@@ -47,19 +44,20 @@ class PartidaModel
             if($questionOK){
                 $_SESSION['questionId'] = $flowValues['question']['id'];
             }
+            $flowValues = $this->determineCategoryView($flowValues['category'], $flowValues);
+            
+        return ["category" => $flowValues['category'],
+                "pregunta" => $flowValues['question']['pregunta'], 
+                "answers" => $flowValues['answers'], 
+                "answerKeys" => $flowValues['answerKeys'],
+                "correct" => $flowValues['correct']['right_answer'],
+                "questionOk" => $questionOK,
+                "questionClass" => $flowValues['questionClass'],
+                "questionStyle" => $flowValues['questionStyle'],
+                "buttonClass" => $flowValues['buttonClass'],
+                "buttonStyle" => $flowValues['buttonStyle']];
         }
-        $flowValues = $this->determineCategoryView($flowValues['category'], $flowValues);
-        $presenter->render("category", 
-                            ["category" => $flowValues['category'],
-                            "pregunta" => $flowValues['question']['pregunta'], 
-                            "answers" => $flowValues['answers'], 
-                            "answerKeys" => $flowValues['answerKeys'],
-                            "correct" => $flowValues['correct']['right_answer'],
-                            "questionOk" => $questionOK,
-                            "questionClass" => $flowValues['questionClass'],
-                            "questionStyle" => $flowValues['questionStyle'],
-                            "buttonClass" => $flowValues['buttonClass'],
-                            "buttonStyle" => $flowValues['buttonStyle']]);
+        return ["fail" => "Lo sentimos, hubo un error, intente en un momento más tarde"];
     }
     public function determineCategoryView($category, $flowValues){
         switch ($category) {
@@ -105,7 +103,7 @@ class PartidaModel
 
         $category = array_key_first($_POST);
         $data['category'] = $category;
-        $userAccuracy = $this->bringUserAccuracy($_SESSION['userID']);
+        $userAccuracy = $this->bringUserAccuracy($_SESSION['userID'])[0];
         $questionEasiness = $this->bringQuestionEasiness();
 
         $query = $this->prepareBringQuestionQuery($category);
@@ -169,15 +167,10 @@ class PartidaModel
                   VALUES (?, ?)";
         $stmt = $this->prepareQuery($query);
 
-
         $stmt->bind_param("is",
             $userId,
             $time
         );
-        //aca borron y cuenta nueva para jugar otra partida
-        if(isset($_SESSION['page_loaded'])){
-            unset($_SESSION['page_loaded']);
-        }
         return $this->executionSuccessful($stmt);
     }
 
@@ -253,18 +246,25 @@ class PartidaModel
     }
 
     public function checkAnswer($presenter){
+        
+        if(!array_key_exists('questionId', $_SESSION))
+            return ["recargo_check" => "has recargado la pagina check answer"];
+        
+        $questionId = $_SESSION['questionId'];
         $correctAnswer = $_SESSION['correct']['right_answer'];
         $answerGivenByUser =  array_keys($_POST);
         $optionSubstring = $answerGivenByUser != null ? substr($answerGivenByUser[1], 7) : null;
         $userCorrect = $correctAnswer === $optionSubstring;
-        $this->registerUserRespondedRightOrWrong($userCorrect, $_SESSION['userID'], $_SESSION['questionId']);
-        $this->registerQuestionOfferedAndHitCount($_SESSION['questionId'], $userCorrect);
+
+        $this->registerUserRespondedRightOrWrong($userCorrect, $_SESSION['userID'], $questionId);
+        $this->registerQuestionOfferedAndHitCount($questionId, $userCorrect);
         if($userCorrect){
             $this->registerScoreToUser($_SESSION['userID']);
-            $presenter->render("successfulAnswer", ["category" => array_key_first($_POST)]);
+            return ["category" => array_key_first($_POST)];
         }
         else{
-            $presenter->render("failedAnswer", ["questionId" => $_SESSION['questionId']]);
+            unset($_SESSION['questionId']);
+            return ["questionId" => $questionId];
         }
     }
 

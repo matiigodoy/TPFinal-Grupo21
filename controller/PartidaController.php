@@ -21,14 +21,28 @@ class PartidaController {
     }
 
     public function start(){
-        $this->model->startPartida($this->presenter);
+        $partidaData = $this->model->startPartida();
+        $partidaFirstKey = array_key_first($partidaData);
+
+        $partidaFirstKey == "category" ? 
+        $this->presenter->render($partidaFirstKey, $partidaData) : 
+        $this->presenter->render("error", $partidaData);
     }
 
     public function checkAnswer(){
-        $this->model->checkAnswer($this->presenter);
+        $checkAnswerData = $this->model->checkAnswer($this->presenter);
+        $checkanswerFirstKey = array_key_first($checkAnswerData);
+        //si es 'category' entonces pasó por la respuesta fue correcta, ya que es
+        //un valor que llevamos para la view de successfulAnswer
+        $checkanswerFirstKey == "category" ? 
+        $this->presenter->render("successfulAnswer", $checkAnswerData) :
+        $this->presenter->render("failedAnswer", $checkAnswerData);
     }
     
     public function continuePartida(){
         $this->model->continuePartida($this->presenter);
+    }
+    public function timeout(){
+        $this->presenter->render("failedAnswer");
     }
 }
