@@ -118,48 +118,49 @@ class PartidaModel
             $dataRaw = $this->database->query($query);
         }
         if(empty($dataRaw)){
-            $query = $this->prepareBringAllQuestionsQuery();
+            $query = $this->prepareBringAllQuestionsQuery($category, $sessionId);
             $dataRaw = $this->database->query($query);
         }
         if (count($dataRaw) > 0) {
-            // Procesar los datos de la pregunta y respuestas obtenidas
             $data['question'] = array_slice($dataRaw[0], 0, 3);
-            $answersWithKeys = array_slice($dataRaw[0], 8, 4);
+            $answersWithKeys = array_slice($dataRaw[0], 4, 4);
             $data['answerKeys'] = array_keys($answersWithKeys);
             $data['answers'] = array_values($answersWithKeys);
-            $data['correct'] = array_slice($dataRaw[0], 12, 1);
+            $data['correct'] = array_slice($dataRaw[0], 8, 1);
             $_SESSION['correct'] = $data['correct'];
 
             return $data;
         } 
+        //SI ENTRA ACÁ ES PORQUE YA NO HAY MÁS PREGUNTAS, RESPONDIÓ TODO BIEN: GANÓ
         else {
             return null;
         }
     }
 
     public function prepareBringQuestionAccToUserQuery($category, $userEaseNumber, $sessionId){
-        return "SELECT subquery.*, a.* FROM ( 
+        return "SELECT quest.*, a.option_a,a.option_b,a.option_c,a.option_d,a.right_answer FROM ( 
                     SELECT q.id, q.category, q.pregunta, q.active, 
                     SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 
                     as question_easiness 
                     FROM question q 
-                    WHERE q.category = 'deportes' 
+                    WHERE q.category = '$category' 
                     GROUP BY q.id 
-                    HAVING question_easiness <= 36.3636 )
-                as subquery 
-                LEFT JOIN answer a ON subquery.id = a.question_id 
-                LEFT JOIN user_question uq ON subquery.id = uq.id_question 
-                WHERE subquery.active = 1 
-                AND subquery.id NOT IN(
+                    HAVING question_easiness <= $userEaseNumber )
+                as quest 
+                LEFT JOIN answer a ON quest.id = a.question_id 
+                LEFT JOIN user_question uq ON quest.id = uq.id_question 
+                WHERE quest.active = 1 
+                AND quest.id NOT IN(
                                         SELECT uq.id_question 
                                         FROM user_question uq 
-                                        WHERE uq.id_user = 2) 
+                                        WHERE uq.id_user = $sessionId) 
                 ORDER BY RAND() LIMIT 1;";
     }
 
     public function prepareBringOnlyQuestionsWronglyAnswered($category, $sessionId)
     {
-        return "SELECT q.*, a.* 
+        return "SELECT q.id, q.category, q.pregunta, q.active, 
+                       a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
                 FROM question q
                 LEFT JOIN answer a ON q.id = a.question_id
                 LEFT JOIN user_question uq ON q.id = uq.id_question
@@ -172,8 +173,10 @@ class PartidaModel
                 ORDER BY RAND()
                 LIMIT 1;";
     }
+
     public function prepareBringAllQuestionsQuery($category, $sessionId){
-        return "SELECT q.*, a.* 
+        return "SELECT q.id, q.category, q.pregunta, q.active, 
+                       a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
                 FROM question q
                 LEFT JOIN answer a ON q.id = a.question_id
                 LEFT JOIN user_question uq ON q.id = uq.id_question
@@ -186,9 +189,6 @@ class PartidaModel
                 ORDER BY RAND()
                 LIMIT 1;";
     }
-
-    //TODO: HACER UN METODO QUE TRAIGA SOLO LAS QUE NO TUVO
-    //ESTE DE ARRIBA ES PARA TRAER LAS QUE RESPONDIO MAL
 
     public function setQuestionsList(){
         if (!isset($_SESSION['selected_questions'])) {
