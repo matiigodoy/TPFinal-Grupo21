@@ -23,6 +23,7 @@ class PartidaController {
     public function start(){
         $partidaData = $this->model->startPartida();
         $partidaFirstKey = array_key_first($partidaData);
+        if($this->model->checkWin($partidaData))$this->presenter->render("win", $partidaData);;
 
         $partidaFirstKey == "category" ? 
         $this->presenter->render($partidaFirstKey, $partidaData) : 
@@ -42,7 +43,7 @@ class PartidaController {
     public function continuePartida(){
         $contPartidaData = $this->model->continuePartida();
         $contPartidaDataFirstKey = array_key_first($contPartidaData);
-
+        if($this->model->checkWin($contPartidaData)) $this->presenter->render($contPartidaDataFirstKey, $contPartidaData);
         $contPartidaDataFirstKey == "category" ? 
         $this->presenter->render($contPartidaDataFirstKey, $contPartidaData) : 
         $this->presenter->render("error", $contPartidaData);

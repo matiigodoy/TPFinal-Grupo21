@@ -91,10 +91,8 @@ class RegisterController {
         $data= [];
 
         if ($username && $auth_code) {
-            $database = Configuration::getDatabase();
-            $registerModel = new RegisterModel($database);
 
-            if ($registerModel->activateUser($username, $auth_code)) {
+            if ($this->registerModel->activateUser($username, $auth_code)) {
                 $data["username"] = $username;
                 $this->presenter->render("login", $data);
             } else {
