@@ -20,16 +20,15 @@ class PartidaModel
     }
     
     public function validateUserCheated(){
-        if (!isset($_SESSION['questionId'])) {
+        //si questionId no esta seteada OR 
+        //el request viene de continuePartida (que la 1era vez tampoco esta seteada) ENTRA.
+        //SINO ES TRAMPA
+        if (!isset($_SESSION['questionId']) || ($_REQUEST['action'] == "continuePartida" && !isset($_SESSION['questionId']))) {
 
             $_SESSION['questionId'] = 0;
             return;
         }
-        elseif (isset($_SESSION['questionId']) && $_REQUEST['action'] == "continuePartida") {
-            return;
-        }
-        // Si ya está marcado, significa que se ha recargado la página
-        //$presenter->render("recargaste");
+        
         unset($_SESSION['questionId']);
         return ["fail" => "Lo siento, registramos que has hecho trampa o pasó algo raro. Podés volver al lobby y reintentar otra partida."];
     }
@@ -37,7 +36,9 @@ class PartidaModel
     public function handlePartida(){
 
         $flowValues = $this->startFlowPartida();
-        if($this->checkWin($flowValues)) return $flowValues;
+        if($this->checkWin($flowValues)) {
+            unset($_SESSION['questionId']);
+            return $flowValues;}
         $questionOK = false;
         if ($flowValues) {
             $questionOK = $this->registerUserWithThatQuestion($flowValues['question']);
@@ -47,7 +48,7 @@ class PartidaModel
             }
             $flowValues = $this->determineCategoryView($flowValues['category'], $flowValues);
             
-        return ["category" => $flowValues['category'],
+            return ["category" => $flowValues['category'],
                 "pregunta" => $flowValues['question']['pregunta'], 
                 "answers" => $flowValues['answers'], 
                 "answerKeys" => $flowValues['answerKeys'],
@@ -139,7 +140,7 @@ class PartidaModel
         //SI ENTRA ACÁ ES PORQUE YA NO HAY MÁS PREGUNTAS, RESPONDIÓ TODO BIEN: GANÓ
         else {
             return ["win" => "¡¡Felicitaciones!! ¡HAS GANADO EL JUEGO!"];
-        };
+        }
     }
 
     public function prepareBringQuestionAccToUserQuery($category, $userEaseNumber, $sessionId){
@@ -332,12 +333,13 @@ class PartidaModel
 
         $this->registerUserRespondedRightOrWrong($userCorrect, $_SESSION['userID'], $questionId);
         $this->registerQuestionOfferedAndHitCount($questionId, $userCorrect);
+        unset($_SESSION['questionId']);
+
         if($userCorrect){
             $this->registerScoreToUser($_SESSION['userID']);
             return ["category" => array_key_first($_POST)];
         }
         else{
-            unset($_SESSION['questionId']);
             return ["questionId" => $questionId];
         }
     }
@@ -346,6 +348,8 @@ class PartidaModel
     }
 
     public function continuePartida(){
+        $cheat = $this->validateUserCheated();
+        if($cheat) return $cheat;
         return $this->handlePartida();
     }
 
