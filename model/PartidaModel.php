@@ -107,8 +107,12 @@ class PartidaModel
         $sessionId = $_SESSION['userID'];
         $category = array_key_first($_POST);
         $data['category'] = $category;
-        $accuracyPerc = $this->bringUserAccuracy($_SESSION['userID']);
-        $userEasinessOfQuestions = 100 - $accuracyPerc;
+        $accuracyPerc = $this->bringUserAccuracy($_SESSION['userID']) ;
+        if(!$accuracyPerc) {
+            $accuracyPerc = 0;
+        }
+        //restamos 130 y no 100 para evitar un 0 en primer ingreso y hacer mas facil el juego
+        $userEasinessOfQuestions = 130 - $accuracyPerc;
         //$questionEasiness = $this->bringQuestionEasiness($userEasinessOfQuestions, $category);
 
         $query = $this->prepareBringQuestionAccToUserQuery($category, $userEasinessOfQuestions, $sessionId);
@@ -138,23 +142,26 @@ class PartidaModel
     }
 
     public function prepareBringQuestionAccToUserQuery($category, $userEaseNumber, $sessionId){
-        return "SELECT quest.*, a.option_a,a.option_b,a.option_c,a.option_d,a.right_answer FROM ( 
-                    SELECT q.id, q.category, q.pregunta, q.active, 
-                    SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 
-                    as question_easiness 
-                    FROM question q 
-                    WHERE q.category = '$category' 
-                    GROUP BY q.id 
-                    HAVING question_easiness <= $userEaseNumber )
-                as quest 
-                LEFT JOIN answer a ON quest.id = a.question_id 
-                LEFT JOIN user_question uq ON quest.id = uq.id_question 
-                WHERE quest.active = 1 
-                AND quest.id NOT IN(
-                                        SELECT uq.id_question 
-                                        FROM user_question uq 
-                                        WHERE uq.id_user = $sessionId) 
-                ORDER BY RAND() LIMIT 1;";
+        return "SELECT quest.id, quest.category, quest.pregunta, quest.active, 
+                       a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer, 
+                       quest.question_ease
+                FROM ( 
+                        SELECT q.id, q.category, q.pregunta, q.active, 
+                        SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 as question_ease
+                        FROM question q 
+                        WHERE q.category = '$category' 
+                        GROUP BY q.id 
+                        HAVING question_ease <= $userEaseNumber) as quest 
+                        LEFT JOIN answer a ON quest.id = a.question_id 
+                        LEFT JOIN user_question uq ON quest.id = uq.id_question 
+                        WHERE quest.active = 1 
+                        AND quest.id NOT IN (
+                            SELECT uq.id_question 
+                            FROM user_question uq 
+                            WHERE uq.id_user = $sessionId
+                    ) 
+                ORDER BY RAND() 
+                LIMIT 1;";
     }
 
     public function prepareBringOnlyQuestionsWronglyAnswered($category, $sessionId)
@@ -184,8 +191,7 @@ class PartidaModel
                 AND q.active = 1
                 AND q.id NOT IN(SELECT uq.id_question 
                             FROM user_question uq 
-                            WHERE uq.id_user = $sessionId
-                            AND uq.wasRight = 0)
+                            WHERE uq.id_user = $sessionId)
                 ORDER BY RAND()
                 LIMIT 1;";
     }
