@@ -1,37 +1,91 @@
-<!-- Page content -->
-    <audio id="audioPlayer" src="/public/music/intro.mp3" autoplay></audio>
-    <div class="w3-content" style="max-width:2000px;margin-top:46px">
-        <main class="py-5">
-            <div class="content container px-lg-5 p-4 bg-light rounded-3 min-vh-100">
-                <h2 class="text-center display-3 fw-bold">Partida</h2>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                  <strong>Recordá:</strong> <p>No se puede actualizar la página o apretar F5 (podes perder si lo hacés)</p>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <p>A continuación elige un tema para comenzar el juego</p>
-                <div class = "px-lg-5 p-4 rounded-3" style="background-image: url('/public/trivia.png')">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partida</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-rYD5N9spZCS+7VoiKVH9+PJpJmM5g2ZssZtSyKjQMcU0iHZkp/izvK6cVeS6iw2r" crossorigin="anonymous">
 
-                    <form action="/partida/start" method="POST">
-                        <button class="text-decoration-none" name = "historia">
-                            <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: yellow; color: black; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
-                                <p>Historia</p>
-                            </div>
-                        </button>
-                        <button class="text-decoration-none" name = "cultura">
-                            <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: blueviolet; color: orange; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
-                                <p>Cultura</p>
-                            </div>
-                        </button>
-                        <button class="text-decoration-none" name = "deportes">
-                            <div class="rounded-3" style="position: relative; z-index:2; align-items:center; text-align:center; background-color: forestgreen; color: white; font-size:500%; min-height: 30%; width: 100%; text-align-all: center;opacity: 70%;}">
-                                <p>Deportes</p>
-                            </div>
-                        </button>
-                    </form>
-                </div>
+</head>
+<body>
+<audio id="audioPlayer" src="/public/music/intro.mp3" autoplay></audio>
+<div class="w3-content" style="max-width: 2000px; margin-top: 46px;">
+    <main class="py-5">
+        <div class="content container px-lg-5 p-4 bg-light rounded-3 min-vh-100 background-container">
+            <h2 class="text-center display-3 fw-bold">Partida</h2>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Recordá:</strong> No se puede actualizar la página o apretar F5 (podrías perder si lo hacés)
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        </main>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
+            <div class="main-text-container">
+                <p class="main-text">A continuación elige un tema para comenzar el juego</p>
+            </div>
+
+            <div class="px-lg-5 p-4 rounded-3">
+                <form action="/partida/start" method="POST">
+                    <button class="btn btn-outline-dark text-decoration-none w-100 mb-3 btn-historia" name="historia">
+                        Historia
+                    </button>
+                    <button class="btn btn-outline-dark text-decoration-none w-100 mb-3 btn-cultura" name="cultura">
+                        Cultura
+                    </button>
+                    <button class="btn btn-outline-dark text-decoration-none w-100 btn-deportes" name="deportes">
+                        Deportes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<style>
+    /* Estilo para asegurar que el fondo ocupe todo el contenedor */
+    .background-container {
+        background-image: url('/public/trivia.png');
+        background-size: cover; /* Ajusta la imagen al tamaño del contenedor */
+        background-position: center; /* Centra la imagen */
+        min-height: 100vh; /* Mínimo alto para ocupar toda la pantalla verticalmente */
+        padding: 20px; /* Espaciado interno */
+        opacity: 0.9; /* Opacidad reducida para un efecto de fondo más suave */
+    }
+
+    /* Estilos específicos para los botones */
+    .btn-historia {
+        background-color: yellow;
+        color: black;
+        font-size: 3rem; /* Tamaño de fuente grande */
+        padding: 20px; /* Espaciado interno grande */
+    }
+
+    .btn-cultura {
+        background-color: blueviolet;
+        color: orange;
+        font-size: 3rem; /* Tamaño de fuente grande */
+        padding: 20px; /* Espaciado interno grande */
+    }
+
+    .btn-deportes {
+        background-color: forestgreen;
+        color: white;
+        font-size: 3rem; /* Tamaño de fuente grande */
+        padding: 20px; /* Espaciado interno grande */
+    }
+    .main-text-container {
+        background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+        padding: 20px; /* Espaciado interno */
+        border-radius: 10px; /* Bordes redondeados */
+        text-align: center; /* Alineación centrada */
+        margin-bottom: 20px; /* Margen inferior */
+    }
+
+    /* Estilo para el texto principal */
+    .main-text {
+        font-size: 2.5rem; /* Tamaño de fuente grande */
+        font-weight: bold; /* Texto en negrita */
+        color: #fff; /* Color del texto blanco */
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
+</html>
+
