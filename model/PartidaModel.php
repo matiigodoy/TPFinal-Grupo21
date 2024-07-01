@@ -37,6 +37,7 @@ class PartidaModel
     public function handlePartida(){
 
         $flowValues = $this->startFlowPartida();
+        if(isset($flowValues['win'])) return $flowValues;
         $questionOK = false;
         if ($flowValues) {
             $questionOK = $this->registerUserWithThatQuestion($flowValues['question']);
@@ -137,8 +138,8 @@ class PartidaModel
         } 
         //SI ENTRA ACÁ ES PORQUE YA NO HAY MÁS PREGUNTAS, RESPONDIÓ TODO BIEN: GANÓ
         else {
-            return null;
-        }
+            return ["win" => "¡¡Felicitaciones!! ¡HAS GANADO EL JUEGO!"];
+        };
     }
 
     public function prepareBringQuestionAccToUserQuery($category, $userEaseNumber, $sessionId){

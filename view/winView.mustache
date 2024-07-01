@@ -1,0 +1,23 @@
+    <audio id="audioPlayer" src="/public/music/incorrecto.mp3" autoplay></audio>
+    <div class="w3-content" style="max-width:2000px;margin-top:46px">
+        <main class="py-5">
+            <div class="container d-flex flex-column align-items-center">
+                <img src="/public/win.jpg" class="img-fluid rounded mx-auto mb-4" style="max-width: 50%;" alt="sad trivia faces">
+                <br />
+                <form class = "mx-auto mb-4" action = "/lobby/get" method = "POST">
+                    <h1>{{win}}</h1>
+                    <h5>Podés elegir otra categoría para jugar o sugerir más preguntas yendo al lobby!</h5>
+                    <button class = "btn btn-primary align-center" type="submit">Volver al lobby</button>
+                </form>
+                <br />
+                <form class = "mx-auto mb-4" action="/user/claimQuestionWrong" method="POST">
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Crees que hay un error con la pregunta?</strong>
+                        <p>Podés reclamar la corrección de la pregunta para que un administrador la evalúe</p>
+                         <input type="hidden" name="questionId" value="{{questionId}}">
+                         <button class = "btn btn-warning" type="submit">Reclamar Corrección</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>

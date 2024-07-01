@@ -42,7 +42,7 @@ class PartidaController {
     public function continuePartida(){
         $contPartidaData = $this->model->continuePartida();
         $contPartidaDataFirstKey = array_key_first($contPartidaData);
-
+        if($contPartidaData == "win") $this->presenter->render($contPartidaDataFirstKey, $contPartidaData);
         $contPartidaDataFirstKey == "category" ? 
         $this->presenter->render($contPartidaDataFirstKey, $contPartidaData) : 
         $this->presenter->render("error", $contPartidaData);
