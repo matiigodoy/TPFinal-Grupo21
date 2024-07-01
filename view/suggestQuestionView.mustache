@@ -4,32 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Pregunta</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .w3-input {
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
-<h1>Sugeri tu pregunta</h1>
-<form action="/user/addInactiveAndCreadaQuestion" method="POST">
-    <label for="question">Pregunta:</label>
-    <input type="text" id="question" name="question" required><br>
+<div class="w3-container">
+    <div class="form-container w3-card-4 w3-padding-large">
+        <h1 class="w3-center">Sugeri tu pregunta</h1>
+        <form action="/user/addInactiveAndCreadaQuestion" method="POST">
+            <label for="question" class="w3-text-teal">Pregunta:</label>
+            <input type="text" id="question" name="question" class="w3-input w3-border" required>
 
-    <label for="category">Categoría:</label>
-    <input type="text" id="category" name="category" required><br>
+            <label for="category" class="w3-text-teal">Categoría:</label>
+            <input type="text" id="category" name="category" class="w3-input w3-border" required>
 
-    <label for="option_a">Opción A:</label>
-    <input type="text" id="option_a" name="option_a" required><br>
+            <label for="option_a" class="w3-text-teal">Opción A:</label>
+            <input type="text" id="option_a" name="option_a" class="w3-input w3-border" required>
 
-    <label for="option_b">Opción B:</label>
-    <input type="text" id="option_b" name="option_b" required><br>
+            <label for="option_b" class="w3-text-teal">Opción B:</label>
+            <input type="text" id="option_b" name="option_b" class="w3-input w3-border" required>
 
-    <label for="option_c">Opción C:</label>
-    <input type="text" id="option_c" name="option_c" required><br>
+            <label for="option_c" class="w3-text-teal">Opción C:</label>
+            <input type="text" id="option_c" name="option_c" class="w3-input w3-border" required>
 
-    <label for="option_d">Opción D:</label>
-    <input type="text" id="option_d" name="option_d" required><br>
+            <label for="option_d" class="w3-text-teal">Opción D:</label>
+            <input type="text" id="option_d" name="option_d" class="w3-input w3-border" required>
 
-    <label for="right_answer">Respuesta Correcta:</label>
-    <input type="text" id="right_answer" name="right_answer" required><br>
+            <label for="right_answer" class="w3-text-teal">Respuesta Correcta:</label>
+            <input type="text" id="right_answer" name="right_answer" class="w3-input w3-border" required>
 
-    <input type="submit" value="Agregar Pregunta">
-</form>
+            <input type="submit" value="Agregar Pregunta" class="w3-button w3-teal w3-margin-top w3-block">
+        </form>
+    </div>
+</div>
 </body>
 </html>
