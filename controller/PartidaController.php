@@ -48,6 +48,7 @@ class PartidaController {
         $this->presenter->render($contPartidaDataFirstKey, $contPartidaData) : 
         $this->presenter->render("error", $contPartidaData);
     }
+    
     public function timeout(){
         $this->presenter->render("failedAnswer");
     }
