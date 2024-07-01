@@ -1,27 +1,39 @@
-<!-- Page content -->
-    <div class="w3-content" style="max-width:2000px;margin-top:46px">
-        <main class="py-5">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid bg-light pt-5 pb-5">
+    <main class="py-5">
+        <div class="container">
+            <div class="card text-center p-4">
+                <h2 class="display-4">Lobby</h2>
+                <h5>Bienvenido <b>{{username}}</b>!!</h5>
+                <h5>Actualmente eres <b>{{role}}</b></h5>
+            </div>
 
-            <div class="content container px-lg-5 p-4 bg-light rounded-3">
-                <h2 class="text-center display-3 fw-bold">Lobby</h2>
-        
-        <h5 class="text-center">Bienvenido <b>{{username}}</b>!!</h5>
-                <br />
-                <h5 class="text-center">Actualmente eres <b>{{role}}</b></h5>
-                <div class ="px-lg-5 p-4 bg-light rounded-3">
-                    <p>Inicia una nueva partida aquí mismo</p>
-                    <form action="/partida/play" method="POST">
-                        <button type="submit" class="btn btn-primary" name="iniciarPartida">Iniciar Partida!</button>
-                    </form>
-                </div>
-                <div class ="px-lg-5 p-4 bg-light rounded-3">
-                    <p>O también podés crear preguntas nuevas!</p>
-                    <form action="/user/getSuggestQuestionView" method="GET">
-                        <button type="submit" class="btn btn-primary" name="suggestQuestion">Sugerir Pregunta</button>
-                    </form>
-                </div>
-    </div>
+            <div class="card p-4 mt-4">
+                <p class="mb-4">Inicia una nueva partida aquí mismo</p>
+                <form action="/partida/play" method="POST">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" name="iniciarPartida">Iniciar Partida!</button>
+                </form>
+            </div>
+
+            <div class="card p-4 mt-4">
+                <p class="mb-4">O también puedes crear preguntas nuevas</p>
+                <form action="/user/getSuggestQuestionView" method="GET">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" name="suggestQuestion">Sugerir Pregunta</button>
+                </form>
+            </div>
+        </div>
     </main>
+</div>
 
-    </div>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+</html>
+
