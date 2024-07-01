@@ -43,11 +43,22 @@ CREATE TABLE `question`(
   pregunta TEXT NOT NULL,
   category VARCHAR(100) NOT NULL,
   count_acertada INT(30) DEFAULT 1,
-  count_ofrecida INT(30) DEFAULT 1,
+  count_ofrecida INT(30) DEFAULT 20,
   isCreada TINYINT(1) NOT NULL DEFAULT 1,
   reports INT(10) NOT NULL DEFAULT 0,
   active TINYINT(1) NOT NULL DEFAULT 1
 );
+
+DELIMITER //
+
+CREATE TRIGGER set_random_count_acertada
+    BEFORE INSERT ON question
+    FOR EACH ROW
+BEGIN
+    SET NEW.count_acertada = FLOOR(10 + (RAND() * 11));
+END //
+
+DELIMITER ;
 
 CREATE TABLE `answer`(
   id INT PRIMARY KEY AUTO_INCREMENT,
