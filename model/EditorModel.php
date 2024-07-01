@@ -145,7 +145,7 @@ class EditorModel
     }
 
     public function updateQuestion($id, $question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer) {
-        $query = "UPDATE question SET pregunta = ?, category = ? WHERE id = ?";
+        $query = "UPDATE question SET pregunta = ?, category = ?, reports = 0 WHERE id = ?";
         $stmt = $this->database->prepare($query);
         if ($stmt === false) {
             die('Prepare failed: ' . htmlspecialchars($this->database->error));
