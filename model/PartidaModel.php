@@ -37,7 +37,7 @@ class PartidaModel
     public function handlePartida(){
 
         $flowValues = $this->startFlowPartida();
-        if(isset($flowValues['win'])) return $flowValues;
+        if($this->checkWin($flowValues)) return $flowValues;
         $questionOK = false;
         if ($flowValues) {
             $questionOK = $this->registerUserWithThatQuestion($flowValues['question']);
@@ -340,6 +340,9 @@ class PartidaModel
             unset($_SESSION['questionId']);
             return ["questionId" => $questionId];
         }
+    }
+    public function checkWin($partidaData){
+        return isset($partidaData['win']);
     }
 
     public function continuePartida(){
