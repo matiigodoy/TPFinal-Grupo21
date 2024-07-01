@@ -169,23 +169,34 @@ class EditorModel
     }
 
     public function deleteQuestion($id) {
-        $query = "DELETE FROM answer WHERE question_id = ?";
-        $stmt = $this->database->prepare($query);
-        if ($stmt === false) {
+        // Eliminar registros en user_question relacionados con la pregunta
+        $queryDeleteUserQuestion = "DELETE FROM user_question WHERE id_question = ?";
+        $stmtUserQuestion = $this->database->prepare($queryDeleteUserQuestion);
+        if ($stmtUserQuestion === false) {
             die('Prepare failed: ' . htmlspecialchars($this->database->error));
         }
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $stmt->close();
+        $stmtUserQuestion->bind_param('i', $id);
+        $stmtUserQuestion->execute();
+        $stmtUserQuestion->close();
 
-        $query = "DELETE FROM question WHERE id = ?";
-        $stmt = $this->database->prepare($query);
-        if ($stmt === false) {
+        // Luego eliminar la pregunta y respuestas asociadas
+        $queryDeleteAnswers = "DELETE FROM answer WHERE question_id = ?";
+        $stmtAnswers = $this->database->prepare($queryDeleteAnswers);
+        if ($stmtAnswers === false) {
             die('Prepare failed: ' . htmlspecialchars($this->database->error));
         }
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $stmt->close();
+        $stmtAnswers->bind_param('i', $id);
+        $stmtAnswers->execute();
+        $stmtAnswers->close();
+
+        $queryDeleteQuestion = "DELETE FROM question WHERE id = ?";
+        $stmtQuestion = $this->database->prepare($queryDeleteQuestion);
+        if ($stmtQuestion === false) {
+            die('Prepare failed: ' . htmlspecialchars($this->database->error));
+        }
+        $stmtQuestion->bind_param('i', $id);
+        $stmtQuestion->execute();
+        $stmtQuestion->close();
     }
 
     public function activateQuestionById($id) {
