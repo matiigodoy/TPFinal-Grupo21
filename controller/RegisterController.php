@@ -11,9 +11,9 @@ class RegisterController {
     }
 
     public function register() {
-        $data = ["showMessage" => false]; // Default, no message to show
+        $data = ["showMessage" => false];
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Check if form has been submitted
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset(
                 $_POST["fullname"],
                 $_POST["birth_year"],
@@ -29,7 +29,7 @@ class RegisterController {
 
                 $formData = $_POST;
                 $fileData = $_FILES["profile_picture"];
-                $data = $formData; // Save form data to return it to the view in case of an error
+                $data = $formData;
 
                 if ($formData["password"] === $formData["confirm_password"]) {
 
@@ -71,7 +71,6 @@ class RegisterController {
                 $this->presenter->render("register", $data);
             }
         } else {
-            // Render the registration form with no error message initially
             $this->presenter->render("register", $data);
         }
     }

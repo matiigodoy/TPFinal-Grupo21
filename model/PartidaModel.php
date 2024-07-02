@@ -18,7 +18,7 @@ class PartidaModel
         $this->registerPartida();
         return $this->handlePartida();
     }
-    
+
     public function validateUserCheated(){
         //si questionId no esta seteada OR 
         //el request viene de continuePartida (que la 1era vez tampoco esta seteada) ENTRA.
@@ -28,17 +28,19 @@ class PartidaModel
             $_SESSION['questionId'] = 0;
             return;
         }
-        
+
         unset($_SESSION['questionId']);
         return ["fail" => "Lo siento, registramos que has hecho trampa o pasó algo raro. Podés volver al lobby y reintentar otra partida."];
     }
 
     public function handlePartida(){
 
+
         $flowValues = $this->startFlowPartida();
         if($this->checkWin($flowValues)) {
             unset($_SESSION['questionId']);
-            return $flowValues;}
+            return $flowValues;
+        }
         $questionOK = false;
         if ($flowValues) {
             $questionOK = $this->registerUserWithThatQuestion($flowValues['question']);
@@ -47,17 +49,18 @@ class PartidaModel
                 $_SESSION['questionId'] = $flowValues['question']['id'];
             }
             $flowValues = $this->determineCategoryView($flowValues['category'], $flowValues);
-            
+
             return ["category" => $flowValues['category'],
-                "pregunta" => $flowValues['question']['pregunta'], 
-                "answers" => $flowValues['answers'], 
+                "pregunta" => $flowValues['question']['pregunta'],
+                "answers" => $flowValues['answers'],
                 "answerKeys" => $flowValues['answerKeys'],
                 "correct" => $flowValues['correct']['right_answer'],
                 "questionOk" => $questionOK,
                 "questionClass" => $flowValues['questionClass'],
                 "questionStyle" => $flowValues['questionStyle'],
                 "buttonClass" => $flowValues['buttonClass'],
-                "buttonStyle" => $flowValues['buttonStyle']];
+                "buttonStyle" => $flowValues['buttonStyle']
+            ];
         }
         return ["fail" => "Lo sentimos, hubo un error, intente en un momento más tarde"];
     }
@@ -109,7 +112,7 @@ class PartidaModel
         $sessionId = $_SESSION['userID'];
         $category = array_key_first($_POST);
         $data['category'] = $category;
-        $accuracyPerc = $this->bringUserAccuracy($_SESSION['userID']) ;
+        $accuracyPerc = $this->bringUserAccuracy($_SESSION['userID']);
         if(!$accuracyPerc) {
             $accuracyPerc = 0;
         }
@@ -136,7 +139,7 @@ class PartidaModel
             $_SESSION['correct'] = $data['correct'];
 
             return $data;
-        } 
+        }
         //SI ENTRA ACÁ ES PORQUE YA NO HAY MÁS PREGUNTAS, RESPONDIÓ TODO BIEN: GANÓ
         else {
             return ["win" => "¡¡Felicitaciones!! ¡HAS GANADO EL JUEGO!"];
@@ -151,7 +154,7 @@ class PartidaModel
                         SELECT q.id, q.category, q.pregunta, q.active, 
                         SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 as question_ease
                         FROM question q 
-                        WHERE q.category = '$category' 
+                        WHERE q.category = '$category'                  
                         GROUP BY q.id 
                         HAVING question_ease <= $userEaseNumber) as quest 
                         LEFT JOIN answer a ON quest.id = a.question_id 
@@ -284,7 +287,7 @@ class PartidaModel
         return $this->executionSuccessful($stmt);
     }
     public function bringQuestionEasiness($userRatio, $category){
-        
+
         do {
                 $sql = "
                 SELECT q.*, SUM(q.count_acertada) / SUM(q.count_ofrecida) * 100 as question_easiness 
@@ -292,9 +295,9 @@ class PartidaModel
                 WHERE q.category = '$category'
                 GROUP BY q.id 
                 HAVING question_easiness <= $userRatio";
-    
+
                 $results = $this->database->query($sql);
-    
+
             if (empty($results)) {
             $userRatio += $increment;
             }
@@ -321,10 +324,10 @@ class PartidaModel
     }
 
     public function checkAnswer(){
-        
+
         if(!array_key_exists('questionId', $_SESSION))
             return ["fail" => "Has recargado la pagina check answer"];
-        
+
         $questionId = $_SESSION['questionId'];
         $correctAnswer = $_SESSION['correct']['right_answer'];
         $answerGivenByUser =  array_keys($_POST);
@@ -352,5 +355,31 @@ class PartidaModel
         if($cheat) return $cheat;
         return $this->handlePartida();
     }
+
+    public function isTimeout($userId, $timeoutSeconds = 5) {
+        $query = "SELECT start_time FROM user WHERE id = ?";
+        $stmt = $this->prepareQuery($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $stmt->bind_result($startTime);
+        $stmt->fetch();
+        $stmt->close();
+
+        if ($startTime) {
+            $startTime = strtotime($startTime);
+            $currentTime = time();
+            return ($currentTime - $startTime) > $timeoutSeconds;
+        }
+        return true;
+    }
+
+    public function saveStartTime($userId) {
+        $startTime = date('Y-m-d H:i:s');
+        $query = "UPDATE user SET start_time = ? WHERE id = ?";
+        $stmt = $this->prepareQuery($query);
+        $stmt->bind_param("si", $startTime, $userId);
+        return $this->executionSuccessful($stmt);
+    }
+
 
 }
