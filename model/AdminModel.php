@@ -142,10 +142,8 @@ class AdminModel
     }
 
     public function getUsersCountByAgeGroup() {
-        // Calculamos el año actual
         $currentYear = date('Y');
 
-        // Definimos los rangos de edad que queremos calcular
         $ageGroups = [
             ['min_age' => 0, 'max_age' => 17, 'label' => 'Menores de 18 años'],
             ['min_age' => 18, 'max_age' => 24, 'label' => '18-24 años'],
@@ -156,10 +154,8 @@ class AdminModel
             ['min_age' => 65, 'max_age' => 100, 'label' => '65 años o más'],
         ];
 
-        // Inicializamos un array para almacenar los resultados
         $usersCountByAgeGroup = [];
 
-        // Consulta SQL para contar usuarios por grupo de edad
         foreach ($ageGroups as $group) {
             $query = "SELECT COUNT(*) as user_count FROM user WHERE (YEAR(CURDATE()) - birth_year) BETWEEN ? AND ?";
             $stmt = $this->database->prepare($query);
@@ -174,7 +170,6 @@ class AdminModel
 
             $count = $result->fetch_assoc()['user_count'];
 
-            // Guardamos el resultado en el array
             $usersCountByAgeGroup[] = [
                 'age_group' => $group['label'],
                 'user_count' => $count

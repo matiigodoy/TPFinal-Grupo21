@@ -24,7 +24,7 @@ $allowedActions = $authConfig[$role]['actions'] ?? [];
 
 // Check if the user is logged in
 if (!isset($_SESSION['userID'])) {
-    // If the user is not logged in, allow access only to allowed guest controllers and actions
+
     if (!in_array($controller, $allowedControllers) || !in_array($action, $allowedActions)) {
 
         $controller = "login";

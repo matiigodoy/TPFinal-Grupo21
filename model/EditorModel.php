@@ -169,7 +169,7 @@ class EditorModel
     }
 
     public function deleteQuestion($id) {
-        // Eliminar registros en user_question relacionados con la pregunta
+
         $queryDeleteUserQuestion = "DELETE FROM user_question WHERE id_question = ?";
         $stmtUserQuestion = $this->database->prepare($queryDeleteUserQuestion);
         if ($stmtUserQuestion === false) {
@@ -179,7 +179,6 @@ class EditorModel
         $stmtUserQuestion->execute();
         $stmtUserQuestion->close();
 
-        // Luego eliminar la pregunta y respuestas asociadas
         $queryDeleteAnswers = "DELETE FROM answer WHERE question_id = ?";
         $stmtAnswers = $this->database->prepare($queryDeleteAnswers);
         if ($stmtAnswers === false) {
