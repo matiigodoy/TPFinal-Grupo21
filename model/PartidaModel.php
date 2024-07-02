@@ -356,7 +356,7 @@ class PartidaModel
         return $this->handlePartida();
     }
 
-    public function isTimeout($userId, $timeoutSeconds = 5) {
+    public function isTimeout($userId, $timeoutSeconds = 15) {
         $query = "SELECT start_time FROM user WHERE id = ?";
         $stmt = $this->prepareQuery($query);
         $stmt->bind_param("i", $userId);
