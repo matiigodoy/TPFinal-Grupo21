@@ -60,7 +60,5 @@ class PartidaController {
         $this->presenter->render("error", $contPartidaData);
     }
     
-    public function timeout(){
-        $this->presenter->render("failedAnswer");
-    }
+
 }
