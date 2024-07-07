@@ -40,7 +40,7 @@ class EditorModel
     public function getQuestionsWithReports()
     {
         $query = "
-        SELECT q.id, q.pregunta, q.category, a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
+        SELECT q.id, q.pregunta, q.category, a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer, q.reports 
         FROM question q
         JOIN answer a ON q.id = a.question_id
         WHERE q.reports > 0
