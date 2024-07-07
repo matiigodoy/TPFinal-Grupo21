@@ -22,7 +22,7 @@ class PartidaController {
 
     public function start(){
         $userId = $_SESSION['userID'];
-        $this->model->saveStartTime($userId);
+
         $partidaData = $this->model->startPartida();
         $partidaFirstKey = array_key_first($partidaData);
         if($this->model->checkWin($partidaData))$this->presenter->render("win", $partidaData);;

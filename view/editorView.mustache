@@ -1,239 +1,256 @@
 <div class="container mt-2">
-
-  <ul class="nav nav-tabs mb-3" id="miTab" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="tab-1" data-toggle="tab" href="#contenido-tab-1" role="tab" aria-controls="contenido-tab-1" aria-selected="true">Agregar Pregunta</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="tab-2" data-toggle="tab" href="#contenido-tab-2" role="tab" aria-controls="contenido-tab-2" aria-selected="false">Preguntas Reportadas</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="tab-3" data-toggle="tab" href="#contenido-tab-3" role="tab" aria-controls="contenido-tab-3" aria-selected="false">Todas las preguntas</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="tab-4" data-toggle="tab" href="#contenido-tab-4" role="tab" aria-controls="contenido-tab-4" aria-selected="false">Preguntas Sugeridas</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="tab-5" data-toggle="tab" href="#contenido-tab-5" role="tab" aria-controls="contenido-tab-5" aria-selected="false">Inactivas</a>
-    </li>
-  </ul>
-  <div class="tab-content" id="contenido-tab">
-    <div class="tab-pane fade show active" id="contenido-tab-1" role="tabpanel" aria-labelledby="tab-1">
-      <div class="text-center">
-        <h2>Agregar Nueva Pregunta</h2>
-      </div>
-      <form action="/editor/addQuestion" method="POST" class="container">
-        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-          <label for="question">Pregunta:</label>
-          <input type="text" class="form-control" id="question" name="question" required>
+    <ul class="nav nav-tabs mb-3" id="miTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="tab-1" data-bs-toggle="tab" href="#contenido-tab-1" role="tab" aria-controls="contenido-tab-1" aria-selected="true">Agregar Pregunta</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-2" data-bs-toggle="tab" href="#contenido-tab-2" role="tab" aria-controls="contenido-tab-2" aria-selected="false">Preguntas Reportadas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-3" data-bs-toggle="tab" href="#contenido-tab-3" role="tab" aria-controls="contenido-tab-3" aria-selected="false">Todas las preguntas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-4" data-bs-toggle="tab" href="#contenido-tab-4" role="tab" aria-controls="contenido-tab-4" aria-selected="false">Preguntas Sugeridas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab-5" data-bs-toggle="tab" href="#contenido-tab-5" role="tab" aria-controls="contenido-tab-5" aria-selected="false">Inactivas</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="contenido-tab">
+        <div class="tab-pane fade show active" id="contenido-tab-1" role="tabpanel" aria-labelledby="tab-1">
+            <div class="text-center">
+                <h2>Agregar Nueva Pregunta</h2>
+            </div>
+            <form action="/editor/addQuestion" method="POST" class="container">
+                <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                    <label for="question">Pregunta:</label>
+                    <input type="text" class="form-control" id="question" name="question" required>
+                </div>
+                <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                    <label for="category">Categoría:</label>
+                    <input type="text" class="form-control" id="category" name="category" required>
+                </div>
+                <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                    <label for="option_a">Opción A:</label>
+                    <input type="text" class="form-control" id="option_a" name="option_a" required>
+                </div>
+                <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                    <label for="option_b">Opción B:</label>
+                    <input type="text" class="form-control" id="option_b" name="option_b" required>
+                </div>
+                <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                    <label for="option_c">Opción C:</label>
+                    <input type="text" class="form-control" id="option_c" name="option_c" required>
+                </div>
+                <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                    <label for="option_d">Opción D:</label>
+                    <input type="text" class="form-control" id="option_d" name="option_d" required>
+                </div>
+                <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                    <label for="right_answer">Respuesta Correcta:</label>
+                    <input type="text" class="form-control" id="right_answer" name="right_answer" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Agregar Pregunta</button>
+            </form>
+            <hr>
         </div>
-        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-          <label for="category">Categoría:</label>
-          <input type="text" class="form-control" id="category" name="category" required>
+        <div class="tab-pane fade" id="contenido-tab-2" role="tabpanel" aria-labelledby="tab-2">
+            {{#questionsWithReports}}
+                <div>
+                    <form action="/editor/updateQuestion" method="POST" class="container">
+                        <input type="hidden" name="id" value="{{id}}">
+                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                            <label for="question_{{id}}">Pregunta:</label>
+                            <span>{{pregunta}}</span> <!-- Mostrar la pregunta -->
+                            <span class="badge bg-secondary">{{reports}} reporte(s)</span> <!-- Indicador de reportes -->
+                            <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control" required style="display: none;">
+                        </div>
+                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                            <label for="category_{{id}}">Categoría:</label>
+                            <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control" required>
+                        </div>
+                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                            <label for="option_a_{{id}}">Opción A:</label>
+                            <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control" required>
+                        </div>
+                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                            <label for="option_b_{{id}}">Opción B:</label>
+                            <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control" required>
+                        </div>
+                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                            <label for="option_c_{{id}}">Opción C:</label>
+                            <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control" required>
+                        </div>
+                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                            <label for="option_d_{{id}}">Opción D:</label>
+                            <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control" required>
+                        </div>
+                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                            <label for="right_answer_{{id}}">Respuesta Correcta:</label>
+                            <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control" required>
+                        </div>
+                        <input type="submit" value="Actualizar Pregunta" class="btn btn-primary mb-3">
+                    </form>
+                    <form action="/editor/deleteQuestion" method="POST" class="container">
+                        <input type="hidden" name="id" value="{{id}}">
+                        <input type="submit" value="Eliminar Pregunta" class="btn btn-danger">
+                    </form>
+                </div>
+                <hr>
+            {{/questionsWithReports}}
+            {{^questionsWithReports}}
+                <div class="text-center">
+                    <img src="/public/no-results-happy.png" alt="No hay preguntas reportadas">
+                    <h6>No hay preguntas reportadas...</h6>
+                </div>
+            {{/questionsWithReports}}
         </div>
-        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-          <label for="option_a">Opción A:</label>
-          <input type="text" class="form-control" id="option_a" name="option_a" required>
+        <div class="tab-pane fade" id="contenido-tab-3" role="tabpanel" aria-labelledby="tab-3">
+            <h2>Preguntas Existentes</h2>
+            {{#activeQuestions}}
+                <form action="/editor/updateQuestion" method="POST" class="container">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="question_{{id}}" class="col-sm-3 col-form-label">Pregunta:</label>
+                        <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="category_{{id}}" class="col-sm-3 col-form-label">Categoría:</label>
+                        <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_a_{{id}}" class="col-sm-3 col-form-label">Opción A:</label>
+                        <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_b_{{id}}" class="col-sm-3 col-form-label">Opción B:</label>
+                        <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_c_{{id}}" class="col-sm-3 col-form-label">Opción C:</label>
+                        <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_d_{{id}}" class="col-sm-3 col-form-label">Opción D:</label>
+                        <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="right_answer_{{id}}" class="col-sm-3 col-form-label">Respuesta Correcta:</label>
+                        <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control col-sm-9" required>
+                    </div>
+                    <input type="submit" value="Actualizar Pregunta" class="btn btn-primary mb-3">
+                </form>
+                <form action="/editor/deleteQuestion" method="POST" class="container">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input type="submit" value="Eliminar Pregunta" class="btn btn-danger mb-3">
+                </form>
+                <hr>
+            {{/activeQuestions}}
+            {{^activeQuestions}}
+                <div class="text-center">
+                    <img src="/public/no-results-happy.png" alt="No hay preguntas activas">
+                    <h6>No hay preguntas activas...</h6>
+                </div>
+            {{/activeQuestions}}
         </div>
-        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-          <label for="option_b">Opción B:</label>
-          <input type="text" class="form-control" id="option_b" name="option_b" required>
+        <div class="tab-pane fade" id="contenido-tab-4" role="tabpanel" aria-labelledby="tab-4">
+            <h2>Preguntas Sugeridas</h2>
+            {{#suggestedQuestions}}
+                <form action="/editor/acceptSuggestedQuestion" method="POST" class="container">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="question_{{id}}" class="col-sm-3 col-form-label">Pregunta:</label>
+                        <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="category_{{id}}" class="col-sm-3 col-form-label">Categoría:</label>
+                        <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_a_{{id}}" class="col-sm-3 col-form-label">Opción A:</label>
+                        <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_b_{{id}}" class="col-sm-3 col-form-label">Opción B:</label>
+                        <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_c_{{id}}" class="col-sm-3 col-form-label">Opción C:</label>
+                        <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_d_{{id}}" class="col-sm-3 col-form-label">Opción D:</label>
+                        <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="right_answer_{{id}}" class="col-sm-3 col-form-label">Respuesta Correcta:</label>
+                        <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control col-sm-9" required>
+                    </div>
+                    <input type="submit" value="Aceptar Pregunta" class="btn btn-primary mb-3">
+                </form>
+                <form action="/editor/deleteSuggestedQuestion" method="POST" class="container">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input type="submit" value="Eliminar Pregunta" class="btn btn-danger mb-3">
+                </form>
+                <hr>
+            {{/suggestedQuestions}}
+            {{^suggestedQuestions}}
+                <div class="text-center">
+                    <img src="/public/no-results-happy.png" alt="No hay preguntas sugeridas">
+                    <h6>No hay preguntas sugeridas...</h6>
+                </div>
+            {{/suggestedQuestions}}
         </div>
-        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-          <label for="option_c">Opción C:</label>
-          <input type="text" class="form-control" id="option_c" name="option_c" required>
+        <div class="tab-pane fade" id="contenido-tab-5" role="tabpanel" aria-labelledby="tab-5">
+            <h2>Preguntas Inactivas</h2>
+            {{#inactiveQuestions}}
+                <form action="/editor/activateQuestion" method="POST" class="container">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="question_{{id}}" class="col-sm-3 col-form-label">Pregunta:</label>
+                        <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="category_{{id}}" class="col-sm-3 col-form-label">Categoría:</label>
+                        <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_a_{{id}}" class="col-sm-3 col-form-label">Opción A:</label>
+                        <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_b_{{id}}" class="col-sm-3 col-form-label">Opción B:</label>
+                        <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_c_{{id}}" class="col-sm-3 col-form-label">Opción C:</label>
+                        <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="option_d_{{id}}" class="col-sm-3 col-form-label">Opción D:</label>
+                        <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control col-sm-9" required>
+                    </div>
+                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                        <label for="right_answer_{{id}}" class="col-sm-3 col-form-label">Respuesta Correcta:</label>
+                        <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control col-sm-9" required>
+                    </div>
+                    <input type="submit" value="Activar Pregunta" class="btn btn-primary mb-3">
+                </form>
+                <form action="/editor/deleteInactiveQuestion" method="POST" class="container">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input type="submit" value="Eliminar Pregunta" class="btn btn-danger mb-3">
+                </form>
+                <hr>
+            {{/inactiveQuestions}}
+            {{^inactiveQuestions}}
+                <div class="text-center">
+                    <img src="/public/no-results-happy.png" alt="No hay preguntas inactivas">
+                    <h6>No hay preguntas inactivas...</h6>
+                </div>
+            {{/inactiveQuestions}}
         </div>
-        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-          <label for="option_d">Opción D:</label>
-          <input type="text" class="form-control" id="option_d" name="option_d" required>
-        </div>
-        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-          <label for="right_answer">Respuesta Correcta:</label>
-          <input type="text" class="form-control" id="right_answer" name="right_answer" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Agregar Pregunta</button>
-      </form>
-      <hr>
     </div>
-    <div class="tab-pane fade" id="contenido-tab-2" role="tabpanel" aria-labelledby="tab-2">
-      {{#questionsWithReports}}
-          <div>
-              <form action="/editor/updateQuestion" method="POST" class="container">
-                  <input type="hidden" name="id" value="{{id}}">
-                  <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                      <label for="question_{{id}}">Pregunta:</label>
-                      <span>{{pregunta}}</span> <!-- Mostrar la pregunta -->
-                      <span class="badge bg-secondary">{{reports}} reporte(s)</span> <!-- Indicador de reportes -->
-                      <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control" required style="display: none;">
-                  </div>
-                  <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                      <label for="category_{{id}}">Categoría:</label>
-                      <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control" required>
-                  </div>
-                  <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                      <label for="option_a_{{id}}">Opción A:</label>
-                      <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control" required>
-                  </div>
-                  <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                      <label for="option_b_{{id}}">Opción B:</label>
-                      <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control" required>
-                  </div>
-                  <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                      <label for="option_c_{{id}}">Opción C:</label>
-                      <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control" required>
-                  </div>
-                  <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                      <label for="option_d_{{id}}">Opción D:</label>
-                      <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control" required>
-                  </div>
-                  <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                      <label for="right_answer_{{id}}">Respuesta Correcta:</label>
-                      <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control" required>
-                  </div>
-                  <input type="submit" value="Actualizar Pregunta" class="btn btn-primary mb-3">
-              </form>
-              <form action="/editor/deleteQuestion" method="POST" class="container">
-                  <input type="hidden" name="id" value="{{id}}">
-                  <input type="submit" value="Eliminar Pregunta" class="btn btn-danger">
-              </form>
-          </div>
-
-          <hr>
-      {{/questionsWithReports}}
-      {{^questionsWithReports}}
-        <div class="text-center">
-          <img src = "/public/no-results-happy.png">
-          <h6>No hay preguntas reportadas...</h6>
-        </div>
-      {{/questionsWithReports}}
-    </div>
-    <div class="tab-pane fade" id="contenido-tab-3" role="tabpanel" aria-labelledby="tab-3">
-      <h2>Preguntas Existentes</h2>
-      {{#activeQuestions}}
-        <form action="/editor/updateQuestion" method="POST" class="container">
-          <input type="hidden" name="id" value="{{id}}">
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="question_{{id}}" class="col-sm-3 col-form-label">Pregunta:</label>
-              <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control col-sm-9" required>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="category_{{id}}" class="col-sm-3 col-form-label">Categoría:</label>
-              <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control col-sm-9" required>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="option_a_{{id}}" class="col-sm-3 col-form-label">Opción A:</label>
-              <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control col-sm-9" required>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="option_b_{{id}}" class="col-sm-3 col-form-label">Opción B:</label>
-              <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control col-sm-9" required>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="option_c_{{id}}" class="col-sm-3 col-form-label">Opción C:</label>
-              <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control col-sm-9" required>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="option_d_{{id}}" class="col-sm-3 col-form-label">Opción D:</label>
-              <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control col-sm-9" required>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="right_answer_{{id}}" class="col-sm-3 col-form-label">Respuesta Correcta:</label>
-              <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control col-sm-9" required>
-          </div>
-          <input type="submit" value="Actualizar Pregunta" class="btn btn-primary mb-3">
-        </form>
-        <form action="/editor/deleteQuestion" method="POST" class="container">
-          <input type="hidden" name="id" value="{{id}}">
-          <input type="submit" value="Eliminar Pregunta" class="btn btn-danger">
-        </form>
-          <hr>
-      {{/activeQuestions}}
-    </div>
-    <div class="tab-pane fade" id="contenido-tab-4" role="tabpanel" aria-labelledby="tab-4">
-      {{#inactiveAndCreadaQuestions}}
-        <form action="/editor/activateQuestion" method="POST" class="container">
-          <input type="hidden" name="id" value="{{id}}">
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="question_{{id}}">Pregunta:</label>
-              <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control" disabled>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="category_{{id}}">Categoría:</label>
-              <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control" disabled>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="option_a_{{id}}">Opción A:</label>
-              <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control" disabled>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="option_b_{{id}}">Opción B:</label>
-              <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control" disabled>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="option_c_{{id}}">Opción C:</label>
-              <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control" disabled>
-          </div>
-          <div class="fform-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="option_d_{{id}}">Opción D:</label>
-              <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control" disabled>
-          </div>
-          <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-              <label for="right_answer_{{id}}">Respuesta Correcta:</label>
-              <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control" disabled>
-          </div>
-          <input type="submit" value="Activar Pregunta" class="btn btn-primary">
-        </form>
-          <hr>
-      {{/inactiveAndCreadaQuestions}}
-      {{^inactiveAndCreadaQuestions}}
-        <div class="text-center">
-          <img src = "/public/no-results-sad.png">
-          <h6>No hay preguntas sugeridas...</h6>
-        </div>
-      {{/inactiveAndCreadaQuestions}}
-    </div>
-    <div class="tab-pane fade" id="contenido-tab-5" role="tabpanel" aria-labelledby="tab-5">
-      {{#inactiveQuestions}}
-          <form action="/editor/activateQuestion" method="POST" class="container">
-            <input type="hidden" name="id" value="{{id}}">
-            <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                <label for="question_{{id}}">Pregunta:</label>
-                <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control" disabled>
-            </div>
-            <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                <label for="category_{{id}}">Categoría:</label>
-                <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control" disabled>
-            </div>
-            <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                <label for="option_a_{{id}}">Opción A:</label>
-                <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control" disabled>
-            </div>
-            <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                <label for="option_b_{{id}}">Opción B:</label>
-                <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control" disabled>
-            </div>
-            <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                <label for="option_c_{{id}}">Opción C:</label>
-                <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control" disabled>
-            </div>
-            <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                <label for="option_d_{{id}}">Opción D:</label>
-                <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control" disabled>
-            </div>
-            <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                <label for="right_answer_{{id}}">Respuesta Correcta:</label>
-                <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control" disabled>
-            </div>
-            <input type="submit" value="Activar Pregunta" class="btn btn-primary">
-          </form>
-          <hr>
-      {{/inactiveQuestions}}
-      {{^inactiveQuestions}}
-        <div class="text-center">
-          <img src = "/public/no-results-neutral.png">
-          <h6>No hay preguntas inactivas...</h6>
-        </div>
-      {{/inactiveQuestions}}
-    </div>
-  </div>
 </div>
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
