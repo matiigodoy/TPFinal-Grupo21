@@ -14,9 +14,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <style>
-        .navbar-right {
-            float: right;
-        }
         .logout-button {
             margin-right: 10px;
             margin-top: 4px;
@@ -26,38 +23,62 @@
 </head>
 <body class="pt-5 nunito">
 
-<div class="w3-top">
-    <div class="w3-bar w3-orange w3-card">
-        <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning fixed-top">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                {{^userID}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register/register">Registrarse</a>
+                    </li>
+                {{/userID}}
 
-        {{^userID}}
-            <a href="/" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Iniciar Sesión</a>
-            <a href="/register/register" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Registrarse</a>
-        {{/userID}}
-
-
-        {{#userID}}
-
-            <a href="/partida/get" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Jugar!</a>
-            <a href="/user/exit" class="w3-bar-item w3-button w3-padding-medium w3-hide-small w3-right logout-button btn btn-danger btn-m">Cerrar Sesión</a>
-            <a href="/lobby" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Lobby</a>
-            <a href="/user" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Ranking</a>
-            {{#isAdmin}}
-                <a href="/admin/getAdminView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Admin</a>
-                <a href="/editor/getEditorView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Editor</a>
-            {{/isAdmin}}
-            {{#isEditor}}
-                <a href="/editor/getEditorView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Vista Editor</a>
-            {{/isEditor}}
-            {{#isUser}}
-                <a href="/user/getSuggestQuestionView" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Sugerí tu pregunta</a>
-            {{/isUser}}
-            <a href="/user/getUserProfile?id={{userID}}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Mi perfil</a>
-
-
-        {{/userID}}
+                {{#userID}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/partida/get">Jugar!</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/lobby">Lobby</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user">Ranking</a>
+                    </li>
+                    {{#isAdmin}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/getAdminView">Vista Admin</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/editor/getEditorView">Vista Editor</a>
+                        </li>
+                    {{/isAdmin}}
+                    {{#isEditor}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/editor/getEditorView">Vista Editor</a>
+                        </li>
+                    {{/isEditor}}
+                    {{#isUser}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user/getSuggestQuestionView">Sugerí tu pregunta</a>
+                        </li>
+                    {{/isUser}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/getUserProfile?id={{userID}}">Mi perfil</a>
+                    </li>
+                {{/userID}}
+            </ul>
+            {{#userID}}
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-danger text-white logout-button" href="/user/exit">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            {{/userID}}
+        </div>
     </div>
-</div>
-
-</body>
-</html>
+</nav>
