@@ -6,6 +6,9 @@
         <br />
         <form class = "mx-auto mb-4" action = "/lobby/get" method = "POST">
           <h1>{{fail}}</h1>
+          {{#errorOk}}
+            <h5>Tardaste {{time}} segundos de más. Mejor suerte para la próxima!</h5>
+          {{/errorOk}}
           <button class = "btn btn-primary align-center" type="submit">Volver al lobby</button>
         </form>
       </div>

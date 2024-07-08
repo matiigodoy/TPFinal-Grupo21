@@ -36,7 +36,7 @@ class PartidaController {
         $responseTime = microtime(true);
         $difference = $responseTime - $_SESSION['question_start'];
         if($difference > 15){
-            $this->presenter->render("error", ["fail" => "¡Tiempo acabado!"]);
+            $this->presenter->render("error", ["fail" => "¡Tiempo acabado!", "errorOk" => true,"time" => (int)$difference - 15]);
             unset($_SESSION['questionId']);
             return;
         } 
