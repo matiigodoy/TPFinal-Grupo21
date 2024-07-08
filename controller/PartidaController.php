@@ -57,8 +57,9 @@ class PartidaController {
     }
     
     public function continuePartida(){
-        $userId = $_SESSION['userID'];
-        $this->model->saveStartTime($userId);
+        $_SESSION['question_start'] = microtime(true);
+        $partidaId = $_SESSION['partidaId'];
+        $this->model->saveStartTime($partidaId);
         $contPartidaData = $this->model->continuePartida();
         $contPartidaDataFirstKey = array_key_first($contPartidaData);
         if($this->model->checkWin($contPartidaData)) $this->presenter->render($contPartidaDataFirstKey, $contPartidaData);
