@@ -9,7 +9,7 @@ class AdminController
         $this->adminModel = $adminModel;
         $this->presenter = $presenter;
     }
-    public function getAdminView(){
+    public function get(){
         // Obtener datos necesarios para la vista y el gráfico
         $totalUsers = $this->adminModel->getTotalUsers();
         $totalRolUsers = $this->adminModel->getTotalUsersByRole('user');
