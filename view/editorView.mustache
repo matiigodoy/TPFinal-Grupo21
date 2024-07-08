@@ -1,26 +1,29 @@
 <div class="container mt-4">
-    <ul class="nav nav-tabs mb-3" id="miTab" role="tablist">
+    <ul class="nav nav-tabs mb-3" id="miTab" role="tablist" style="border-bottom: 1px solid grey;--bs-nav-tabs-border-width: var(--bs-border-width);
+    --bs-nav-tabs-border-color: grey;
+    --bs-nav-tabs-border-radius: var(--bs-border-radius);
+    --bs-nav-tabs-link-hover-border-color: var(--bs-secondary-bg) var(--bs-secondary-bg) var(--bs-border-color);
+    --bs-nav-tabs-link-active-color: grey;
+    --bs-nav-tabs-link-active-bg: white;
+    --bs-nav-tabs-link-active-border-color: grey grey white;">
         <li class="nav-item">
-            <a class="nav-link active" id="tab-1" data-bs-toggle="tab" href="#contenido-tab-1" role="tab" aria-controls="contenido-tab-1" aria-selected="true">Agregar Pregunta</a>
+            <a class="nav-link text-secondary active" id="tab-1" data-bs-toggle="tab" href="#contenido-tab-1" role="tab" aria-controls="contenido-tab-1" aria-selected="true">➕ Agregar Pregunta</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="tab-2" data-bs-toggle="tab" href="#contenido-tab-2" role="tab" aria-controls="contenido-tab-2" aria-selected="false">Preguntas Reportadas</a>
+            <a class="nav-link text-secondary" id="tab-2" data-bs-toggle="tab" href="#contenido-tab-2" role="tab" aria-controls="contenido-tab-2" aria-selected="false">🚩 Preguntas Reportadas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="tab-3" data-bs-toggle="tab" href="#contenido-tab-3" role="tab" aria-controls="contenido-tab-3" aria-selected="false">Todas las preguntas</a>
+            <a class="nav-link text-secondary" id="tab-3" data-bs-toggle="tab" href="#contenido-tab-3" role="tab" aria-controls="contenido-tab-3" aria-selected="false">📋 Todas las preguntas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="tab-4" data-bs-toggle="tab" href="#contenido-tab-4" role="tab" aria-controls="contenido-tab-4" aria-selected="false">Preguntas Sugeridas</a>
+            <a class="nav-link text-secondary" id="tab-4" data-bs-toggle="tab" href="#contenido-tab-4" role="tab" aria-controls="contenido-tab-4" aria-selected="false">⚠️ Preguntas Sugeridas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="tab-5" data-bs-toggle="tab" href="#contenido-tab-5" role="tab" aria-controls="contenido-tab-5" aria-selected="false">Inactivas</a>
+            <a class="nav-link text-secondary" id="tab-5" data-bs-toggle="tab" href="#contenido-tab-5" role="tab" aria-controls="contenido-tab-5" aria-selected="false">⛔ Inactivas</a>
         </li>
     </ul>
     <div class="tab-content" id="contenido-tab">
-        <div class="tab-pane fade show active" id="contenido-tab-1" role="tabpanel" aria-labelledby="tab-1">
-            <div class="text-center">
-                <h2>Agregar Nueva Pregunta</h2>
-            </div>
+        <div class="tab-pane fade show active mt-4" id="contenido-tab-1" role="tabpanel" aria-labelledby="tab-1">
             <form action="/editor/addQuestion" method="POST" class="container">
                 <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
                     <label for="question">Pregunta:</label>
@@ -54,50 +57,77 @@
             </form>
             <hr>
         </div>
-        <div class="tab-pane fade" id="contenido-tab-2" role="tabpanel" aria-labelledby="tab-2">
-            {{#questionsWithReports}}
+        <div class="tab-pane fade mt-4" id="contenido-tab-2" role="tabpanel" aria-labelledby="tab-2">
+            <div class="col-md-12">
                 <div>
-                    <form action="/editor/updateQuestion" method="POST" class="container">
-                        <input type="hidden" name="id" value="{{id}}">
-                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                            <label for="question_{{id}}">Pregunta:</label>
-                            <span>{{pregunta}}</span> <!-- Mostrar la pregunta -->
-                            <span class="badge bg-secondary">{{reports}} reporte(s)</span> <!-- Indicador de reportes -->
-                            <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control" required style="display: none;">
+                    <div class="row">
+                    {{#questionsWithReports}}
+                        <div class="col-12 col-md-6">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center border-danger">
+                                    <span style="max-width: 60%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{pregunta}}    <span class="badge bg-secondary">{{reports}} reporte(s)</span></span>
+                                    <span>
+                                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#editModalReport"><i class="fa fa-eye " aria-hidden="true"></i></button>
+                                    </span>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                            <label for="category_{{id}}">Categoría:</label>
-                            <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control" required>
+                        <div class="modal fade" id="editModalReport" tabindex="-1" aria-labelledby="editModalLabelReport" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabelReport">Editar Pregunta</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/editor/updateQuestion" method="POST" class="container">
+                                    <input type="hidden" name="id" value="{{id}}">
+                                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                                        <label for="question_{{id}}">Pregunta:</label>
+                                        <span>{{pregunta}}</span> <!-- Mostrar la pregunta -->
+                                        <span class="badge bg-secondary">{{reports}} reporte(s)</span> <!-- Indicador de reportes -->
+                                        <input type="text" id="question_{{id}}" name="question" value="{{pregunta}}" class="form-control" required style="display: none;">
+                                    </div>
+                                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                                        <label for="category_{{id}}">Categoría:</label>
+                                        <input type="text" id="category_{{id}}" name="category" value="{{category}}" class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                                        <label for="option_a_{{id}}">Opción A:</label>
+                                        <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                                        <label for="option_b_{{id}}">Opción B:</label>
+                                        <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                                        <label for="option_c_{{id}}">Opción C:</label>
+                                        <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                                        <label for="option_d_{{id}}">Opción D:</label>
+                                        <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
+                                        <label for="right_answer_{{id}}">Respuesta Correcta:</label>
+                                        <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control" required>
+                                    </div>
+                                    <input type="submit" value="Actualizar" class="btn btn-primary mb-3">
+                                </form>
+                                <form action="/editor/deleteQuestion" method="POST" class="container">
+                                    <input type="hidden" name="id" value="{{id}}">
+                                    <input type="submit" value="Eliminar" class="btn btn-danger mb-3">
+                                </form>
+                                
+                            </div>
                         </div>
-                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                            <label for="option_a_{{id}}">Opción A:</label>
-                            <input type="text" id="option_a_{{id}}" name="option_a" value="{{option_a}}" class="form-control" required>
                         </div>
-                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                            <label for="option_b_{{id}}">Opción B:</label>
-                            <input type="text" id="option_b_{{id}}" name="option_b" value="{{option_b}}" class="form-control" required>
                         </div>
-                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                            <label for="option_c_{{id}}">Opción C:</label>
-                            <input type="text" id="option_c_{{id}}" name="option_c" value="{{option_c}}" class="form-control" required>
-                        </div>
-                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                            <label for="option_d_{{id}}">Opción D:</label>
-                            <input type="text" id="option_d_{{id}}" name="option_d" value="{{option_d}}" class="form-control" required>
-                        </div>
-                        <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
-                            <label for="right_answer_{{id}}">Respuesta Correcta:</label>
-                            <input type="text" id="right_answer_{{id}}" name="right_answer" value="{{right_answer}}" class="form-control" required>
-                        </div>
-                        <input type="submit" value="Actualizar Pregunta" class="btn btn-primary mb-3">
-                    </form>
-                    <form action="/editor/deleteQuestion" method="POST" class="container">
-                        <input type="hidden" name="id" value="{{id}}">
-                        <input type="submit" value="Eliminar Pregunta" class="btn btn-danger">
-                    </form>
+                    {{/questionsWithReports}}
+                    </div>
                 </div>
-                <hr>
-            {{/questionsWithReports}}
+            </div>
+
             {{^questionsWithReports}}
                 <div class="text-center">
                     <img src="/public/no-results-happy.png" alt="No hay preguntas reportadas">
@@ -105,10 +135,9 @@
                 </div>
             {{/questionsWithReports}}
         </div>
-        <div class="tab-pane fade" id="contenido-tab-3" role="tabpanel" aria-labelledby="tab-3">
-            <h2>Preguntas Existentes</h2>
+        <div class="tab-pane fade mt-4" id="contenido-tab-3" role="tabpanel" aria-labelledby="tab-3">
             <div class="col-md-12">
-                <div class="product-list">
+                <div>
                     <div class="row">
                     {{#activeQuestions}}
                         <div class="col-md-6">
@@ -116,21 +145,19 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span style="max-width: 60%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{pregunta}}</span>
                                     <span>
-                                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal{{@index}}"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModalActive"><i class="fa fa-eye" aria-hidden="true"></i></button>
                                     </span>
                                 </li>
                             </ul>
                         </div>
-                        <!-- Modal -->
-                        <div class="modal fade" id="editModal{{@index}}" tabindex="-1" aria-labelledby="editModalLabel{{@index}}" aria-hidden="true">
+                        <div class="modal fade" id="editModalActive" tabindex="-1" aria-labelledby="editModalLabelActive" aria-hidden="true">
                         <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="editModalLabel{{@index}}">Editar Pregunta</h5>
+                                <h5 class="modal-title" id="editModalLabelActive">Editar Pregunta</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <!-- Contenido del modal para editar -->
                                 <form action="/editor/updateQuestion" method="POST" class="container">
                                 <input type="hidden" name="id" value="{{id}}">
                                 <div class="form-group col-12 mb-3">
@@ -183,8 +210,7 @@
                 </div>
             {{/activeQuestions}}
         </div>
-        <div class="tab-pane fade" id="contenido-tab-4" role="tabpanel" aria-labelledby="tab-4">
-            <h2>Preguntas Sugeridas</h2>
+        <div class="tab-pane fade mt-4" id="contenido-tab-4" role="tabpanel" aria-labelledby="tab-4">
             {{#suggestedQuestions}}
                 <form action="/editor/acceptSuggestedQuestion" method="POST" class="container">
                     <input type="hidden" name="id" value="{{id}}">
@@ -231,8 +257,7 @@
                 </div>
             {{/suggestedQuestions}}
         </div>
-        <div class="tab-pane fade" id="contenido-tab-5" role="tabpanel" aria-labelledby="tab-5">
-            <h2>Preguntas Inactivas</h2>
+        <div class="tab-pane fade mt-4" id="contenido-tab-5" role="tabpanel" aria-labelledby="tab-5">
             {{#inactiveQuestions}}
                 <form action="/editor/activateQuestion" method="POST" class="container">
                     <input type="hidden" name="id" value="{{id}}">
