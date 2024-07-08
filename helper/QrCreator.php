@@ -21,7 +21,12 @@ class QrCreator
         $tamanio = 10;
         $level = "M";
         $frameSize = 3;
-        $contenido = $username;
+
+        $baseURL = "http://$_SERVER[HTTP_HOST]";
+        $path = "/user/getUserProfile?id=";
+        $url = $baseURL . $path . $id;
+
+        $contenido = $url;
 
         QRcode::png($contenido, $filename, $level, $tamanio, $frameSize);
 
