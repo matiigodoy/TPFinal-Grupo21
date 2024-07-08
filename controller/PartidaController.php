@@ -21,25 +21,32 @@ class PartidaController {
     }
 
     public function start(){
-        $userId = $_SESSION['userID'];
-        $this->model->saveStartTime($userId);
         $partidaData = $this->model->startPartida();
+        $partidaId = $_SESSION['partidaId'];
+        $this->model->saveStartTime($partidaId);
         $partidaFirstKey = array_key_first($partidaData);
         if($this->model->checkWin($partidaData))$this->presenter->render("win", $partidaData);;
-
+        $_SESSION['question_start'] = microtime(true);
         $partidaFirstKey == "category" ? 
         $this->presenter->render($partidaFirstKey, $partidaData) : 
         $this->presenter->render("error", $partidaData);
     }
 
     public function checkAnswer(){
-        $userId = $_SESSION['userID'];
-        if ($this->model->isTimeout($userId)) {
+        $responseTime = microtime(true);
+        $difference = $responseTime - $_SESSION['question_start'];
+        if($difference > 15){
             $this->presenter->render("error", ["fail" => "¡Tiempo acabado!"]);
             unset($_SESSION['questionId']);
             return;
-        }
-        $this->model->saveStartTime($userId);
+        } 
+        // $partidaId = $_SESSION['partidaId'];
+        // if ($this->model->isTimeout($partidaId)) {
+        //     $this->presenter->render("error", ["fail" => "¡Tiempo acabado!"]);
+        //     unset($_SESSION['questionId']);
+        //     return;
+        // }
+        // $this->model->saveStartTime($userId);
         $checkAnswerData = $this->model->checkAnswer($this->presenter);
         $checkanswerFirstKey = array_key_first($checkAnswerData);
         //si es 'category' entonces pasó por la respuesta fue correcta, ya que es

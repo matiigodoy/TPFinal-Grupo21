@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 include_once("Configuration.php");
 include_once("helper/SessionManager.php");
 
