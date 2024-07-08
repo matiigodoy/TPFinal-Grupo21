@@ -22,8 +22,8 @@ class PartidaController {
 
     public function start(){
         $partidaData = $this->model->startPartida();
-        $partidaId = $_SESSION['partidaId'];
-        $this->model->saveStartTime($partidaId);
+        //$partidaId = $_SESSION['partidaId'];
+        //$this->model->saveStartTime($partidaId);
         $partidaFirstKey = array_key_first($partidaData);
         if($this->model->checkWin($partidaData))$this->presenter->render("win", $partidaData);;
         $_SESSION['question_start'] = microtime(true);
@@ -58,8 +58,8 @@ class PartidaController {
     
     public function continuePartida(){
         $_SESSION['question_start'] = microtime(true);
-        $partidaId = $_SESSION['partidaId'];
-        $this->model->saveStartTime($partidaId);
+        //$partidaId = $_SESSION['partidaId'];
+        //$this->model->saveStartTime($partidaId);
         $contPartidaData = $this->model->continuePartida();
         $contPartidaDataFirstKey = array_key_first($contPartidaData);
         if($this->model->checkWin($contPartidaData)) $this->presenter->render($contPartidaDataFirstKey, $contPartidaData);
