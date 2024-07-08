@@ -210,8 +210,8 @@
                 </div>
             {{/activeQuestions}}
         </div>
-        <div class="tab-pane fade mt-4" id="contenido-tab-4" role="tabpanel" aria-labelledby="tab-4">
-            {{#suggestedQuestions}}
+        <div class="tab-pane fade mt-4" id="contenido-tab-5" role="tabpanel" aria-labelledby="tab-4">
+            {{#inactiveQuestions}}
                 <form action="/editor/acceptSuggestedQuestion" method="POST" class="container">
                     <input type="hidden" name="id" value="{{id}}">
                     <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
@@ -249,16 +249,16 @@
                     <input type="submit" value="Eliminar Pregunta" class="btn btn-danger mb-3">
                 </form>
                 <hr>
-            {{/suggestedQuestions}}
-            {{^suggestedQuestions}}
+            {{/inactiveQuestions}}
+            {{^inactiveQuestions}}
                 <div class="text-center">
                     <img src="/public/no-results-happy.png" alt="No hay preguntas sugeridas">
-                    <h6>No hay preguntas sugeridas...</h6>
+                    <h6>No hay preguntas inactivas...</h6>
                 </div>
-            {{/suggestedQuestions}}
+            {{/inactiveQuestions}}
         </div>
-        <div class="tab-pane fade mt-4" id="contenido-tab-5" role="tabpanel" aria-labelledby="tab-5">
-            {{#inactiveQuestions}}
+        <div class="tab-pane fade mt-4" id="contenido-tab-4" role="tabpanel" aria-labelledby="tab-5">
+            {{#inactiveAndCreadaQuestions}}
                 <form action="/editor/activateQuestion" method="POST" class="container">
                     <input type="hidden" name="id" value="{{id}}">
                     <div class="form-group col-12 col-md-8 col-xl-6 mb-3">
@@ -296,13 +296,13 @@
                     <input type="submit" value="Eliminar Pregunta" class="btn btn-danger mb-3">
                 </form>
                 <hr>
-            {{/inactiveQuestions}}
-            {{^inactiveQuestions}}
+            {{/inactiveAndCreadaQuestions}}
+            {{^inactiveAndCreadaQuestions}}
                 <div class="text-center">
                     <img src="/public/no-results-happy.png" alt="No hay preguntas inactivas">
-                    <h6>No hay preguntas inactivas...</h6>
+                    <h6>No hay preguntas sugeridas...</h6>
                 </div>
-            {{/inactiveQuestions}}
+            {{/inactiveAndCreadaQuestions}}
         </div>
     </div>
 </div>

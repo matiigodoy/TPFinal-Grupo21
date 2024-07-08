@@ -99,7 +99,7 @@ class EditorModel
         $query = "SELECT q.id, q.pregunta, q.category, a.option_a, a.option_b, a.option_c, a.option_d, a.right_answer 
               FROM question q
               JOIN answer a ON q.id = a.question_id
-              WHERE q.active = 0";
+              WHERE q.active = 0 AND q.isCreada = 0";
 
         $stmt = $this->database->prepare($query);
         if ($stmt === false) {

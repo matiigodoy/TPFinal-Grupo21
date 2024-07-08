@@ -16,7 +16,7 @@ class PartidaModel
         $cheat = $this->validateUserCheated();
         if($cheat) return $cheat;
         $this->registerPartida();
-        $_SESSION['partidaId'] = $this->bringPartidaId($_SESSION['userID']);
+        //$_SESSION['partidaId'] = $this->bringPartidaId($_SESSION['userID']);
         return $this->handlePartida();
     }
 
