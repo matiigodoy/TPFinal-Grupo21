@@ -16,7 +16,7 @@ class PartidaModel
         $cheat = $this->validateUserCheated();
         if($cheat) return $cheat;
         $this->registerPartida();
-        $_SESSION['partidaId'] = $this->bringPartidaId($_SESSION['userID']);
+        //$_SESSION['partidaId'] = $this->bringPartidaId($_SESSION['userID']);
         return $this->handlePartida();
     }
 
@@ -379,11 +379,11 @@ class PartidaModel
         return true;
     }
 
-    public function saveStartTime($userId) {
+    public function saveStartTime($partidaId) {
         $startTime = date('Y-m-d H:i:s');
         $query = "UPDATE partida SET start_time = ? WHERE id = ?";
         $stmt = $this->prepareQuery($query);
-        $stmt->bind_param("si", $startTime, $userId);
+        $stmt->bind_param("si", $startTime, $partidaId);
         return $this->executionSuccessful($stmt);
     }
 
