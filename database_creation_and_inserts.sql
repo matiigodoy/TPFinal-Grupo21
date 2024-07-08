@@ -26,7 +26,6 @@ CREATE TABLE `user`(
   role VARCHAR(30) NOT NULL DEFAULT 'user',
   auth_code VARCHAR(250) DEFAULT NULL,
   is_active TINYINT(1) NOT NULL DEFAULT 0
-  start_time timestamp(6) NULL DEFAULT current_timestamp(6)
  );
 
 CREATE TABLE `partida`(
@@ -36,7 +35,8 @@ CREATE TABLE `partida`(
   partida_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   isOpen TINYINT(1) NOT NULL DEFAULT 0,
   FOREIGN KEY (id_user) REFERENCES user(id),
-  FOREIGN KEY (id_opponent) REFERENCES user(id)
+  FOREIGN KEY (id_opponent) REFERENCES user(id),
+  start_time timestamp(6) NULL DEFAULT current_timestamp(6)
  );
 
 CREATE TABLE `question`(

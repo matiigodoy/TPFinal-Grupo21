@@ -16,6 +16,7 @@ class PartidaModel
         $cheat = $this->validateUserCheated();
         if($cheat) return $cheat;
         $this->registerPartida();
+        $_SESSION['partidaId'] = $this->bringPartidaId($_SESSION['userID']);
         return $this->handlePartida();
     }
 
@@ -239,6 +240,11 @@ class PartidaModel
         );
         return $this->executionSuccessful($stmt);
     }
+    public function bringPartidaId($userId){
+        $sql = "SELECT p.Id FROM partida p WHERE p.id_user = $userId ORDER BY p.start_time DESC";
+        $partidaId = $this->database->query($sql)[0]['Id'];
+        return $partidaId;
+    }
 
     public function prepareQuery($query){
         $stmt = $this->database->prepare($query);
@@ -356,10 +362,10 @@ class PartidaModel
         return $this->handlePartida();
     }
 
-    public function isTimeout($userId, $timeoutSeconds = 15) {
-        $query = "SELECT start_time FROM user WHERE id = ?";
+    public function isTimeout($partidaId, $timeoutSeconds = 15) {
+        $query = "SELECT start_time FROM partida WHERE id = ?";
         $stmt = $this->prepareQuery($query);
-        $stmt->bind_param("i", $userId);
+        $stmt->bind_param("i", $partidaId);
         $stmt->execute();
         $stmt->bind_result($startTime);
         $stmt->fetch();
@@ -375,7 +381,7 @@ class PartidaModel
 
     public function saveStartTime($userId) {
         $startTime = date('Y-m-d H:i:s');
-        $query = "UPDATE user SET start_time = ? WHERE id = ?";
+        $query = "UPDATE partida SET start_time = ? WHERE id = ?";
         $stmt = $this->prepareQuery($query);
         $stmt->bind_param("si", $startTime, $userId);
         return $this->executionSuccessful($stmt);

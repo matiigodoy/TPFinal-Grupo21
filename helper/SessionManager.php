@@ -1,5 +1,7 @@
 <?php
-
+ini_set('session.cookie_httponly', 1); // Solo accesible por HTTP (no JavaScript)
+ini_set('session.cookie_secure', 1);   // Solo se envía a través de HTTPS
+ini_set('session.cookie_samesite', 'Strict'); // Restringir el envío de cookies a sitios cruzados
 class SessionManager {
     public function __construct() {
         if (session_status() == PHP_SESSION_NONE) {
