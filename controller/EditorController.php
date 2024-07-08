@@ -11,7 +11,7 @@ class EditorController
         $this->presenter = $presenter;
     }
 
-    public function getEditorView()
+    public function get()
     {
         $activeQuestions = $this->editorModel->getActiveQuestions();
         $inactiveAndCreadaQuestions = $this->editorModel->getInactiveAndCreadaQuestions();
@@ -42,7 +42,7 @@ class EditorController
             $this->editorModel->addQuestion($question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer);
 
 
-            return $this->getEditorView();
+            return $this->get();
         }
     }
 
@@ -61,7 +61,7 @@ class EditorController
             $this->editorModel->updateQuestion($id, $question, $category, $option_a, $option_b, $option_c, $option_d, $right_answer);
 
             // Volver a cargar la vista del editor después de actualizar la pregunta
-            return $this->getEditorView();
+            return $this->get();
         }
     }
 
@@ -73,7 +73,7 @@ class EditorController
             $this->editorModel->deleteQuestion($id);
 
             // Volver a cargar la vista del editor después de eliminar la pregunta
-            return $this->getEditorView();
+            return $this->get();
         }
     }
 
@@ -83,7 +83,7 @@ class EditorController
             $id = $_POST['id'];
             $this->editorModel->activateQuestionById($id);
 
-            $this->getEditorView();
+            $this->get();
         }
     }
 }
